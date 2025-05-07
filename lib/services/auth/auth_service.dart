@@ -1,14 +1,17 @@
 import 'dart:developer';
-
-import 'package:airmaster/config/api_config.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class AuthService {
+import 'package:airmaster/config/api_config.dart';
+import 'package:airmaster/data/users/user_preferences.dart';
+import 'package:airmaster/model/users/user.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+
+class AuthService extends ChangeNotifier {
   static final _googleSignIn = GoogleSignIn();
 
-  static Future login() async {
+  static Future<bool?> login() async {
     try {
       GoogleSignInAccount? account = await _googleSignIn.signIn();
 
@@ -27,19 +30,25 @@ class AuthService {
         'accessToken': auth.accessToken,
       };
 
-      // Send POST request to your server
       final response = await http.post(
         Uri.parse(ApiConfig.loginUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
 
-      // Handle the response
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        log("Login success: ${response.body}");
+        var userData = responseData['data'];
+
+        User authUser = User.fromJson(userData['user']);
+
+        UserPreferences().saveUser(authUser);
+
+        // log("Login success: ${response.body}");
         return true;
       } else {
-        log("Server error: ${response.body}");
+        // log("Server error: ${response.body}");
         return false;
       }
     } catch (e) {
