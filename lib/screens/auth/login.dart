@@ -1,11 +1,12 @@
 import 'dart:developer';
 import 'package:airmaster/data/users/user_preferences.dart';
-import 'package:airmaster/screens/home/dashboard.dart';
+import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginView extends StatefulWidget {
@@ -101,54 +102,41 @@ class _LoginViewState extends State<LoginView> {
       if (user != false) {
         final userPrefs = UserPreferences();
         final String name = await userPrefs.getName();
-        _showWelcomeSnackBar(name.isNotEmpty ? name : "Guest");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
+        Get.offAllNamed(AppRoutes.MAIN_SCREEN);
+        Get.snackbar(
+          'Hi there, Welcome Back!',
+          'You have successfully logged in as $name',
+          backgroundColor: ColorConstants.backgroundColor,
+          colorText: ColorConstants.textPrimary,
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.TOP,
         );
       } else {
-        _showErrorSnackBar(
-          "Your account is not registered, Please contact your IT Support",
+        Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
+        Get.snackbar(
+          'Sorry!',
+          'Your account is not registered, Please contact your IT Support',
+          backgroundColor: ColorConstants.backgroundColor,
+          colorText: ColorConstants.textPrimary,
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
       log(e.toString());
-      _showErrorSnackBar("Please contact your IT Support");
+      Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
+      Get.snackbar(
+        'Sorry!, Something went wrong',
+        'Please contact your IT Support',
+        backgroundColor: ColorConstants.backgroundColor,
+        colorText: ColorConstants.textPrimary,
+        duration: const Duration(seconds: 2),
+        snackPosition: SnackPosition.TOP,
+      );
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
-  }
-
-  void _showWelcomeSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Welcome, $message"),
-        duration: const Duration(milliseconds: 3000),
-        action: SnackBarAction(
-          label: 'Close',
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ),
-    );
-  }
-
-  void _showErrorSnackBar(String message) {
-    log("Error: $message");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Error: $message"),
-        duration: const Duration(milliseconds: 5000),
-        action: SnackBarAction(
-          label: 'Close',
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ),
-    );
   }
 }

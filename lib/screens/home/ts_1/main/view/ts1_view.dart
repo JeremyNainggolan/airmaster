@@ -1,9 +1,11 @@
 import "package:airmaster/screens/home/ts_1/analytics/view/ts1_analytics.dart";
 import "package:airmaster/screens/home/ts_1/history/view/ts1_history.dart";
 import "package:airmaster/screens/home/ts_1/home/view/ts1_home.dart";
-import "package:airmaster/screens/home/ts_1/settings/view/ts1_settings.dart";
+import "package:airmaster/screens/home/ts_1/profile/view/ts1_profile.dart";
 import "package:airmaster/utils/const_color.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:get/route_manager.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart";
 
@@ -14,16 +16,9 @@ class TS1View extends StatefulWidget {
   State<TS1View> createState() => _TS1ViewState();
 }
 
-BuildContext? testContext;
-
 class _TS1ViewState extends State<TS1View> {
   late PersistentTabController _controller;
   late bool _hideNavBar;
-
-  final List<ScrollController> _scrollControllers = [
-    ScrollController(),
-    ScrollController(),
-  ];
 
   @override
   void initState() {
@@ -32,55 +27,52 @@ class _TS1ViewState extends State<TS1View> {
     _hideNavBar = false;
   }
 
-  @override
-  void dispose() {
-    for (final element in _scrollControllers) {
-      element.dispose();
-    }
-    super.dispose();
-  }
-
   List<Widget> _buildScreens() => [
     TS1_Home(),
     TS1_Analytics(),
     TS1_History(),
-    TS1_Settings(),
+    TS1_Profile(),
   ];
 
   List<PersistentBottomNavBarItem> _navBarsItems() => [
     PersistentBottomNavBarItem(
       icon: const Icon(Icons.home),
       title: "Home",
-      activeColorPrimary: ColorConstants.primaryColor,
-      inactiveColorPrimary: Colors.grey,
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
     ),
     PersistentBottomNavBarItem(
       icon: const Icon(Icons.analytics),
       title: "Analytics",
-      activeColorPrimary: ColorConstants.primaryColor,
-      inactiveColorPrimary: Colors.grey,
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
     ),
     PersistentBottomNavBarItem(
       icon: const Icon(Icons.history),
       title: "History",
-      activeColorPrimary: ColorConstants.primaryColor,
-      inactiveColorPrimary: Colors.grey,
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
     ),
     PersistentBottomNavBarItem(
-      icon: const Icon(Icons.settings),
-      title: "Settings",
-      activeColorPrimary: ColorConstants.primaryColor,
-      inactiveColorPrimary: Colors.grey,
+      icon: const Icon(CupertinoIcons.person_circle_fill),
+      title: "Profile",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
     ),
   ];
 
   @override
   Widget build(final BuildContext context) => Scaffold(
     appBar: AppBar(
+      backgroundColor: ColorConstants.primaryColor,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
+        onPressed: () => Get.back(),
+      ),
       title: Text(
         "TS - 1",
         style: GoogleFonts.notoSans(
-          color: ColorConstants.textPrimary,
+          color: ColorConstants.textSecondary,
           fontSize: 20.0,
           fontWeight: FontWeight.bold,
         ),
@@ -91,19 +83,11 @@ class _TS1ViewState extends State<TS1View> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      handleAndroidBackButtonPress: true,
+      handleAndroidBackButtonPress: false,
       resizeToAvoidBottomInset: false,
       stateManagement: true,
       hideNavigationBarWhenKeyboardAppears: true,
-      popBehaviorOnSelectedNavBarItemPress: PopBehavior.once,
-      hideOnScrollSettings: HideOnScrollSettings(
-        hideNavBarOnScroll: true,
-        scrollControllers: _scrollControllers,
-      ),
       padding: const EdgeInsets.only(top: 8),
-      selectedTabScreenContext: (final context) {
-        testContext = context;
-      },
       backgroundColor: ColorConstants.backgroundColor,
       isVisible: !_hideNavBar,
       confineToSafeArea: true,

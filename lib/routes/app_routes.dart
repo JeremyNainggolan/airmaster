@@ -9,6 +9,9 @@ class AppRoutes {
 
   static const String TS1_MAIN = '/main/ts1';
   static const String TS1_HOME_SCREEN = '/main/ts1/home';
+  static const String TS1_ANALYTICS = '/main/ts1/analytics';
+  static const String TS1_HISTORY = '/main/ts1/history';
+  static const String TS1_PROFILE = '/main/ts1/profile';
 
   static const String TC_MAIN = '/main/tc';
 

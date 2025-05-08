@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:get/get.dart';
 
-class TS1_Home_Controller extends GetxController {
+class TS1_Profile_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
   var userId = ''.obs;
@@ -19,20 +19,9 @@ class TS1_Home_Controller extends GetxController {
   var rank = ''.obs;
   var instructor = <String>[].obs;
 
-  var greetings = ''.obs;
-
   @override
   void onInit() {
     super.onInit();
-
-    var hour = DateTime.now().hour;
-    if (hour < 12) {
-      greetings.value = "Morning";
-    } else if (hour < 17) {
-      greetings.value = "Afternoon";
-    } else {
-      greetings.value = "Evening";
-    }
     loadUserData();
   }
 

@@ -1,5 +1,6 @@
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/utils/const_color.dart';
+import 'package:airmaster/utils/const_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/instance_manager.dart';
@@ -82,7 +83,7 @@ class _HomeViewState extends State<HomeView> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
         color: Colors.white,
       ),
       child: InkWell(

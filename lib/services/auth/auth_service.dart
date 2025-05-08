@@ -43,7 +43,7 @@ class AuthService extends ChangeNotifier {
 
         User authUser = User.fromJson(userData['user']);
 
-        UserPreferences().saveUser(authUser);
+        await UserPreferences().saveUser(authUser);
 
         // log("Login success: ${response.body}");
         return true;

@@ -33,6 +33,7 @@ class UserPreferences {
     await _prefs!.setString('name', user.name ?? '');
     await _prefs!.setString('email', user.email ?? '');
     await _prefs!.setString('hub', user.hub ?? '');
+    await _prefs!.setString('photo_url', user.photo_url ?? '');
     await _prefs!.setString('status', user.status ?? '');
     await _prefs!.setString('loa_number', user.loa_number ?? '');
     await _prefs!.setString('license_number', user.license_number ?? '');
@@ -56,6 +57,7 @@ class UserPreferences {
       name: _prefs!.getString('name') ?? '',
       email: _prefs!.getString('email') ?? '',
       hub: _prefs!.getString('hub') ?? '',
+      photo_url: _prefs!.getString('photo_url') ?? '',
       status: _prefs!.getString('status') ?? '',
       loa_number: _prefs!.getString('loa_number') ?? '',
       license_number: _prefs!.getString('license_number') ?? '',
@@ -79,6 +81,7 @@ class UserPreferences {
     await _prefs!.remove('name');
     await _prefs!.remove('email');
     await _prefs!.remove('hub');
+    await _prefs!.remove('photo_url');
     await _prefs!.remove('status');
     await _prefs!.remove('loa_number');
     await _prefs!.remove('license_number');
@@ -154,6 +157,12 @@ class UserPreferences {
   Future<String> getHub() async {
     await init();
     return _prefs!.getString('hub') ?? '';
+  }
+
+  Future<String> getImgUrl() async {
+    await init();
+    log(_prefs!.getString('email') ?? '');
+    return _prefs!.getString('photo_url') ?? '';
   }
 
   Future<String> getStatus() async {

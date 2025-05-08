@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class User {
   bool? isLogin;
   String? token;
@@ -6,6 +8,7 @@ class User {
   String? name;
   String? email;
   String? hub;
+  String? photo_url;
   String? status;
   String? loa_number;
   String? license_number;
@@ -21,6 +24,7 @@ class User {
     this.name,
     this.email,
     this.hub,
+    this.photo_url,
     this.status,
     this.loa_number,
     this.license_number,
@@ -38,6 +42,7 @@ class User {
       name: response['name'],
       email: response['email'],
       hub: response['hub'],
+      photo_url: response['photo_url'],
       status: response['status'],
       loa_number: response['loa_number'],
       license_number: response['license_number'],
