@@ -103,40 +103,50 @@ class _LoginViewState extends State<LoginView> {
         final userPrefs = UserPreferences();
         final String name = await userPrefs.getName();
         Get.offAllNamed(AppRoutes.MAIN_SCREEN);
-        Get.snackbar(
+        successSnackBar(
           'Hi there, Welcome Back!',
           'You have successfully logged in as $name',
-          backgroundColor: ColorConstants.backgroundColor,
-          colorText: ColorConstants.textPrimary,
-          duration: const Duration(seconds: 2),
-          snackPosition: SnackPosition.TOP,
         );
       } else {
         Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
-        Get.snackbar(
+        errorSnackBar(
           'Sorry!',
           'Your account is not registered, Please contact your IT Support',
-          backgroundColor: ColorConstants.backgroundColor,
-          colorText: ColorConstants.textPrimary,
-          duration: const Duration(seconds: 2),
-          snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
       log(e.toString());
       Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
-      Get.snackbar(
+      errorSnackBar(
         'Sorry!, Something went wrong',
         'Please contact your IT Support',
-        backgroundColor: ColorConstants.backgroundColor,
-        colorText: ColorConstants.textPrimary,
-        duration: const Duration(seconds: 2),
-        snackPosition: SnackPosition.TOP,
       );
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  successSnackBar(String title, String message) {
+    return Get.snackbar(
+      title,
+      message,
+      backgroundColor: ColorConstants.backgroundColor,
+      colorText: ColorConstants.textPrimary,
+      duration: const Duration(seconds: 2),
+      snackPosition: SnackPosition.TOP,
+    );
+  }
+
+  errorSnackBar(String title, String message) {
+    return Get.snackbar(
+      title,
+      message,
+      backgroundColor: ColorConstants.primaryColor,
+      colorText: ColorConstants.textSecondary,
+      duration: const Duration(seconds: 2),
+      snackPosition: SnackPosition.TOP,
+    );
   }
 }

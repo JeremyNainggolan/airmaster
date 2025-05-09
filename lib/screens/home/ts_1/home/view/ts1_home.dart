@@ -1,4 +1,6 @@
 // ignore_for_file: camel_case_types
+import 'dart:developer';
+
 import 'package:airmaster/screens/home/ts_1/home/controller/ts1_home_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -46,7 +48,7 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                         ),
                       ),
 
-                      const SizedBox(width: 12),
+                      const SizedBox(width: SizeConstant.SIZED_BOX_WIDTH),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,67 +76,77 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                           ],
                         ),
                       ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              DateFormatter.convertDateTimeDisplay(
+                                DateTime.now().toString(),
+                                "EEEE",
+                              ),
+                              style: GoogleFonts.notoSans(
+                                color: ColorConstants.textSecondary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              DateFormatter.convertDateTimeDisplay(
+                                DateTime.now().toString(),
+                                "dd MMMM yyyy",
+                              ),
+                              style: GoogleFonts.notoSans(
+                                color: ColorConstants.textSecondary,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
+              SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+              Divider(
+                color: ColorConstants.dividerColor,
+                thickness: SizeConstant.DIVIDER_THICKNESS,
+              ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.all(SizeConstant.PADDING),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: ColorConstants.cardColorSecondary,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            color: ColorConstants.backgroundColor,
-                            size: 36,
-                          ),
-                        ],
+                    Text(
+                      'Assessment',
+                      style: GoogleFonts.notoSans(
+                        color: ColorConstants.textPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            DateFormatter.convertDateTimeDisplay(
-                              DateTime.now().toString(),
-                              "EEEE",
-                            ),
-                            style: GoogleFonts.notoSans(
-                              color: ColorConstants.textPrimary,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            DateFormatter.convertDateTimeDisplay(
-                              DateTime.now().toString(),
-                              "dd MMMM yyyy",
-                            ),
-                            style: GoogleFonts.notoSans(
-                              color: ColorConstants.textPrimary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        log('New Assessment Button Pressed');
+                      },
+                      icon: Icon(Icons.add, color: ColorConstants.primaryColor),
+                      label: Text(
+                        'New Assessment',
+                        style: GoogleFonts.notoSans(
+                          color: ColorConstants.primaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: ColorConstants.primaryColor),
+                        backgroundColor: ColorConstants.backgroundColor,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Divider(
-                color: ColorConstants.dividerColor,
-                thickness: SizeConstant.DIVIDER_THICKNESS,
               ),
             ],
           ),

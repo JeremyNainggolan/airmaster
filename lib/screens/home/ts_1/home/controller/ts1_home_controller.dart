@@ -1,7 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:developer';
-
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:get/get.dart';
 
@@ -48,14 +46,5 @@ class TS1_Home_Controller extends GetxController {
     licenseExpiry.value = await _userPrefs.getLicenseExpiry();
     rank.value = await _userPrefs.getRank();
     instructor.assignAll(await _userPrefs.getInstructor());
-  }
-
-  // Optional: Clear user data and update observables
-  Future<void> logout() async {
-    try {
-      await _userPrefs.clearUser();
-    } catch (e) {
-      log('Error clearing user data: $e');
-    }
   }
 }
