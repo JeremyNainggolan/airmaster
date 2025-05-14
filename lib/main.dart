@@ -2,6 +2,7 @@ import 'package:airmaster/data/users/user_provider.dart';
 import 'package:airmaster/routes/app_pages.dart';
 import 'package:airmaster/screens/splash.dart';
 import 'package:airmaster/services/auth/auth_service.dart';
+import 'package:airmaster/utils/const_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,9 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Airmaster',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: ColorConstants.primaryColor,
+          ),
         ),
         home: SplashView(),
         getPages: AppPages.routes,

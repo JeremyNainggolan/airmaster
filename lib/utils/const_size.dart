@@ -16,4 +16,12 @@ class SizeConstant {
   static const double DIVIDER_THICKNESS = 2.5;
 
   static const double DIVIDER_THICKNESS_LOW = 0.5;
+
+  static const double HEADING_SIZE = 22.0;
+
+  static const double SUB_HEADING_SIZE = 20.0;
+
+  static const double SUB_SUB_HEADING_SIZE = 18.00;
+
+  static const double TEXT_SIZE = 16.0;
 }

@@ -6,6 +6,8 @@ import 'package:airmaster/screens/home/dashboard.dart';
 import 'package:airmaster/screens/home/ts_1/analytics/view/ts1_analytics.dart';
 import 'package:airmaster/screens/home/ts_1/history/view/ts1_history.dart';
 import 'package:airmaster/screens/home/ts_1/home/bindings/ts1_home_binding.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/bindings/candidate_assessment_binding.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/view/candidate_assessment_view.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/ts1_home.dart';
 import 'package:airmaster/screens/home/ts_1/main/bindings/ts1_main_binding.dart';
 import 'package:airmaster/screens/home/ts_1/main/view/ts1_view.dart';
@@ -35,6 +37,12 @@ class AppPages {
       name: AppRoutes.TS1_HOME_SCREEN,
       page: () => const TS1_Home(),
       binding: TS1_Home_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TS1_CANDIDATE_ASSESSMENT,
+      page: () => const Candidate_View(),
+      binding: Candidate_Binding(),
       transition: Transition.native,
     ),
     GetPage(

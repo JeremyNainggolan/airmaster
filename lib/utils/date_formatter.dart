@@ -11,4 +11,9 @@ class DateFormatter {
     final String formatted = serverFormater.format(displayDate);
     return formatted;
   }
+
+  static DateTime getCurrentDateWithoutTime() {
+    DateTime now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }
 }

@@ -1,12 +1,12 @@
 // ignore_for_file: camel_case_types
-import 'dart:developer';
 
+import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/ts_1/home/controller/ts1_home_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/utils/date_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TS1_Home extends GetView<TS1_Home_Controller> {
@@ -129,7 +129,7 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        log('New Assessment Button Pressed');
+                        Get.toNamed(AppRoutes.TS1_CANDIDATE_ASSESSMENT);
                       },
                       icon: Icon(Icons.add, color: ColorConstants.primaryColor),
                       label: Text(
