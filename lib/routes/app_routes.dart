@@ -12,6 +12,7 @@ class AppRoutes {
   static const String TS1_HOME_SCREEN = '/main/ts1/home';
   static const String TS1_CANDIDATE_ASSESSMENT =
       '/main/ts1/candidate_assessment';
+  static const String TS1_FLIGHT_DETAILS = '/main/ts1/flight_details';
 
   static const String TS1_ANALYTICS = '/main/ts1/analytics';
   static const String TS1_HISTORY = '/main/ts1/history';

@@ -1,20 +1,30 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, deprecated_member_use
+import 'dart:developer';
+
+import 'package:airmaster/data/asessment/candidate/candidate_preferences.dart';
+import 'package:airmaster/helpers/airport_route_formatter.dart';
+import 'package:airmaster/model/users/user.dart';
+import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/controller/candidate_assessment_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/utils/date_formatter.dart';
+import 'package:airmaster/widgets/cust_divider.dart';
+import 'package:airmaster/widgets/cust_text_field.dart';
+import 'package:airmaster/widgets/input_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Candidate_View extends GetView<Candidate_Controller> {
   const Candidate_View({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController dateController = TextEditingController(
-      text: DateFormatter.convertDateTimeDisplay(DateTime.now().toString()),
-    );
+    List<User> searchedUsers = [];
 
     return PopScope(
       canPop: false,
@@ -22,6 +32,7 @@ class Candidate_View extends GetView<Candidate_Controller> {
         if (!didPop) {
           final bool shouldPop = await _showBackDialog() ?? false;
           if (shouldPop) {
+            CandidatePreferences().clearCandidate();
             Get.back();
           }
         }
@@ -56,35 +67,519 @@ class Candidate_View extends GetView<Candidate_Controller> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFormField(
-                    controller: dateController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          SizeConstant.BORDER_RADIUS,
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
                         ),
-                        borderSide: BorderSide(
-                          color: ColorConstants.blackColor,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          SizeConstant.BORDER_RADIUS,
-                        ),
-                        borderSide: BorderSide(
-                          color: ColorConstants.blackColor,
+                        child: TextFormField(
+                          controller: controller.date,
+                          readOnly: true,
+                          decoration:
+                              CustomInputDecoration.customInputDecorationReadOnly(
+                                labelText: 'Assessment Date',
+                              ),
                         ),
                       ),
-                      labelText: 'Assessment Date',
-                      labelStyle: GoogleFonts.notoSans(
-                        color: ColorConstants.textPrimary,
-                        fontSize: SizeConstant.TEXT_SIZE,
-                        fontWeight: FontWeight.normal,
+
+                      CustomDivider(divider: 'Flight Crew 1'),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TypeAheadField<User>(
+                          controller: controller.firstFlightCrewName,
+                          builder: (context, _, focusNode) {
+                            return TextFormField(
+                              onTap: () {
+                                controller.firstFlightCrewName.text = '';
+                                controller.firstFlightCrewStaffNumber.text = '';
+                                controller.firstFlightCrewLicense.text = '';
+                                controller.firstFlightCrewLicenseExpiry.text =
+                                    '';
+                                focusNode.requestFocus();
+                                controller.firstFlightCrewName.clear();
+                              },
+                              controller: controller.firstFlightCrewName,
+                              focusNode: focusNode,
+                              decoration:
+                                  CustomInputDecoration.customInputDecoration(
+                                    labelText: 'Flight Crew Name',
+                                  ),
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select user by finding name';
+                                }
+                                return null;
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                            );
+                          },
+                          suggestionsCallback: (pattern) async {
+                            Future.delayed(Duration(milliseconds: 500));
+                            if (pattern.isNotEmpty) {
+                              searchedUsers = await controller
+                                  .getUsersBySearchName(pattern);
+                              return searchedUsers;
+                            } else {
+                              return [];
+                            }
+                          },
+                          itemBuilder: (context, User suggestion) {
+                            return ListTile(
+                              title: Text(
+                                suggestion.name ?? '',
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textPrimary,
+                                  fontSize: SizeConstant.TEXT_SIZE,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            );
+                          },
+                          emptyBuilder: (context) {
+                            return SizedBox(
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  'No users found.',
+                                  style: GoogleFonts.notoSans(
+                                    color: ColorConstants.textPrimary,
+                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          onSelected: (User? suggestion) {
+                            controller.firstFlightCrewName.text =
+                                suggestion?.name ?? '';
+                            controller.firstFlightCrewStaffNumber.text =
+                                suggestion?.id_number ?? '';
+                            controller.firstFlightCrewLicense.text =
+                                suggestion?.license_number ?? '';
+                            controller
+                                .firstFlightCrewLicenseExpiry
+                                .text = DateFormatter.convertDateTimeDisplay(
+                              suggestion?.license_expiry.toString() ?? '',
+                              "dd MMMM yyyy",
+                            );
+                          },
+                          hideOnSelect: true,
+                        ),
                       ),
-                      suffixIcon: Icon(
-                        Icons.calendar_month_outlined,
-                        color: ColorConstants.blackColor,
+
+                      // staff no
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.firstFlightCrewStaffNumber,
+                          focusNode: FocusNode(),
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'Staff No.',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.firstFlightCrewStaffNumber.text = value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      // license no
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.firstFlightCrewLicense,
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'License No.',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.firstFlightCrewLicense.text = value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      // license expiry
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.firstFlightCrewLicenseExpiry,
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'License Expiry',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.firstFlightCrewLicenseExpiry.text =
+                                value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      CustomDivider(divider: 'Flight Crew 2'),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TypeAheadField<User>(
+                          controller: controller.secondFlightCrewName,
+                          builder: (context, _, focusNode) {
+                            return TextFormField(
+                              onTap: () {
+                                controller.secondFlightCrewName.text = '';
+                                controller.secondFlightCrewStaffNumber.text =
+                                    '';
+                                controller.secondFlightCrewLicense.text = '';
+                                controller.secondFlightCrewLicenseExpiry.text =
+                                    '';
+                                focusNode.requestFocus();
+                                controller.secondFlightCrewName.clear();
+                              },
+                              controller: controller.secondFlightCrewName,
+                              focusNode: focusNode,
+                              decoration:
+                                  CustomInputDecoration.customInputDecoration(
+                                    labelText: 'Flight Crew Name',
+                                  ),
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select user by finding name';
+                                }
+                                return null;
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                            );
+                          },
+                          suggestionsCallback: (pattern) async {
+                            Future.delayed(Duration(milliseconds: 500));
+                            if (pattern.isNotEmpty) {
+                              searchedUsers = await controller
+                                  .getUsersBySearchName(pattern);
+                              return searchedUsers;
+                            } else {
+                              return [];
+                            }
+                          },
+                          itemBuilder: (context, User suggestion) {
+                            return ListTile(
+                              title: Text(
+                                suggestion.name ?? '',
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textPrimary,
+                                  fontSize: SizeConstant.TEXT_SIZE,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            );
+                          },
+                          emptyBuilder: (context) {
+                            return SizedBox(
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                  'No users found.',
+                                  style: GoogleFonts.notoSans(
+                                    color: ColorConstants.textPrimary,
+                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          onSelected: (User? suggestion) {
+                            if (suggestion?.name ==
+                                controller.firstFlightCrewName.text) {
+                              controller.secondFlightCrewName.clear();
+                              controller.secondFlightCrewStaffNumber.clear();
+                              controller.secondFlightCrewLicense.clear();
+                              controller.secondFlightCrewLicenseExpiry.clear();
+                              Get.snackbar(
+                                'Error',
+                                'Please select a different user.',
+                                backgroundColor: ColorConstants.primaryColor,
+                                colorText: ColorConstants.textSecondary,
+                                snackStyle: SnackStyle.FLOATING,
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            } else {
+                              controller.secondFlightCrewName.text =
+                                  suggestion?.name ?? '';
+                              controller.secondFlightCrewStaffNumber.text =
+                                  suggestion?.id_number ?? '';
+                              controller.secondFlightCrewLicense.text =
+                                  suggestion?.license_number ?? '';
+                              controller
+                                  .secondFlightCrewLicenseExpiry
+                                  .text = DateFormatter.convertDateTimeDisplay(
+                                suggestion?.license_expiry.toString() ?? '',
+                                "dd MMMM yyyy",
+                              );
+                            }
+                          },
+                          hideOnSelect: true,
+                        ),
+                      ),
+
+                      // staff no
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.secondFlightCrewStaffNumber,
+                          focusNode: FocusNode(),
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'Staff No.',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.secondFlightCrewStaffNumber.text = value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      // license no
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.secondFlightCrewLicense,
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'License No.',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.secondFlightCrewLicense.text = value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      // license expiry
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConstant.VERTICAL_PADDING,
+                        ),
+                        child: TextFormField(
+                          controller: controller.secondFlightCrewLicenseExpiry,
+                          decoration:
+                              CustomInputDecoration.customInputDecoration(
+                                labelText: 'License Expiry',
+                              ),
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select user by finding name';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (value) {
+                            controller.secondFlightCrewLicenseExpiry.text =
+                                value;
+                          },
+                          readOnly: true,
+                        ),
+                      ),
+
+                      CustomDivider(divider: 'Other'),
+
+                      // Aircraft Type
+                      CustomTextField(
+                        controller: controller.aircraftType,
+                        label: 'Aircraft Type',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter aircraft type';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          controller.aircraftType.text = value;
+                        },
+                      ),
+
+                      // Airport Route
+                      CustomTextField(
+                        controller: controller.airportAndRoute,
+                        label: 'Airport & Route (AAA-BBB-CCC)',
+                        capitalization: TextCapitalization.characters,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp('[A-Z]')),
+                          LengthLimitingTextInputFormatter(9),
+                          AirportRouteFormatter(),
+                        ],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter airport & route';
+                          }
+                          if (!RegExp(
+                            r'^[A-Z]{3}-[A-Z]{3}-[A-Z]{3}$',
+                          ).hasMatch(value)) {
+                            return "Enter in the format of ABC-DEF-GHI";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          controller.airportAndRoute.text = value;
+                        },
+                      ),
+
+                      // Simulation Hours
+                      CustomTextField(
+                        controller: controller.simulationHours,
+                        label: 'Simulation Hours (hh:mm)',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter simulation hours';
+                          }
+                          if (!RegExp(
+                            r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
+                          ).hasMatch(value)) {
+                            return "Enter in the format of hh:mm";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          controller.simulationHours.text = value;
+                        },
+                      ),
+
+                      // Simulation Identity
+                      CustomTextField(
+                        controller: controller.simulationIdentity,
+                        label: 'Simulation Identity',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter simulation identity';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          controller.simulationIdentity.text = value;
+                        },
+                      ),
+
+                      // LOA No.
+                      CustomTextField(
+                        controller: controller.loaNumber,
+                        label: 'LOA No.',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter LOA No.';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          controller.loaNumber.text = value;
+                        },
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: SizeConstant.TOP_PADDING),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (controller.formKey.currentState!.validate()) {
+                          Get.dialog(
+                            Center(
+                              child: LoadingAnimationWidget.hexagonDots(
+                                color: ColorConstants.primaryColor,
+                                size: 50,
+                              ),
+                            ),
+                          );
+
+                          await controller.candidateAssessment();
+                          await Future.delayed(Duration(seconds: 1));
+
+                          Get.toNamed(AppRoutes.TS1_FLIGHT_DETAILS);
+                        } else {
+                          log('Form is invalid');
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorConstants.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            SizeConstant.BORDER_RADIUS,
+                          ),
+                        ),
+                      ),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 48,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Next",
+                            style: GoogleFonts.notoSans(
+                              color: ColorConstants.textSecondary,
+                              fontSize: SizeConstant.TEXT_SIZE,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

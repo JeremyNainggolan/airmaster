@@ -33,6 +33,10 @@ class User {
     this.instructor,
   });
 
+  static List<User> resultSearchJson(List<dynamic> response) {
+    return response.map((item) => User.fromJson(item)).toList();
+  }
+
   factory User.fromJson(Map<String, dynamic> response) {
     return User(
       isLogin: true,
