@@ -13,6 +13,8 @@ class SizeConstant {
 
   static const double TOP_PADDING = 8.0;
 
+  static const double BOT_PADDING = 8.0;
+
   static const double BORDER_RADIUS = 8.0;
 
   static const double SCREEN_PADDING = 15.0;

@@ -32,7 +32,6 @@ class Candidate_View extends GetView<Candidate_Controller> {
         if (!didPop) {
           final bool shouldPop = await _showBackDialog() ?? false;
           if (shouldPop) {
-            CandidatePreferences().clearCandidate();
             Get.back();
           }
         }
@@ -633,7 +632,10 @@ class Candidate_View extends GetView<Candidate_Controller> {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            onPressed: () => Get.back(result: true),
+            onPressed: () {
+              CandidatePreferences().clearCandidate();
+              Get.back(result: true);
+            },
           ),
         ],
       ),

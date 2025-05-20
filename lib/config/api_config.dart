@@ -9,4 +9,5 @@ class ApiConfig {
 
   static const String TS_1 = '$baseUrl/ts1';
   static const String get_user_by_name = '$TS_1/get-user-by-name';
+  static const String get_flight_details = '$TS_1/get-flight-details';
 }

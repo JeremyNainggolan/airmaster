@@ -129,7 +129,8 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        Get.toNamed(AppRoutes.TS1_CANDIDATE_ASSESSMENT);
+                        // Get.toNamed(AppRoutes.TS1_CANDIDATE_ASSESSMENT);
+                        Get.toNamed(AppRoutes.TS1_FLIGHT_DETAILS);
                       },
                       icon: Icon(Icons.add, color: ColorConstants.primaryColor),
                       label: Text(

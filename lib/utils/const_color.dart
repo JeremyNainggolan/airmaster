@@ -24,7 +24,7 @@ class ColorConstants {
 
   static Color errorColor = Color(0xFFF20000);
   static Color successColor = Color(0xFF14AE5C);
-  static Color warningColor = Color(0xFFE9D502);
+  static Color warningColor = Color(0xFFFFEE58);
   static Color infoColor = Color(0xFF0000FF);
   static Color lightColor = Color(0xFF575656);
   static Color whiteColor = Color(0xFFFFFFFF);

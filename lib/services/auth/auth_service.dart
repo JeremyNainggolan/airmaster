@@ -4,11 +4,10 @@ import 'dart:convert';
 import 'package:airmaster/config/api_config.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/model/users/user.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
-class AuthService extends ChangeNotifier {
+class AuthService {
   static final _googleSignIn = GoogleSignIn();
 
   static Future<bool?> login() async {

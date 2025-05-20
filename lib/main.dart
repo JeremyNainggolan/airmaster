@@ -1,11 +1,9 @@
-import 'package:airmaster/data/users/user_provider.dart';
 import 'package:airmaster/routes/app_pages.dart';
 import 'package:airmaster/screens/splash.dart';
-import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,22 +15,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-      ],
-      child: GetMaterialApp(
-        title: 'Airmaster',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: ColorConstants.primaryColor,
-          ),
+    return GetMaterialApp(
+      title: 'Airmaster',
+      theme: ThemeData(
+        primaryColor: ColorConstants.primaryColor,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
+        fontFamily: GoogleFonts.notoSans().fontFamily,
+        colorScheme: ColorScheme(
+          primary: ColorConstants.primaryColor,
+          secondary: ColorConstants.secondaryColor,
+          error: ColorConstants.errorColor,
+          surface: ColorConstants.blackColor,
+          onPrimary: ColorConstants.primaryColor,
+          onSecondary: ColorConstants.secondaryColor,
+          onError: ColorConstants.errorColor,
+          onSurface: ColorConstants.blackColor,
+          brightness: Brightness.light,
         ),
-        home: SplashView(),
-        getPages: AppPages.routes,
-        debugShowCheckedModeBanner: false,
       ),
+      home: SplashView(),
+      getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

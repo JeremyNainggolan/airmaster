@@ -8,6 +8,8 @@ import 'package:airmaster/screens/home/ts_1/history/view/ts1_history.dart';
 import 'package:airmaster/screens/home/ts_1/home/bindings/ts1_home_binding.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/bindings/candidate_assessment_binding.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/view/candidate_assessment_view.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/evaluation/bindings/evaluation_assessment_binding.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/evaluation/view/evaluation_assessment_view.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/flight_details/bindings/flightdetails_assessment_binding.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/flight_details/view/flightdetails_assessment_view.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/ts1_home.dart';
@@ -51,6 +53,12 @@ class AppPages {
       name: AppRoutes.TS1_FLIGHT_DETAILS,
       page: () => const FlightDetails_View(),
       binding: FlightDetails_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TS1_EVALUATION,
+      page: () => const Evaluation_View(),
+      binding: Evaluation_Binding(),
       transition: Transition.native,
     ),
     GetPage(
