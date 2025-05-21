@@ -124,33 +124,39 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                                             .whiteColor,
                                                     value: entry.value,
                                                     onChanged: (value) {
-                                                      final updatedMap = Map<
-                                                        String,
-                                                        bool
-                                                      >.from(
-                                                        controller
-                                                            .firstCandidateSubAnotatedMap[item]!,
-                                                      );
-                                                      updatedMap[entry.key] =
-                                                          value!;
-                                                      controller
-                                                              .firstCandidateSubAnotatedMap[item] =
-                                                          updatedMap;
-                                                      controller
-                                                          .firstCandidateSubAnotatedMap
-                                                          .refresh();
-
                                                       if (value == true) {
+                                                        final updatedMap = Map<
+                                                          String,
+                                                          bool
+                                                        >.from(
+                                                          controller
+                                                              .firstCandidateSubAnotatedMap[item]!,
+                                                        ).map(
+                                                          (key, val) =>
+                                                              MapEntry(
+                                                                key,
+                                                                false,
+                                                              ),
+                                                        );
+
+                                                        updatedMap[entry.key] =
+                                                            true;
+
                                                         controller
-                                                            .firstCandidateIndex++;
+                                                                .firstCandidateSubAnotatedMap[item] =
+                                                            updatedMap;
+                                                        controller
+                                                            .firstCandidateSubAnotatedMap
+                                                            .refresh();
                                                       } else {
                                                         controller
-                                                            .firstCandidateIndex--;
+                                                                .firstCandidateSubAnotatedMap[item]![entry
+                                                                .key] =
+                                                            false;
+                                                        controller
+                                                            .firstCandidateSubAnotatedMap
+                                                            .refresh();
                                                       }
-
-                                                      log(
-                                                        "First Candidate Index: ${controller.firstCandidateIndex}",
-                                                      );
                                                     },
                                                     title: Text(
                                                       entry.key,
@@ -230,18 +236,6 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                               controller
                                                       .firstCandidateAnotatedMap[item] =
                                                   value!;
-
-                                              if (value == true) {
-                                                controller
-                                                    .firstCandidateIndex++;
-                                              } else {
-                                                controller
-                                                    .firstCandidateIndex--;
-                                              }
-
-                                              log(
-                                                "First Candidate Index: ${controller.firstCandidateIndex}",
-                                              );
                                             },
                                             title: Text(
                                               item,
@@ -323,33 +317,39 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                                             .whiteColor,
                                                     value: entry.value,
                                                     onChanged: (value) {
-                                                      final updatedMap = Map<
-                                                        String,
-                                                        bool
-                                                      >.from(
-                                                        controller
-                                                            .secondCandidateSubAnotatedMap[item]!,
-                                                      );
-                                                      updatedMap[entry.key] =
-                                                          value!;
-                                                      controller
-                                                              .secondCandidateSubAnotatedMap[item] =
-                                                          updatedMap;
-                                                      controller
-                                                          .secondCandidateSubAnotatedMap
-                                                          .refresh();
-
                                                       if (value == true) {
+                                                        final updatedMap = Map<
+                                                          String,
+                                                          bool
+                                                        >.from(
+                                                          controller
+                                                              .secondCandidateSubAnotatedMap[item]!,
+                                                        ).map(
+                                                          (key, val) =>
+                                                              MapEntry(
+                                                                key,
+                                                                false,
+                                                              ),
+                                                        );
+
+                                                        updatedMap[entry.key] =
+                                                            true;
+
                                                         controller
-                                                            .secondCandidateIndex++;
+                                                                .secondCandidateSubAnotatedMap[item] =
+                                                            updatedMap;
+                                                        controller
+                                                            .secondCandidateSubAnotatedMap
+                                                            .refresh();
                                                       } else {
                                                         controller
-                                                            .secondCandidateIndex--;
+                                                                .secondCandidateSubAnotatedMap[item]![entry
+                                                                .key] =
+                                                            false;
+                                                        controller
+                                                            .secondCandidateSubAnotatedMap
+                                                            .refresh();
                                                       }
-
-                                                      log(
-                                                        "Second Candidate Index: ${controller.secondCandidateIndex}",
-                                                      );
                                                     },
                                                     title: Text(
                                                       entry.key,
@@ -429,18 +429,6 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                               controller
                                                       .secondCandidateAnotatedMap[item] =
                                                   value!;
-
-                                              if (value == true) {
-                                                controller
-                                                    .secondCandidateIndex++;
-                                              } else {
-                                                controller
-                                                    .secondCandidateIndex--;
-                                              }
-
-                                              log(
-                                                "Second Candidate Index: ${controller.secondCandidateIndex}",
-                                              );
                                             },
                                             title: Text(
                                               item,
@@ -465,115 +453,117 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                     padding: EdgeInsets.only(top: SizeConstant.TOP_PADDING),
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (controller.firstCandidateIndex <= 2) {
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: ColorConstants.warningColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (BuildContext context) {
-                              return Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Wrap(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.warning_amber_rounded,
-                                          color: ColorConstants.textPrimary,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Warning!",
-                                          style: GoogleFonts.notoSans(
-                                            fontSize: SizeConstant.TEXT_SIZE,
-                                            color: ColorConstants.textPrimary,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30),
-                                    Text(
-                                      "Please select at least 3 items for Flight Crew 1",
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                        color: ColorConstants.textPrimary,
-                                      ),
-                                    ),
-                                    SizedBox(height: 30),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        } else if (controller.secondCandidateIndex <= 2) {
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: ColorConstants.warningColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (BuildContext context) {
-                              return Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Wrap(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.warning_amber_rounded,
-                                          color: ColorConstants.textPrimary,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Warning!",
-                                          style: GoogleFonts.notoSans(
-                                            fontSize: SizeConstant.TEXT_SIZE,
-                                            color: ColorConstants.textPrimary,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30),
-                                    Text(
-                                      "Please select at least 3 items for Flight Crew 2",
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                        color: ColorConstants.textPrimary,
-                                      ),
-                                    ),
-                                    SizedBox(height: 30),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
+                        await controller.getValidation();
 
                         if (controller.formKey.currentState!.validate()) {
-                          Get.dialog(
-                            Center(
-                              child: LoadingAnimationWidget.hexagonDots(
-                                color: ColorConstants.primaryColor,
-                                size: 50,
+                          if (controller.firstCandidateIndex <= 2) {
+                            showModalBottomSheet(
+                              context: Get.context!,
+                              backgroundColor: ColorConstants.warningColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
                               ),
-                            ),
-                          );
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Wrap(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: ColorConstants.textPrimary,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Warning!",
+                                            style: GoogleFonts.notoSans(
+                                              fontSize: SizeConstant.TEXT_SIZE,
+                                              color: ColorConstants.textPrimary,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 30),
+                                      Text(
+                                        "Please select at least 3 items for Flight Crew 1",
+                                        style: GoogleFonts.notoSans(
+                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                          color: ColorConstants.textPrimary,
+                                        ),
+                                      ),
+                                      SizedBox(height: 30),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          } else if (controller.secondCandidateIndex <= 2) {
+                            showModalBottomSheet(
+                              context: Get.context!,
+                              backgroundColor: ColorConstants.warningColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                              ),
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Wrap(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: ColorConstants.textPrimary,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Warning!",
+                                            style: GoogleFonts.notoSans(
+                                              fontSize: SizeConstant.TEXT_SIZE,
+                                              color: ColorConstants.textPrimary,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 30),
+                                      Text(
+                                        "Please select at least 3 items for Flight Crew 2",
+                                        style: GoogleFonts.notoSans(
+                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                          color: ColorConstants.textPrimary,
+                                        ),
+                                      ),
+                                      SizedBox(height: 30),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            Get.dialog(
+                              Center(
+                                child: LoadingAnimationWidget.hexagonDots(
+                                  color: ColorConstants.primaryColor,
+                                  size: 50,
+                                ),
+                              ),
+                            );
 
-                          await controller.candidateAnotated();
-                          await Future.delayed(Duration(seconds: 1));
+                            await controller.candidateAnotated();
+                            await Future.delayed(Duration(seconds: 1));
 
-                          Get.toNamed(AppRoutes.TS1_EVALUATION);
+                            Get.toNamed(AppRoutes.TS1_EVALUATION);
+                          }
                         } else {
                           showModalBottomSheet(
-                            context: context,
+                            context: Get.context!,
                             backgroundColor: ColorConstants.warningColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(

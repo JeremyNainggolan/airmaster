@@ -99,4 +99,29 @@ class FlightDetails_Controller extends GetxController {
 
     log("Candidate anotated saved: $candidateAnotated");
   }
+
+  Future<void> getValidation() async {
+    firstCandidateIndex =
+        firstCandidateAnotatedMap.values.where((value) => value == true).length;
+
+    secondCandidateIndex =
+        secondCandidateAnotatedMap.values
+            .where((value) => value == true)
+            .length;
+
+    firstCandidateIndex +=
+        firstCandidateSubAnotatedMap.values
+            .expand((subMap) => subMap.values)
+            .where((value) => value == true)
+            .length;
+
+    secondCandidateIndex +=
+        secondCandidateSubAnotatedMap.values
+            .expand((subMap) => subMap.values)
+            .where((value) => value == true)
+            .length;
+
+    log("First Candidate Index: $firstCandidateIndex");
+    log("Second Candidate Index: $secondCandidateIndex");
+  }
 }
