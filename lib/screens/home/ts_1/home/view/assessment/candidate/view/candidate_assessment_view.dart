@@ -138,21 +138,20 @@ class Candidate_View extends GetView<Candidate_Controller> {
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              tileColor: ColorConstants.backgroundColor,
                             );
                           },
                           emptyBuilder: (context) {
-                            return SizedBox(
-                              height: 40,
-                              child: Center(
-                                child: Text(
-                                  'No users found.',
-                                  style: GoogleFonts.notoSans(
-                                    color: ColorConstants.textPrimary,
-                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                            return ListTile(
+                              title: Text(
+                                'No users found.',
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textPrimary,
+                                  fontSize: SizeConstant.TEXT_SIZE,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              tileColor: ColorConstants.backgroundColor,
                             );
                           },
                           onSelected: (User? suggestion) {
