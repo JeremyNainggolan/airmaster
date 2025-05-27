@@ -34,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
           _buildOption(
             "TS-1",
             "Training Simulator",
-            () => Get.toNamed(AppRoutes.TS1_MAIN),
+            () => Get.toNamed(AppRoutes.MAINTENANCE_SCREEN),
           ),
           const SizedBox(height: 10),
           _buildOption(

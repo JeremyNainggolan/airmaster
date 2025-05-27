@@ -3,6 +3,8 @@
 class AppRoutes {
   AppRoutes._();
 
+  static const String MAINTENANCE_SCREEN = '/maintenance';
+
   static const String LOGIN_SCREEN = '/login';
 
   static const String MAIN_SCREEN = '/main';
@@ -22,4 +24,9 @@ class AppRoutes {
   static const String TC_MAIN = '/main/tc';
 
   static const String EFB_MAIN = '/main/efb';
+  static const String EFB_HOME = '/main/efb/home';
+  static const String EFB_DEVICES = '/main/efb/devices';
+  static const String EFB_HISTORY = '/main/efb/history';
+  static const String EFB_ANALYTICS = '/main/efb/analytics';
+  static const String EFB_PROFILE = '/main/efb/profile';
 }
