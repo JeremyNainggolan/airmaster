@@ -29,4 +29,5 @@ class ColorConstants {
   static Color lightColor = Color(0xFF575656);
   static Color whiteColor = Color(0xFFFFFFFF);
   static Color blackColor = Color(0xFF000000);
+  static Color creamColor = Color(0xFFF5EAD8);
 }

@@ -1,7 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:developer';
-
 import 'package:airmaster/screens/home/efb/profile/controller/efb_profile_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -203,7 +201,7 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  _showLogoutDialog(context);
+                  showLogoutDialog(context);
                 },
                 style: ButtonStyle(
                   padding: WidgetStateProperty.all(
@@ -304,7 +302,7 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
     );
   }
 
-  Future<void> _showLogoutDialog(BuildContext context) async {
+  Future<void> showLogoutDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {

@@ -35,6 +35,8 @@ class SizeConstant {
 
   static const double SUB_SUB_HEADING_SIZE = 18.00;
 
+  static const double TEXT_SIZE_MAX = 20.0;
+
   static const double TEXT_SIZE = 16.0;
 
   static const double TEXT_SIZE_HINT = 14.0;

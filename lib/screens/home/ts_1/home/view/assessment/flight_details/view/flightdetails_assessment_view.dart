@@ -1,7 +1,5 @@
 // ignore_for_file: camel_case_types, deprecated_member_use
 
-import 'dart:developer';
-
 import 'package:airmaster/data/asessment/flight_details/flight_details_preferences.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/flight_details/controller/flightdetails_assessment_controller.dart';

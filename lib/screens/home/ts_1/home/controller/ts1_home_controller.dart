@@ -6,18 +6,18 @@ import 'package:get/get.dart';
 class TS1_Home_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
-  var userId = ''.obs;
-  var name = ''.obs;
-  var email = ''.obs;
-  var imgUrl = ''.obs;
-  var hub = ''.obs;
-  var loaNumber = ''.obs;
-  var licenseNumber = ''.obs;
-  var licenseExpiry = Rxn<DateTime>();
-  var rank = ''.obs;
-  var instructor = <String>[].obs;
+  final userId = ''.obs;
+  final name = ''.obs;
+  final email = ''.obs;
+  final imgUrl = ''.obs;
+  final hub = ''.obs;
+  final loaNumber = ''.obs;
+  final licenseNumber = ''.obs;
+  final licenseExpiry = Rxn<DateTime>();
+  final rank = ''.obs;
+  final instructor = <String>[].obs;
 
-  var greetings = ''.obs;
+  final greetings = ''.obs;
 
   @override
   void onInit() {

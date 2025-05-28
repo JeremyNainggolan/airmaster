@@ -36,6 +36,7 @@ class CustomInputDecoration {
     required Icon icon,
   }) {
     return InputDecoration(
+      suffixIcon: icon,
       labelText: labelText,
       labelStyle: GoogleFonts.notoSans(
         color: ColorConstants.textPrimary,
