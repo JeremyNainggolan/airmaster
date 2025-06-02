@@ -5,15 +5,21 @@ import 'dart:developer';
 
 import 'package:airmaster/config/api_config.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class EFB_Home_Controller extends GetxController {
+class EFB_Home_Controller extends GetxController
+    with GetTickerProviderStateMixin {
   final UserPreferences _userPrefs = UserPreferences();
+
+  late TabController occTabController;
+  late TabController pilotTabController;
 
   final name = ''.obs;
   final imgUrl = ''.obs;
   final hub = ''.obs;
+  final rank = ''.obs;
 
   final greetings = ''.obs;
 
@@ -23,6 +29,8 @@ class EFB_Home_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    occTabController = TabController(length: 3, vsync: this);
+    pilotTabController = TabController(length: 2, vsync: this);
     loadUserData();
     getAvailableDevices();
 
@@ -36,11 +44,19 @@ class EFB_Home_Controller extends GetxController {
     }
   }
 
+  @override
+  void onClose() {
+    occTabController.dispose();
+    pilotTabController.dispose();
+    super.onClose();
+  }
+
   Future<void> loadUserData() async {
     await _userPrefs.init();
     name.value = await _userPrefs.getName();
     imgUrl.value = await _userPrefs.getImgUrl();
     hub.value = await _userPrefs.getHub();
+    rank.value = await _userPrefs.getRank();
   }
 
   Future<void> getAvailableDevices() async {
@@ -71,5 +87,9 @@ class EFB_Home_Controller extends GetxController {
     } catch (e) {
       log('Error fetching devices: $e');
     }
+  }
+
+  Future<Map<String, dynamic> getWaitingConfirmation() async {
+    
   }
 }

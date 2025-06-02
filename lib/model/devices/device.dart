@@ -28,4 +28,8 @@ class Device {
       status: response['status'] ?? true,
     );
   }
+
+  static List<Device> resultSearchJson(List<dynamic> response) {
+    return response.map((item) => Device.fromJson(item)).toList();
+  }
 }

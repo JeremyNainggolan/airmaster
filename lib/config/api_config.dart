@@ -15,4 +15,6 @@ class ApiConfig {
   static const String get_count_devices = '$EFB/get-count-devices';
   static const String get_devices = '$EFB/get-devices';
   static const String get_device_by_id = '$EFB/get-device-by-id';
+  static const String get_device_by_name = '$EFB/get-device-by-name';
+  static const String submit_request = '$EFB/submit-request';
 }

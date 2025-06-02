@@ -3,11 +3,15 @@
 class SizeConstant {
   static const double SIZED_BOX_HEIGHT = 10.0;
 
+  static const double SIZED_BOX_HEIGHT_2 = 15.0;
+
   static const double SIZED_BOX_HEIGHT_DOUBLE = 30.0;
 
   static const double SIZED_BOX_WIDTH = 15.0;
 
   static const double PADDING = 15.0;
+
+  static const double PADDING_MIN = 8.0;
 
   static const double HORIZONTAL_PADDING = 8.0;
 

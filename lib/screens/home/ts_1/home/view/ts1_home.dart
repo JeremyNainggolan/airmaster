@@ -88,18 +88,18 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                               style: GoogleFonts.notoSans(
                                 color: ColorConstants.textSecondary,
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
                               DateFormatter.convertDateTimeDisplay(
                                 DateTime.now().toString(),
-                                "dd MMMM yyyy",
+                                "MMM d, yyyy",
                               ),
                               style: GoogleFonts.notoSans(
                                 color: ColorConstants.textSecondary,
                                 fontSize: 14,
-                                fontWeight: FontWeight.normal,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ],

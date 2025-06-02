@@ -31,6 +31,9 @@ dependencies:
   image_gallery_saver_plus: ^4.0.1
   stroke_text: ^1.0.0
   screenshot: ^3.0.0
+  mobile_scanner: ^7.0.0
+  dotted_line: ^3.2.3
+  quickalert: ^1.1.0
   
 
 dev_dependencies:

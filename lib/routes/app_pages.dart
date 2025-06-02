@@ -11,6 +11,8 @@ import 'package:airmaster/screens/home/efb/history/bindings/efb_history_binding.
 import 'package:airmaster/screens/home/efb/history/view/efb_history.dart';
 import 'package:airmaster/screens/home/efb/home/bindings/efb_home_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/efb_home.dart';
+import 'package:airmaster/screens/home/efb/home/view/request/bindings/request_device_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/request/view/request_device_view.dart';
 import 'package:airmaster/screens/home/efb/main/bindings/efb_main_binding.dart';
 import 'package:airmaster/screens/home/efb/main/view/efb_view.dart';
 import 'package:airmaster/screens/home/efb/profile/bindings/efb_profile_binding.dart';
@@ -96,37 +98,54 @@ class AppPages {
       transition: Transition.native,
     ),
 
-    // GetPage(name: AppRoutes.TC_HOME, page: () => const TCView()),
+    // EFB
     GetPage(
       name: AppRoutes.EFB_MAIN,
       page: () => const EFBView(),
       binding: EFB_Main_Binding(),
       transition: Transition.native,
     ),
+
+    // Home Pages
     GetPage(
       name: AppRoutes.EFB_HOME,
       page: () => const EFB_Home(),
       binding: EFB_Home_Binding(),
       transition: Transition.native,
     ),
+
+    GetPage(
+      name: AppRoutes.EFB_REQUEST,
+      page: () => const Request_View(),
+      binding: Request_Binding(),
+      transition: Transition.native,
+    ),
+
+    // Device Pages
     GetPage(
       name: AppRoutes.EFB_DEVICES,
       page: () => const EFB_Device(),
       binding: EFB_Device_Binding(),
       transition: Transition.native,
     ),
+
+    // History Pages
     GetPage(
       name: AppRoutes.EFB_HISTORY,
       page: () => const EFB_History(),
       binding: EFB_History_Binding(),
       transition: Transition.native,
     ),
+
+    // Analytics Pages
     GetPage(
       name: AppRoutes.EFB_ANALYTICS,
       page: () => const EFB_Analytics(),
       binding: EFB_Analytics_Binding(),
       transition: Transition.native,
     ),
+
+    // Profile Pages
     GetPage(
       name: AppRoutes.EFB_PROFILE,
       page: () => const EFB_Profile(),

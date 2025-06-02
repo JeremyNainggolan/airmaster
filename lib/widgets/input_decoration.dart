@@ -62,6 +62,37 @@ class CustomInputDecoration {
     );
   }
 
+  static customInputDecorationWithPrefixIcon({
+    required String labelText,
+    required Icon icon,
+  }) {
+    return InputDecoration(
+      prefixIcon: icon,
+      labelText: labelText,
+      labelStyle: GoogleFonts.notoSans(
+        color: ColorConstants.textPrimary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
+        borderSide: BorderSide(color: ColorConstants.blackColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
+        borderSide: BorderSide(color: ColorConstants.successColor),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
+        borderSide: BorderSide(color: ColorConstants.errorColor),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
+        borderSide: BorderSide(color: ColorConstants.errorColor),
+      ),
+    );
+  }
+
   static customInputDecorationReadOnly({required String labelText}) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
