@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:stroke_text/stroke_text.dart';
 
@@ -116,17 +118,17 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                   ),
                 ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_DOUBLE),
-                buildPropertyRow('Device Number', device.deviceNo),
+                buildInfoRow('Device Number', device.deviceNo),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildPropertyRow('iOS Version', device.iosVersion),
+                buildInfoRow('iOS Version', device.iosVersion),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildPropertyRow('Fly Smart Version', device.flySmart),
+                buildInfoRow('Fly Smart Version', device.flySmart),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildPropertyRow('Lido mPilot Version', device.lidoVersion),
+                buildInfoRow('Lido mPilot Version', device.lidoVersion),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildPropertyRow('Hub', device.hub),
+                buildInfoRow('Hub', device.hub),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildPropertyRow(
+                buildInfoRow(
                   'Status',
                   device.status ? 'Available' : 'Unavailable',
                 ),
@@ -137,8 +139,56 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      captureAndDownloadWallpaper(context, deviceNo);
+                    onPressed: () async {
+                      QuickAlert.show(
+                        context: Get.context!,
+                        type: QuickAlertType.loading,
+                        text: 'Downloading...',
+                      );
+
+                      var result = await captureAndDownloadWallpaper(deviceNo);
+
+                      if (Get.isDialogOpen ?? false) {
+                        Get.back();
+                      }
+
+                      if (result) {
+                        QuickAlert.show(
+                          barrierDismissible: false,
+                          context: Get.context!,
+                          type: QuickAlertType.success,
+                          title: 'Success!',
+                          text: 'Wallpaper downloaded successfully.',
+                          confirmBtnTextStyle: GoogleFonts.notoSans(
+                            color: ColorConstants.textSecondary,
+                            fontSize: SizeConstant.TEXT_SIZE_HINT,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          onConfirmBtnTap: () async {
+                            Get.back();
+                            Get.back();
+                            Get.back();
+                          },
+                        );
+                      } else {
+                        QuickAlert.show(
+                          context: Get.context!,
+                          type: QuickAlertType.error,
+                          title: 'Failed',
+                          text:
+                              'Failed to download wallpaper. Please try again.',
+                          confirmBtnTextStyle: GoogleFonts.notoSans(
+                            color: ColorConstants.textSecondary,
+                            fontSize: SizeConstant.TEXT_SIZE_HINT,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          onConfirmBtnTap: () async {
+                            Get.back();
+                            Get.back();
+                            Get.back();
+                          },
+                        );
+                      }
                     },
                     style: ButtonStyle(
                       padding: WidgetStateProperty.all(
@@ -148,22 +198,14 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                         ColorConstants.primaryColor,
                       ),
                     ),
-                    child: Obx(() {
-                      return controller.isLoading.value
-                          ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              ColorConstants.textSecondary,
-                            ),
-                          )
-                          : Text(
-                            'Download Wallpaper',
-                            style: GoogleFonts.notoSans(
-                              color: ColorConstants.textSecondary,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                    }),
+                    child: Text(
+                      'Download Wallpaper',
+                      style: GoogleFonts.notoSans(
+                        color: ColorConstants.textSecondary,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -174,33 +216,46 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
-  Widget buildPropertyRow(String propertyName, String propertyValue) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            '$propertyName : ',
-            style: GoogleFonts.notoSans(
-              color: ColorConstants.textPrimary,
-              fontSize: SizeConstant.TEXT_SIZE,
-              fontWeight: FontWeight.w500,
+  Widget buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 150, child: buildTextKey(label)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Text(
+              ":",
+              style: GoogleFonts.notoSans(color: ColorConstants.textPrimary),
             ),
           ),
-        ),
+          Expanded(child: buildTextValue(value.isNotEmpty ? value : "-")),
+        ],
+      ),
+    );
+  }
 
-        Expanded(
-          flex: 0,
-          child: Text(
-            propertyValue,
-            style: GoogleFonts.notoSans(
-              color: ColorConstants.textPrimary,
-              fontSize: SizeConstant.TEXT_SIZE,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
+  Widget buildTextKey(String text) {
+    return Text(
+      text,
+      style: GoogleFonts.notoSans(
+        color: ColorConstants.textPrimary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+    );
+  }
+
+  Widget buildTextValue(String text) {
+    return Text(
+      text,
+      textAlign: TextAlign.end,
+      style: GoogleFonts.notoSans(
+        color: ColorConstants.textPrimary,
+        fontSize: SizeConstant.TEXT_SIZE,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -241,62 +296,36 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
-  void captureAndDownloadWallpaper(
-    BuildContext context,
-    String deviceNo,
-  ) async {
-    controller.isLoading.value = true;
-
+  Future<bool> captureAndDownloadWallpaper(String deviceNo) async {
     await Future.delayed(const Duration(milliseconds: 300));
 
-    controller.screenshotController
-        .capture(
-          delay: Durations.long2,
-          pixelRatio: MediaQuery.of(Get.context!).devicePixelRatio,
-        )
-        .then((capturedImage) async {
-          if (capturedImage != null) {
-            final buffer = capturedImage.buffer.asUint8List();
-            log('Captured image size: ${buffer.length} bytes');
+    try {
+      final capturedImage = await controller.screenshotController.capture(
+        delay: Durations.long2,
+        pixelRatio: MediaQuery.of(Get.context!).devicePixelRatio,
+      );
 
-            if (buffer.isNotEmpty) {
-              final result = await ImageGallerySaverPlus.saveImage(
-                buffer,
-                quality: 100,
-                name: 'EFB_IAA_$deviceNo',
-              );
+      if (capturedImage != null) {
+        final buffer = capturedImage.buffer.asUint8List();
+        log('Captured image size: ${buffer.length} bytes');
 
-              log('Image saved to gallery: $result');
-              Get.snackbar(
-                'Success',
-                'Wallpaper downloaded successfully!',
-                backgroundColor: ColorConstants.whiteColor,
-                titleText: Text(
-                  'Success',
-                  style: GoogleFonts.notoSans(
-                    color: ColorConstants.successColor,
-                    fontSize: SizeConstant.TEXT_SIZE,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                messageText: Text(
-                  'Wallpaper downloaded successfully!',
-                  style: GoogleFonts.notoSans(
-                    color: ColorConstants.textPrimary,
-                    fontSize: SizeConstant.TEXT_SIZE,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                snackPosition: SnackPosition.TOP,
-              );
-            }
-          }
-        })
-        .whenComplete(() {
-          controller.isLoading.value = false;
-          Future.delayed(Duration(milliseconds: 100), () {
-            Navigator.of(context).pop();
-          });
-        });
+        if (buffer.isNotEmpty) {
+          final result = await ImageGallerySaverPlus.saveImage(
+            buffer,
+            quality: 100,
+            name: 'EFB_IAA_$deviceNo',
+          );
+
+          log('Image saved to gallery: $result');
+
+          Future.delayed(const Duration(seconds: 2));
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      log('Error capturing or saving image: $e');
+      return false;
+    }
   }
 }

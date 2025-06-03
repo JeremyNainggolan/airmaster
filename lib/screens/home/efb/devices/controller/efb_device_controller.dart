@@ -15,7 +15,6 @@ class EFB_Device_Controller extends GetxController {
   final List<Device> device = <Device>[].obs;
   List<Device> foundedDevices = <Device>[].obs;
   final textSearchField = TextEditingController();
-  final isLoading = false.obs;
 
   final screenshotController = ScreenshotController();
   final captureKey = GlobalKey();

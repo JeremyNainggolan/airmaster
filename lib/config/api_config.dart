@@ -14,7 +14,11 @@ class ApiConfig {
   static const String EFB = '$baseUrl/efb';
   static const String get_count_devices = '$EFB/get-count-devices';
   static const String get_devices = '$EFB/get-devices';
+  static const String get_pilot_devices = '$EFB/get-pilot-devices';
   static const String get_device_by_id = '$EFB/get-device-by-id';
   static const String get_device_by_name = '$EFB/get-device-by-name';
+  static const String get_confirmation_status = '$EFB/get-confirmation-status';
+  static const String check_request = '$EFB/check-request';
   static const String submit_request = '$EFB/submit-request';
+  static const String cancel_request = '$EFB/cancel-request';
 }

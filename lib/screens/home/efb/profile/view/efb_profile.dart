@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/profile/controller/efb_profile_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -343,6 +344,12 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
               ),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
               onPressed: () async {
                 Navigator.of(context).pop();
 
@@ -357,7 +364,7 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
                 await controller.logout();
                 await Future.delayed(Duration(seconds: 2));
 
-                Get.offAllNamed('/login');
+                Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
                 Get.snackbar(
                   'Logout',
                   'You have been logged out successfully',
@@ -371,7 +378,7 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
               child: Text(
                 'Yes',
                 style: GoogleFonts.notoSans(
-                  color: ColorConstants.primaryColor,
+                  color: ColorConstants.textSecondary,
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),

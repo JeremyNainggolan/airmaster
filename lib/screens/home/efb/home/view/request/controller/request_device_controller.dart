@@ -25,6 +25,7 @@ class Request_Controller extends GetxController {
   Future<bool> submitRequest() async {
     String token = await UserPreferences().getToken();
     String requestUser = await UserPreferences().getIdNumber();
+    String requestUserName = await UserPreferences().getName();
 
     final data = {
       'deviceno': selectedDeviceNo.value,
@@ -36,6 +37,7 @@ class Request_Controller extends GetxController {
       'category': category.value,
       'remark': remark.value,
       'request_user': requestUser,
+      'request_user_name': requestUserName,
       'request_date': DateTime.now().toString(),
       'status': 'waiting',
     };
@@ -53,6 +55,7 @@ class Request_Controller extends GetxController {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         log("Request submitted successfully: ${responseData['message']}");
+        await Future.delayed(const Duration(seconds: 2));
         return true;
       } else {
         log("API Error: ${responseData['message']}");

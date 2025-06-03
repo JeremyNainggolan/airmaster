@@ -23,8 +23,13 @@ class EFB_Home_Controller extends GetxController
 
   final greetings = ''.obs;
 
+  final checkRequest = false.obs;
+
   final availableDevicesCount = 0.obs;
   final usedDevicesCount = 0.obs;
+
+  final waitingConfirmation = <Map<String, dynamic>>[].obs;
+  final inUse = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
@@ -33,6 +38,8 @@ class EFB_Home_Controller extends GetxController
     pilotTabController = TabController(length: 2, vsync: this);
     loadUserData();
     getAvailableDevices();
+    getWaitingConfirmation();
+    checkingRequest();
 
     var hour = DateTime.now().hour;
     if (hour < 12) {
@@ -49,6 +56,32 @@ class EFB_Home_Controller extends GetxController
     occTabController.dispose();
     pilotTabController.dispose();
     super.onClose();
+  }
+
+  Future<void> checkingRequest() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+    String userId = await _userPrefs.getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          ApiConfig.check_request,
+        ).replace(queryParameters: {'hub': hub, 'request_user': userId}),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        checkRequest.value = true;
+      } else {
+        checkRequest.value = false;
+      }
+    } catch (e) {
+      checkRequest.value = false;
+    }
   }
 
   Future<void> loadUserData() async {
@@ -78,18 +111,165 @@ class EFB_Home_Controller extends GetxController
       if (response.statusCode == 200) {
         availableDevicesCount.value = responseData['data']['available'] ?? 0;
         usedDevicesCount.value = responseData['data']['used'] ?? 0;
-
-        log('Available devices: ${availableDevicesCount.value}');
-        log('Used devices: ${usedDevicesCount.value}');
-      } else {
-        log('Failed to fetch devices: ${response.statusCode}');
       }
     } catch (e) {
       log('Error fetching devices: $e');
     }
   }
 
-  Future<Map<String, dynamic> getWaitingConfirmation() async {
-    
+  Future<void> getWaitingConfirmation() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+    String userId = await _userPrefs.getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.get_confirmation_status).replace(
+          queryParameters: {
+            'hub': hub,
+            'request_user': userId,
+            'status': 'waiting',
+          },
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        waitingConfirmation.clear();
+        if (responseData['data'] != null) {
+          waitingConfirmation.addAll(
+            (responseData['data'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList(),
+          );
+        } else {
+          waitingConfirmation.clear();
+        }
+      } else {
+        waitingConfirmation.clear();
+      }
+    } catch (e) {
+      log('Error fetching waiting confirmation: $e');
+    }
+  }
+
+  Future<void> getInUse() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+    String userId = await _userPrefs.getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.get_confirmation_status).replace(
+          queryParameters: {
+            'hub': hub,
+            'request_user': userId,
+            'status': 'in_use',
+          },
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        inUse.clear();
+        if (responseData['data'] != null) {
+          inUse.addAll(
+            (responseData['data'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList(),
+          );
+        } else {
+          inUse.clear();
+        }
+      } else {
+        inUse.clear();
+        log('Failed to fetch confirmation status: ${response.statusCode}');
+      }
+    } catch (e) {
+      inUse.clear();
+      log('Error fetching waiting confirmation: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getPilotDevices(String searchDevice) async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+    String userId = await _userPrefs.getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.get_pilot_devices).replace(
+          queryParameters: {
+            'deviceno': searchDevice,
+            'hub': hub,
+            'request_user': userId,
+          },
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> deviceData = responseData['data'];
+        if (deviceData.isNotEmpty) {
+          return deviceData;
+        } else {
+          return {};
+        }
+      } else {
+        log("API Error: ${response.body}");
+        return {};
+      }
+    } catch (e) {
+      log("Exception in getPilotDevices: $e");
+      return {};
+    }
+  }
+
+  Future<bool> cancelRequest(String requestId, String deviceNo) async {
+    String token = await _userPrefs.getToken();
+
+    try {
+      final response = await http.delete(
+        Uri.parse(ApiConfig.cancel_request).replace(
+          queryParameters: {'request_id': requestId, 'deviceno': deviceNo},
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        await Future.delayed(const Duration(seconds: 2));
+        return true;
+      } else {
+        log("API Error: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      log("Exception in cancelRequest: $e");
+      return false;
+    }
+  }
+
+  Future<void> refreshData() async {
+    await loadUserData();
+    await getAvailableDevices();
+    await getWaitingConfirmation();
+    await getInUse();
+    await checkingRequest();
   }
 }

@@ -363,6 +363,7 @@ class Request_View extends GetView<Request_Controller> {
                                       CustomInputDecoration.customInputDecoration(
                                         labelText: 'Remarks',
                                       ),
+                                  maxLines: 3,
                                 ),
                                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                                 SizedBox(
@@ -406,95 +407,106 @@ class Request_View extends GetView<Request_Controller> {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: ColorConstants.backgroundColor,
+          shadowColor: ColorConstants.shadowColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
           title: Text(
             'Confirm Request',
             style: GoogleFonts.notoSans(
               color: ColorConstants.textPrimary,
-              fontSize: SizeConstant.SUB_SUB_HEADING_SIZE,
+              fontSize: 20.0,
               fontWeight: FontWeight.bold,
             ),
           ),
           content: Text(
-            'Are you sure you want to request this device?',
+            'Are you sure you want to submit this request?',
             style: GoogleFonts.notoSans(
               color: ColorConstants.textPrimary,
-              fontSize: SizeConstant.TEXT_SIZE,
+              fontSize: 16.0,
               fontWeight: FontWeight.normal,
             ),
           ),
           actions: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: TextButton(
-                    child: Text(
-                      'No',
-                      style: GoogleFonts.notoSans(
-                        color: ColorConstants.textPrimary,
-                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
+            TextButton(
+              child: Text(
+                'No',
+                style: GoogleFonts.notoSans(
+                  color: ColorConstants.textPrimary,
+                  fontSize: SizeConstant.TEXT_SIZE_HINT,
+                  fontWeight: FontWeight.normal,
                 ),
-                const Spacer(flex: 1),
-                Expanded(
-                  flex: 5,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: ColorConstants.successColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    child: Text(
-                      'Yes',
-                      style: GoogleFonts.notoSans(
-                        color: ColorConstants.textSecondary,
-                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      var result = await controller.submitRequest();
-                      log(result.toString());
-                      if (result) {
-                        QuickAlert.show(
-                          context: Get.context!,
-                          type: QuickAlertType.success,
-                          title: 'Success!',
-                          text: 'Your request has been submitted successfully.',
-                          confirmBtnTextStyle: GoogleFonts.notoSans(
-                            color: ColorConstants.textSecondary,
-                            fontSize: SizeConstant.TEXT_SIZE_HINT,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          onConfirmBtnTap: () async {
-                            Get.back();
-                            Get.back();
-                          },
-                        );
-                      } else {
-                        QuickAlert.show(
-                          context: Get.context!,
-                          type: QuickAlertType.error,
-                          title: 'Failed',
-                          text:
-                              'Failed to submit your request. Please try again.',
-                        );
-                      }
-                    },
-                  ),
+              ),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-              ],
+              ),
+              child: Text(
+                'Yes',
+                style: GoogleFonts.notoSans(
+                  color: ColorConstants.textSecondary,
+                  fontSize: SizeConstant.TEXT_SIZE_HINT,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.loading,
+                  text: 'Submitting...',
+                );
+
+                var submitResult = await controller.submitRequest();
+                log(submitResult.toString());
+
+                if (Get.isDialogOpen ?? false) {
+                  Get.back();
+                }
+
+                if (submitResult) {
+                  QuickAlert.show(
+                    barrierDismissible: false,
+                    context: Get.context!,
+                    type: QuickAlertType.success,
+                    title: 'Success!',
+                    text: 'Your request has been submitted successfully.',
+                    confirmBtnTextStyle: GoogleFonts.notoSans(
+                      color: ColorConstants.textSecondary,
+                      fontSize: SizeConstant.TEXT_SIZE_HINT,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    onConfirmBtnTap: () async {
+                      Get.back();
+                      Get.back();
+                      Get.back(result: true);
+                    },
+                  );
+                } else {
+                  QuickAlert.show(
+                    context: Get.context!,
+                    type: QuickAlertType.error,
+                    title: 'Failed',
+                    text: 'Failed to submit your request. Please try again.',
+                    confirmBtnTextStyle: GoogleFonts.notoSans(
+                      color: ColorConstants.textSecondary,
+                      fontSize: SizeConstant.TEXT_SIZE_HINT,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         );
@@ -509,8 +521,14 @@ class Request_View extends GetView<Request_Controller> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(width: 150, child: buildTextKey(label)),
-          SizedBox(width: 10, child: Text(":")),
-          Expanded(child: buildTextValue(value)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Text(
+              ":",
+              style: GoogleFonts.notoSans(color: ColorConstants.textPrimary),
+            ),
+          ),
+          Expanded(child: buildTextValue(value.isNotEmpty ? value : "-")),
         ],
       ),
     );
