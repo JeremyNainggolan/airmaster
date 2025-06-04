@@ -2,14 +2,12 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/model/devices/device.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/home/controller/efb_home_controller.dart';
-import 'package:airmaster/screens/home/efb/home/view/request/bindings/request_device_binding.dart';
-import 'package:airmaster/screens/home/efb/home/view/request/view/request_device_view.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/utils/date_formatter.dart';
+import 'package:airmaster/widgets/build_row.dart';
 import 'package:airmaster/widgets/cust_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -264,14 +262,12 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                   width: double.infinity,
                                   child: OutlinedButton.icon(
                                     onPressed: () async {
-                                      final result = await Get.to(
-                                        () => Request_View(),
-                                        binding: Request_Binding(),
+                                      final result = await Get.toNamed(
+                                        AppRoutes.EFB_REQUEST,
                                       );
 
                                       if (result == true) {
-                                        controller.checkingRequest();
-                                        controller.getWaitingConfirmation();
+                                        controller.refreshData();
                                       }
                                     },
                                     icon: Icon(
@@ -313,180 +309,215 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                         child: TabBarView(
                           controller: controller.pilotTabController,
                           children: [
-                            Obx(
-                              () =>
-                                  controller.waitingConfirmation.isEmpty
-                                      ? Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                            Obx(() {
+                              return RefreshIndicator(
+                                onRefresh: controller.refreshData,
+                                child:
+                                    controller.waitingConfirmation.isEmpty
+                                        ? ListView(
                                           children: [
-                                            Icon(
-                                              Icons.device_hub,
-                                              size: 50,
-                                              color:
-                                                  ColorConstants.primaryColor,
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text(
-                                              'No devices waiting for confirmation',
-                                              style: GoogleFonts.notoSans(
-                                                color:
-                                                    ColorConstants.textPrimary,
-                                                fontSize:
-                                                    SizeConstant.TEXT_SIZE,
-                                                fontWeight: FontWeight.w400,
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.device_hub,
+                                                    size: 40,
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                  ),
+                                                  Text(
+                                                    'No devices waiting for confirmation',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
-                                        ),
-                                      )
-                                      : ListView.builder(
-                                        itemCount:
-                                            controller
-                                                .waitingConfirmation
-                                                .length,
-                                        itemBuilder: (context, index) {
-                                          final device =
+                                        )
+                                        : ListView.builder(
+                                          itemCount:
                                               controller
-                                                  .waitingConfirmation[index];
-                                          return Card(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                color:
-                                                    ColorConstants.blackColor,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    SizeConstant.BORDER_RADIUS,
-                                                  ),
-                                            ),
-                                            color:
-                                                ColorConstants.backgroundColor,
-                                            child: ListTile(
-                                              onTap: () {
-                                                showDeviceDialog(
-                                                  device['deviceno'],
-                                                );
-                                              },
-                                              leading: Icon(Icons.device_hub),
-                                              trailing: Icon(
-                                                Icons.chevron_right,
-                                                color: Colors.black,
-                                              ),
-                                              title: Text(
-                                                device['deviceno'],
-                                                style: GoogleFonts.notoSans(
+                                                  .waitingConfirmation
+                                                  .length,
+                                          itemBuilder: (context, index) {
+                                            final device =
+                                                controller
+                                                    .waitingConfirmation[index];
+                                            return Card(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
                                                   color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
-                                                      SizeConstant.TEXT_SIZE,
-                                                  fontWeight: FontWeight.w600,
+                                                      ColorConstants.blackColor,
                                                 ),
-                                              ),
-                                              subtitle: Text(
-                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
-                                                style: GoogleFonts.notoSans(
-                                                  color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
+                                                borderRadius:
+                                                    BorderRadius.circular(
                                                       SizeConstant
-                                                          .TEXT_SIZE_HINT,
-                                                  fontWeight: FontWeight.w400,
+                                                          .BORDER_RADIUS,
+                                                    ),
+                                              ),
+                                              color:
+                                                  ColorConstants
+                                                      .backgroundColor,
+                                              child: ListTile(
+                                                onTap: () async {
+                                                  showWaitingDeviceDialog(
+                                                    device['deviceno'],
+                                                  );
+                                                },
+                                                leading: Icon(Icons.device_hub),
+                                                trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.black,
+                                                ),
+                                                title: Text(
+                                                  device['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant.TEXT_SIZE,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                            ),
-                            Obx(
-                              () =>
-                                  controller.inUse.isEmpty
-                                      ? Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                            );
+                                          },
+                                        ),
+                              );
+                            }),
+
+                            Obx(() {
+                              return RefreshIndicator(
+                                onRefresh: controller.refreshData,
+                                child:
+                                    controller.inUse.isEmpty
+                                        ? ListView(
                                           children: [
-                                            Icon(
-                                              Icons.device_hub,
-                                              size: 50,
-                                              color:
-                                                  ColorConstants.primaryColor,
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text(
-                                              'No devices in use',
-                                              style: GoogleFonts.notoSans(
-                                                color:
-                                                    ColorConstants.textPrimary,
-                                                fontSize:
-                                                    SizeConstant.TEXT_SIZE,
-                                                fontWeight: FontWeight.w400,
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.device_hub,
+                                                    size: 40,
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                  ),
+                                                  Text(
+                                                    'No devices in use',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
-                                        ),
-                                      )
-                                      : ListView.builder(
-                                        itemCount: controller.inUse.length,
-                                        itemBuilder: (context, index) {
-                                          final device =
-                                              controller.inUse[index];
-                                          return Card(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                color:
-                                                    ColorConstants.blackColor,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    SizeConstant.BORDER_RADIUS,
-                                                  ),
-                                            ),
-                                            color:
-                                                ColorConstants.backgroundColor,
-                                            child: ListTile(
-                                              onTap: () {
-                                                showDeviceDialog(
-                                                  device['deviceno'],
-                                                );
-                                              },
-                                              leading: Icon(Icons.device_hub),
-                                              trailing: Icon(
-                                                Icons.chevron_right,
-                                                color: Colors.black,
-                                              ),
-                                              title: Text(
-                                                device['deviceno'],
-                                                style: GoogleFonts.notoSans(
+                                        )
+                                        : ListView.builder(
+                                          itemCount: controller.inUse.length,
+                                          itemBuilder: (context, index) {
+                                            final device =
+                                                controller.inUse[index];
+                                            return Card(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
                                                   color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
-                                                      SizeConstant.TEXT_SIZE,
-                                                  fontWeight: FontWeight.w600,
+                                                      ColorConstants.blackColor,
                                                 ),
-                                              ),
-                                              subtitle: Text(
-                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
-                                                style: GoogleFonts.notoSans(
-                                                  color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
+                                                borderRadius:
+                                                    BorderRadius.circular(
                                                       SizeConstant
-                                                          .TEXT_SIZE_HINT,
-                                                  fontWeight: FontWeight.w400,
+                                                          .BORDER_RADIUS,
+                                                    ),
+                                              ),
+                                              color:
+                                                  ColorConstants
+                                                      .backgroundColor,
+                                              child: ListTile(
+                                                onTap: () {
+                                                  log(
+                                                    'Tapped on device: ${device['deviceno']}',
+                                                  );
+
+                                                  Get.toNamed(
+                                                    AppRoutes.EFB_DETAIL,
+                                                    arguments: {
+                                                      'device': device,
+                                                    },
+                                                  );
+                                                  // showUsedDeviceDialog(
+                                                  //   device['deviceno'],
+                                                  // );
+                                                },
+                                                leading: Icon(Icons.device_hub),
+                                                trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.black,
+                                                ),
+                                                title: Text(
+                                                  device['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant.TEXT_SIZE,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                            ),
+                                            );
+                                          },
+                                        ),
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -501,7 +532,7 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
     );
   }
 
-  Future<void> showDeviceDialog(String deviceNo) async {
+  Future<void> showWaitingDeviceDialog(String deviceNo) async {
     Map device = await controller.getPilotDevices(deviceNo);
     log('Device details: $device');
     return showDialog<void>(
@@ -527,38 +558,45 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                   ),
                 ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_DOUBLE),
-                buildInfoRow('Device Number', device['deviceno']),
+                BuildRow(label: 'Device Number', value: device['deviceno']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('iOS Version', device['ios_version']),
+                BuildRow(label: 'iOS Version', value: device['ios_version']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Fly Smart Version', device['fly_smart']),
+                BuildRow(
+                  label: 'Fly Smart Version',
+                  value: device['fly_smart'],
+                ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Lido mPilot Version', device['lido_version']),
+                BuildRow(
+                  label: 'Lido mPilot Version',
+                  value: device['lido_version'],
+                ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Doc Version', device['doc_version']),
+                BuildRow(label: 'Doc Version', value: device['doc_version']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Hub', device['hub']),
+                BuildRow(label: 'Hub', value: device['hub']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Category', device['category']),
+                BuildRow(label: 'Category', value: device['category']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                 CustomDivider(divider: 'Requested By'),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('ID', device['request_user']),
+                BuildRow(label: 'ID', value: device['request_user']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow('Name', device['request_user_name']),
+                BuildRow(label: 'Name', value: device['request_user_name']),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow(
-                  'Date',
-                  DateFormatter.convertDateTimeDisplay(
+                BuildRow(
+                  label: 'Date',
+                  value: DateFormatter.convertDateTimeDisplay(
                     device['request_date'],
                     "d MMMM yyyy",
                   ),
                 ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                buildInfoRow(
-                  'Status',
-                  device['status'].toString().toUpperCase(),
+                BuildRow(
+                  label: 'Status',
+                  value: device['status'].toString().toUpperCase(),
                 ),
+
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_DOUBLE),
                 SizedBox(
                   width: double.infinity,
@@ -641,49 +679,6 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
           ),
         );
       },
-    );
-  }
-
-  Widget buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: 150, child: buildTextKey(label)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Text(
-              ":",
-              style: GoogleFonts.notoSans(color: ColorConstants.textPrimary),
-            ),
-          ),
-          Expanded(child: buildTextValue(value.isNotEmpty ? value : "-")),
-        ],
-      ),
-    );
-  }
-
-  Widget buildTextKey(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.notoSans(
-        color: ColorConstants.textPrimary,
-        fontSize: SizeConstant.TEXT_SIZE_HINT,
-        fontWeight: FontWeight.normal,
-      ),
-    );
-  }
-
-  Widget buildTextValue(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.end,
-      style: GoogleFonts.notoSans(
-        color: ColorConstants.textPrimary,
-        fontSize: SizeConstant.TEXT_SIZE,
-        fontWeight: FontWeight.bold,
-      ),
     );
   }
 }

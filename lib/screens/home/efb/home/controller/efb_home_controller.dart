@@ -31,15 +31,19 @@ class EFB_Home_Controller extends GetxController
   final waitingConfirmation = <Map<String, dynamic>>[].obs;
   final inUse = <Map<String, dynamic>>[].obs;
 
+  final occReturn = false.obs;
+  final pilotHandover = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     occTabController = TabController(length: 3, vsync: this);
     pilotTabController = TabController(length: 2, vsync: this);
     loadUserData();
+    checkingRequest();
     getAvailableDevices();
     getWaitingConfirmation();
-    checkingRequest();
+    getInUse();
 
     var hour = DateTime.now().hour;
     if (hour < 12) {
@@ -168,7 +172,7 @@ class EFB_Home_Controller extends GetxController
           queryParameters: {
             'hub': hub,
             'request_user': userId,
-            'status': 'in_use',
+            'status': 'used',
           },
         ),
         headers: {
@@ -191,11 +195,9 @@ class EFB_Home_Controller extends GetxController
         }
       } else {
         inUse.clear();
-        log('Failed to fetch confirmation status: ${response.statusCode}');
       }
     } catch (e) {
       inUse.clear();
-      log('Error fetching waiting confirmation: $e');
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:airmaster/model/devices/device.dart';
 import 'package:airmaster/screens/home/efb/home/view/request/controller/request_device_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
+import 'package:airmaster/widgets/build_row.dart';
 import 'package:airmaster/widgets/input_decoration.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -228,39 +229,39 @@ class Request_View extends GetView<Request_Controller> {
                                 ),
                                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "Device No",
-                                    controller.selectedDeviceNo.value,
+                                  () => BuildRow(
+                                    label: "Device No",
+                                    value: controller.selectedDeviceNo.value,
                                   ),
                                 ),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "iOS Version",
-                                    controller.selectediOSVersion.value,
+                                  () => BuildRow(
+                                    label: "iOS Version",
+                                    value: controller.selectediOSVersion.value,
                                   ),
                                 ),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "Fly Smart Version",
-                                    controller.selectedFlySmart.value,
+                                  () => BuildRow(
+                                    label: "Fly Smart Version",
+                                    value: controller.selectedFlySmart.value,
                                   ),
                                 ),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "Docunet Version",
-                                    controller.selectedDocuVersion.value,
+                                  () => BuildRow(
+                                    label: "Docunet Version",
+                                    value: controller.selectedDocuVersion.value,
                                   ),
                                 ),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "Lido mPilot Version",
-                                    controller.selectedLidoVersion.value,
+                                  () => BuildRow(
+                                    label: "Lido mPilot Version",
+                                    value: controller.selectedLidoVersion.value,
                                   ),
                                 ),
                                 Obx(
-                                  () => buildInfoRow(
-                                    "HUB",
-                                    controller.selectedHub.value,
+                                  () => BuildRow(
+                                    label: "HUB",
+                                    value: controller.selectedHub.value,
                                   ),
                                 ),
                                 SizedBox(
@@ -511,49 +512,6 @@ class Request_View extends GetView<Request_Controller> {
           ],
         );
       },
-    );
-  }
-
-  Widget buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: 150, child: buildTextKey(label)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Text(
-              ":",
-              style: GoogleFonts.notoSans(color: ColorConstants.textPrimary),
-            ),
-          ),
-          Expanded(child: buildTextValue(value.isNotEmpty ? value : "-")),
-        ],
-      ),
-    );
-  }
-
-  Widget buildTextKey(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.notoSans(
-        color: ColorConstants.textPrimary,
-        fontSize: SizeConstant.TEXT_SIZE_HINT,
-        fontWeight: FontWeight.normal,
-      ),
-    );
-  }
-
-  Widget buildTextValue(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.end,
-      style: GoogleFonts.notoSans(
-        color: ColorConstants.textPrimary,
-        fontSize: SizeConstant.TEXT_SIZE,
-        fontWeight: FontWeight.bold,
-      ),
     );
   }
 }

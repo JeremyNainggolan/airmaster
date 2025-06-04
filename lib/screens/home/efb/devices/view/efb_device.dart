@@ -1,7 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:developer';
-
 import 'package:airmaster/model/devices/device.dart';
 import 'package:airmaster/screens/home/efb/devices/controller/efb_device_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -37,7 +35,6 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                 icon: Icon(Icons.search, color: ColorConstants.blackColor),
               ),
               onChanged: (value) {
-                log('Search query: $value');
                 controller.searchDevice(value);
               },
             ),
@@ -58,7 +55,6 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                       color: ColorConstants.backgroundColor,
                       child: ListTile(
                         onTap: () {
-                          log('Tapped on device: ${device.deviceNo}');
                           showDeviceDialog(context, device.deviceNo);
                         },
                         leading: Icon(Icons.device_hub),
@@ -307,16 +303,13 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
 
       if (capturedImage != null) {
         final buffer = capturedImage.buffer.asUint8List();
-        log('Captured image size: ${buffer.length} bytes');
 
         if (buffer.isNotEmpty) {
-          final result = await ImageGallerySaverPlus.saveImage(
+          final _ = await ImageGallerySaverPlus.saveImage(
             buffer,
             quality: 100,
             name: 'EFB_IAA_$deviceNo',
           );
-
-          log('Image saved to gallery: $result');
 
           Future.delayed(const Duration(seconds: 2));
           return true;
@@ -324,7 +317,6 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
       }
       return false;
     } catch (e) {
-      log('Error capturing or saving image: $e');
       return false;
     }
   }

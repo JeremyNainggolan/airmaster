@@ -25,7 +25,11 @@ class AppRoutes {
 
   static const String EFB_MAIN = '/main/efb';
   static const String EFB_HOME = '/main/efb/home';
-  static const String EFB_REQUEST = '/main/efb/request';
+  static const String EFB_REQUEST = '/main/efb/home/request';
+  static const String EFB_DETAIL = '/main/efb/home/detail';
+  static const String EFB_FEEDBACK = '/main/efb/home/detail/feedback';
+  static const String EFB_BATTERY = '/main/efb/home/detail/battery';
+  static const String EFB_CONFIRM = '/main/efb/home/detail/confirm';
 
   static const String EFB_DEVICES = '/main/efb/devices';
   static const String EFB_HISTORY = '/main/efb/history';

@@ -10,6 +10,14 @@ import 'package:airmaster/screens/home/efb/devices/view/efb_device.dart';
 import 'package:airmaster/screens/home/efb/history/bindings/efb_history_binding.dart';
 import 'package:airmaster/screens/home/efb/history/view/efb_history.dart';
 import 'package:airmaster/screens/home/efb/home/bindings/efb_home_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/bindings/request_detail_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/firstpage/bindings/feedback_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/firstpage/view/feedback_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/secondpage/bindings/battery_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/secondpage/view/battery_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/thirdpage/bindings/confirm_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/thirdpage/view/confirm_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/request_detail_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/efb_home.dart';
 import 'package:airmaster/screens/home/efb/home/view/request/bindings/request_device_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/request/view/request_device_view.dart';
@@ -118,6 +126,34 @@ class AppPages {
       name: AppRoutes.EFB_REQUEST,
       page: () => const Request_View(),
       binding: Request_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_DETAIL,
+      page: () => const Detail_View(),
+      binding: Detail_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FEEDBACK,
+      page: () => const Feedback_View(),
+      binding: Feedback_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_BATTERY,
+      page: () => const Battery_View(),
+      binding: Battery_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_CONFIRM,
+      page: () => const Confirm_View(),
+      binding: Confirm_Binding(),
       transition: Transition.native,
     ),
 
