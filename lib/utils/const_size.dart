@@ -3,6 +3,8 @@
 class SizeConstant {
   static const double SIZED_BOX_HEIGHT = 10.0;
 
+  static const double SPACING = 50.0;
+
   static const double SIZED_BOX_HEIGHT_2 = 15.0;
 
   static const double SIZED_BOX_HEIGHT_DOUBLE = 30.0;

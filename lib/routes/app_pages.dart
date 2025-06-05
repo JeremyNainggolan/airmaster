@@ -3,6 +3,7 @@
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/auth/login.dart';
 import 'package:airmaster/screens/home/dashboard.dart';
+import 'package:get/get.dart';
 import 'package:airmaster/screens/home/efb/analytics/bindings/efb_analytics_binding.dart';
 import 'package:airmaster/screens/home/efb/analytics/view/efb_analytics.dart';
 import 'package:airmaster/screens/home/efb/devices/bindings/efb_device_binding.dart';
@@ -40,7 +41,18 @@ import 'package:airmaster/screens/home/ts_1/main/view/ts1_view.dart';
 import 'package:airmaster/screens/home/ts_1/profile/bindings/ts1_profile_binding.dart';
 import 'package:airmaster/screens/home/ts_1/profile/view/ts1_profile.dart';
 import 'package:airmaster/screens/maintenance/under_maintenance.dart';
-import 'package:get/get.dart';
+import 'package:airmaster/screens/home/training_card/main/tc_view.dart';
+import 'package:airmaster/screens/home/training_card/main/bindings/tc_main_binding.dart';
+import 'package:airmaster/screens/home/training_card/home/view/tc_home.dart';
+import 'package:airmaster/screens/home/training_card/home/bindings/tc_home_binding.dart';
+import 'package:airmaster/screens/home/training_card/profile/view/tc_profile.dart';
+import 'package:airmaster/screens/home/training_card/profile/bindings/tc_profile_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/tc_training.dart';
+import 'package:airmaster/screens/home/training_card/training/bindings/tc_training_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/new_training/view/new_training_view.dart';
+import 'package:airmaster/screens/home/training_card/training/view/new_training/bindings/new_training_bindings.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/bindings/training_list_detail_bindings.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/training_list_detail_view.dart';
 
 class AppPages {
   static final routes = [
@@ -104,6 +116,44 @@ class AppPages {
       page: () => const TS1_Profile(),
       binding: TS1_Profile_Binding(),
       transition: Transition.native,
+    ),
+
+    // Training Card
+    GetPage(
+      name: AppRoutes.TC_MAIN,
+      page: () => const TCView(),
+      binding: TC_Main_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_HOME_SCREEN,
+      page: () => const TC_Home(),
+      binding: TC_Home_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_PROFILE,
+      page: () => const TC_Profile(),
+      binding: TC_Profile_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_TRAINING,
+      page: () => const TC_Training(),
+      binding: TC_Training_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_NEW_TRAINING ,
+      page: () => const TC_NewTraining(),
+      binding: TC_NewTraining_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_TRAINING_LIST_DETAIL, 
+      page: () => TC_TrainingListDetail(),
+      binding: TC_TrainingListDetail_Binding(),
+      transition: Transition.native, 
     ),
 
     // EFB

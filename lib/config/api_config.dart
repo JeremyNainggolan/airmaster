@@ -11,6 +11,10 @@ class ApiConfig {
   static const String get_user_by_name = '$TS_1/get-user-by-name';
   static const String get_flight_details = '$TS_1/get-flight-details';
 
+  static const String TC = '$baseUrl/tc';
+  static const String get_training_cards = '$TC/index';
+  static const String new_training_card = '$TC/store';
+
   static const String EFB = '$baseUrl/efb';
   static const String get_count_devices = '$EFB/get-count-devices';
   static const String get_devices = '$EFB/get-devices';

@@ -23,6 +23,14 @@ class AppRoutes {
 
   static const String TC_MAIN = '/main/tc';
 
+  static const String TC_HOME_SCREEN = '/main/tc/home';
+  static const String TC_TRAINING = '/main/tc/training';
+  static const String TC_NEW_TRAINING = '/main/tc/new_training';
+  static const String TC_TRAINING_LIST_DETAIL = '/main/tc/training_list_detail';
+  
+  static const String TC_PILOT_CREW = '/main/tc/pilot_crew';
+  static const String TC_PROFILE = '/main/tc/profile';
+
   static const String EFB_MAIN = '/main/efb';
   static const String EFB_HOME = '/main/efb/home';
   static const String EFB_REQUEST = '/main/efb/home/request';

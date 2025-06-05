@@ -37,8 +37,11 @@ class AuthService {
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
+      log("Response from server: ${responseData.toString()}");
+
       if (response.statusCode == 200) {
         var userData = responseData['data'];
+      log("UserData: $userData");
 
         User authUser = User.fromJson(userData['user']);
 
@@ -47,7 +50,7 @@ class AuthService {
         // log("Login success: ${response.body}");
         return true;
       } else {
-        // log("Server error: ${response.body}");
+        log("Server error: ${response.body}");
         return false;
       }
     } catch (e) {
