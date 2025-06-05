@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:airmaster/data/users/user_preferences.dart';
+import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:get/get.dart';
 
 class EFB_Profile_Controller extends GetxController {
@@ -43,7 +44,7 @@ class EFB_Profile_Controller extends GetxController {
 
   Future<void> logout() async {
     try {
-      await _userPrefs.clearUser();
+      await AuthService.logout();
     } catch (e) {
       log('Error clearing user data: $e');
     }

@@ -41,7 +41,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         var userData = responseData['data'];
-      log("UserData: $userData");
+        log("UserData: $userData");
 
         User authUser = User.fromJson(userData['user']);
 
@@ -55,6 +55,18 @@ class AuthService {
       }
     } catch (e) {
       log("Error during login: $e");
+      return false;
+    }
+  }
+
+  static Future<bool> logout() async {
+    try {
+      await _googleSignIn.disconnect();
+      await _googleSignIn.signOut();
+      await UserPreferences().clearUser();
+      return true;
+    } catch (e) {
+      log("Error during logout: $e");
       return false;
     }
   }
