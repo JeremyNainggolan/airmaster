@@ -17,6 +17,7 @@ class ApiConfig {
 
   static const String EFB = '$baseUrl/efb';
   static const String get_count_devices = '$EFB/get-count-devices';
+  static const String get_user_by_id = '$EFB/get-user-by-id';
   static const String get_devices = '$EFB/get-devices';
   static const String get_pilot_devices = '$EFB/get-pilot-devices';
   static const String get_device_by_id = '$EFB/get-device-by-id';

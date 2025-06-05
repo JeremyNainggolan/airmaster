@@ -42,6 +42,7 @@ class ShowAlert {
       ),
       confirmBtnText: 'Okay',
       onConfirmBtnTap: () {
+        Get.back();
         Get.back(result: true);
       },
     );
@@ -56,8 +57,8 @@ class ShowAlert {
       barrierDismissible: false,
       context: Get.context!,
       type: QuickAlertType.success,
-      title: 'Success!',
-      text: 'Device returned successfully.',
+      title: title,
+      text: message,
       confirmBtnTextStyle: GoogleFonts.notoSans(
         color: ColorConstants.textSecondary,
         fontSize: SizeConstant.TEXT_SIZE_HINT,
@@ -67,6 +68,29 @@ class ShowAlert {
         Get.back();
         Get.back();
         Get.back(result: true);
+      },
+    );
+  }
+
+  static Future<bool?> showFetchSuccess(
+    BuildContext dialogContext,
+    String title,
+    String message,
+  ) async {
+    return await QuickAlert.show(
+      barrierDismissible: false,
+      context: Get.context!,
+      type: QuickAlertType.success,
+      title: title,
+      text: message,
+      confirmBtnTextStyle: GoogleFonts.notoSans(
+        color: ColorConstants.textSecondary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+      onConfirmBtnTap: () async {
+        Get.back();
+        Get.back();
       },
     );
   }

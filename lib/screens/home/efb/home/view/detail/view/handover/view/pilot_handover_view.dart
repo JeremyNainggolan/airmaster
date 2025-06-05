@@ -1,16 +1,20 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:airmaster/helpers/qr_scanner.dart';
 import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/controller/pilot_handover_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
+import 'package:airmaster/widgets/build_row.dart';
 import 'package:airmaster/widgets/input_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
   const Pilot_Handover_View({super.key});
@@ -102,7 +106,30 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                       final result = await Get.to(() => QrScanner());
 
                       if (result != null) {
-                        log('QR Code Result: $result');
+                        QuickAlert.show(
+                          barrierDismissible: false,
+                          context: Get.context!,
+                          type: QuickAlertType.loading,
+                          text: 'Loading...',
+                        );
+
+                        final confirmed = await controller.getUser(result);
+                        if (Get.isDialogOpen ?? false) {
+                          Get.back();
+                        }
+                        if (confirmed == true) {
+                          await ShowAlert.showFetchSuccess(
+                            Get.context!,
+                            'Success',
+                            'User data retrieved. You may continue with the assessment.',
+                          );
+                        } else {
+                          await ShowAlert.showErrorAlert(
+                            Get.context!,
+                            'User Not Found',
+                            'Unable to fetch user information. Please make sure the QR code is valid and try again.',
+                          );
+                        }
                       }
                     },
                     child: Text(
@@ -112,6 +139,194 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                         fontSize: SizeConstant.TEXT_SIZE,
                         fontWeight: FontWeight.w600,
                       ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_2),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.tertiaryColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConstant.BORDER_RADIUS,
+                    ),
+                    border: Border.all(
+                      color: ColorConstants.blackColor,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Crew Information',
+                          style: GoogleFonts.notoSans(
+                            color: ColorConstants.textTertiary,
+                            fontSize: SizeConstant.TEXT_SIZE,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Divider(
+                          color: ColorConstants.dividerColor,
+                          thickness: SizeConstant.DIVIDER_THICKNESS_LOW,
+                        ),
+                        Obx(
+                          () =>
+                              controller.user.isEmpty
+                                  ? Text(
+                                    'Please scan QR Crew.',
+                                    style: GoogleFonts.notoSans(
+                                      color: ColorConstants.textPrimary,
+                                      fontSize: SizeConstant.TEXT_SIZE,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  )
+                                  : Column(
+                                    children: [
+                                      BuildRow(
+                                        label: 'Name',
+                                        value: controller.user['name'],
+                                      ),
+                                      BuildRow(
+                                        label: 'Rank',
+                                        value: controller.user['rank'],
+                                      ),
+                                      BuildRow(
+                                        label: 'Email',
+                                        value: controller.user['email'],
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_2),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.tertiaryColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConstant.BORDER_RADIUS,
+                    ),
+                    border: Border.all(
+                      color: ColorConstants.blackColor,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Signature',
+                          style: GoogleFonts.notoSans(
+                            color: ColorConstants.textTertiary,
+                            fontSize: SizeConstant.TEXT_SIZE,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Divider(
+                          color: ColorConstants.dividerColor,
+                          thickness: SizeConstant.DIVIDER_THICKNESS_LOW,
+                        ),
+                        Obx(
+                          () =>
+                              controller.user.isEmpty
+                                  ? Text(
+                                    'Please scan QR Crew.',
+                                    style: GoogleFonts.notoSans(
+                                      color: ColorConstants.textPrimary,
+                                      fontSize: SizeConstant.TEXT_SIZE,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  )
+                                  : Stack(
+                                    children: [
+                                      Container(
+                                        height: 300,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            SizeConstant.BORDER_RADIUS,
+                                          ),
+                                        ),
+                                        child: SfSignaturePad(
+                                          key: controller.signatureKey,
+                                          backgroundColor: Colors.white,
+                                          onDrawEnd: () async {
+                                            final imageData =
+                                                await controller
+                                                    .signatureKey
+                                                    .currentState!
+                                                    .toImage();
+                                            final byteData = await imageData
+                                                .toByteData(
+                                                  format: ImageByteFormat.png,
+                                                );
+
+                                            log(byteData.toString());
+
+                                            if (byteData != null) {
+                                              controller.signatureImg =
+                                                  byteData.buffer.asUint8List();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.delete_outline_outlined,
+                                            size: 32,
+                                            color: ColorConstants.primaryColor,
+                                          ),
+                                          onPressed: () {
+                                            controller.signatureKey.currentState
+                                                ?.clear();
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(
+                                          SizeConstant.PADDING_MIN,
+                                        ),
+                                        alignment: Alignment.topLeft,
+                                        child: Image.asset(
+                                          'assets/images/airasia_logo_circle.png',
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                        SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+                        Obx(
+                          () =>
+                              controller.user.isEmpty
+                                  ? Container()
+                                  : SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        'Hand Over',
+                                        style: GoogleFonts.notoSans(
+                                          color: ColorConstants.textSecondary,
+                                          fontSize: SizeConstant.TEXT_SIZE,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

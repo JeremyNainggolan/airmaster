@@ -56,13 +56,9 @@ class _QrScannerState extends State<QrScanner>
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          "QR Scanner",
-          style: TextStyle(
-            color: ColorConstants.textPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Image.asset(
+          'assets/images/airasia_logo_text.png',
+          width: MediaQuery.of(context).size.width * 0.2,
         ),
       ),
       backgroundColor: ColorConstants.backgroundColor,
@@ -135,8 +131,8 @@ class _QrScannerState extends State<QrScanner>
             'Scan EFB Device QR Code',
             style: GoogleFonts.notoSans(
               color: ColorConstants.textPrimary,
-              fontSize: SizeConstant.TEXT_SIZE,
-              fontWeight: FontWeight.bold,
+              fontSize: SizeConstant.TEXT_SIZE_HINT,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
