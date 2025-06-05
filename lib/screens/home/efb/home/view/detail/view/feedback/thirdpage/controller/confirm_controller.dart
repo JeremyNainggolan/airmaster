@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 class Confirm_Controller extends GetxController {
   final params = Get.arguments;
 
-  final device = {}.obs;
   final feedbackQuestion = {}.obs;
   final batteryQuestion = {}.obs;
 
@@ -25,7 +24,6 @@ class Confirm_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    device.value = params['device'];
     feedbackQuestion.value = params['feedback_question'];
     batteryQuestion.value = params['battery_question'];
   }

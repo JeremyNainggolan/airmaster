@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/controller/request_detail_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -13,6 +14,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class Detail_View extends GetView<Detail_Controller> {
   const Detail_View({super.key});
@@ -170,28 +172,69 @@ class Detail_View extends GetView<Detail_Controller> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  log(
-                                    'Device: ${controller.device.toString()}',
-                                  );
-                                  Get.toNamed(
-                                    AppRoutes.EFB_FEEDBACK,
-                                    arguments: {'device': controller.device},
-                                  );
-                                },
-                                child: Text(
-                                  "Feedback",
-                                  style: GoogleFonts.notoSans(
-                                    color: ColorConstants.textSecondary,
-                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Obx(
+                            () =>
+                                controller.isFeedback.value
+                                    ? SizedBox(
+                                      child: OutlinedButton.icon(
+                                        onPressed: () async {
+                                          log(
+                                            'Device: ${controller.device.toString()}',
+                                          );
+                                          log(
+                                            'Feedback: ${controller.feedback.toString()}',
+                                          );
+                                        },
+                                        label: Text(
+                                          'Thanks for your feedback!',
+                                          style: GoogleFonts.notoSans(
+                                            color: ColorConstants.textPrimary,
+                                            fontSize:
+                                                SizeConstant.TEXT_SIZE_HINT,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          side: BorderSide(
+                                            color: ColorConstants.blackColor,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              SizeConstant.BORDER_RADIUS,
+                                            ),
+                                          ),
+                                          elevation:
+                                              SizeConstant.CARD_ELEVATION,
+                                        ),
+                                      ),
+                                    )
+                                    : Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            log(
+                                              'Device: ${controller.device.toString()}',
+                                            );
+                                            Get.toNamed(
+                                              AppRoutes.EFB_FEEDBACK,
+                                              arguments: {
+                                                'device': controller.device,
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            "Feedback",
+                                            style: GoogleFonts.notoSans(
+                                              color:
+                                                  ColorConstants.textSecondary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                           ),
                         ],
                       ),
@@ -277,7 +320,72 @@ class Detail_View extends GetView<Detail_Controller> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        Navigator.of(Get.context!).pop();
+                        if (controller.handOverTo.value.isEmpty) {
+                          await ShowAlert.showErrorAlert(
+                            context,
+                            'Failed',
+                            'Please select who to return the device to.',
+                          );
+                        } else {
+                          final confirmed = await ShowAlert.showConfirmAlert(
+                            context,
+                            'Confirm Return',
+                            'Are you sure you want to return the device to ${controller.handOverTo.value == 'occHandover' ? 'OCC' : 'another Crew'}? This action cannot be undone.',
+                          );
+
+                          if (confirmed == true) {
+                            QuickAlert.show(
+                              barrierDismissible: false,
+                              context: Get.context!,
+                              type: QuickAlertType.loading,
+                              text: 'Loading...',
+                            );
+
+                            if (controller.handOverTo.value == 'occHandover') {
+                              final loading = await controller.returnOCC();
+                              if (Get.isDialogOpen ?? false) {
+                                Get.back();
+                              }
+                              if (loading) {
+                                log('Device return at: OCC');
+                                await ShowAlert.showSuccessAlert(
+                                  Get.context!,
+                                  'Success',
+                                  'Device returned successfully.',
+                                );
+                              } else {
+                                await ShowAlert.showErrorAlert(
+                                  Get.context!,
+                                  'Failed',
+                                  'Failed to return device. Please try again later.',
+                                );
+                              }
+                            } else if (controller.handOverTo.value ==
+                                'pilotHandover') {
+                              await Future.delayed(const Duration(seconds: 2));
+                              log('Feedback: ${controller.feedback}');
+                              log('Device: ${controller.device}');
+                              Get.back();
+                              if (controller.feedback.isEmpty) {
+                                log('EMPTY FEEDBACK');
+                                Get.toNamed(
+                                  AppRoutes.EFB_HANDOVER,
+                                  arguments: {'device': controller.device},
+                                );
+                              } else {
+                                log('NOT EMPTY FEEDBACK');
+                                Get.toNamed(
+                                  AppRoutes.EFB_HANDOVER,
+                                  arguments: {
+                                    'device': controller.device,
+                                    'feedback': controller.feedback,
+                                  },
+                                );
+                              }
+                              log('Device return at: Pilot Handover');
+                            }
+                          }
+                        }
                       },
                       style: ButtonStyle(
                         padding: WidgetStateProperty.all(

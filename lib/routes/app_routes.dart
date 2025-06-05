@@ -27,7 +27,7 @@ class AppRoutes {
   static const String TC_TRAINING = '/main/tc/training';
   static const String TC_NEW_TRAINING = '/main/tc/new_training';
   static const String TC_TRAINING_LIST_DETAIL = '/main/tc/training_list_detail';
-  
+
   static const String TC_PILOT_CREW = '/main/tc/pilot_crew';
   static const String TC_PROFILE = '/main/tc/profile';
 
@@ -38,6 +38,7 @@ class AppRoutes {
   static const String EFB_FEEDBACK = '/main/efb/home/detail/feedback';
   static const String EFB_BATTERY = '/main/efb/home/detail/battery';
   static const String EFB_CONFIRM = '/main/efb/home/detail/confirm';
+  static const String EFB_HANDOVER = '/main/efb/home/detail/handover';
 
   static const String EFB_DEVICES = '/main/efb/devices';
   static const String EFB_HISTORY = '/main/efb/history';

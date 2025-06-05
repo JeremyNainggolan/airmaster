@@ -2,8 +2,9 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/helpers/show_back_alert.dart';
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/controller/request_detail_controller.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/thirdpage/controller/confirm_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -21,7 +22,7 @@ class Confirm_View extends GetView<Confirm_Controller> {
       canPop: false,
       onPopInvoked: (didPop) async {
         if (didPop) return;
-        final confirmed = await ShowBackAlert.showAlert(context);
+        final confirmed = await ShowAlert.showBackAlert(context);
 
         if (confirmed == true) {
           Get.back();
@@ -33,13 +34,13 @@ class Confirm_View extends GetView<Confirm_Controller> {
           backgroundColor: ColorConstants.primaryColor,
           leading: IconButton(
             onPressed: () async {
-              final confirmed = await ShowBackAlert.showAlert(context);
+              final confirmed = await ShowAlert.showBackAlert(context);
 
               if (confirmed == true) {
                 Get.back();
               }
             },
-            icon: Icon(Icons.arrow_back, color: ColorConstants.blackColor),
+            icon: Icon(Icons.arrow_back, color: ColorConstants.whiteColor),
           ),
           title: Text(
             'Feedback - Confirm',
@@ -580,33 +581,35 @@ class Confirm_View extends GetView<Confirm_Controller> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      log(controller.feedbackQuestion.string);
-                      log(controller.batteryQuestion.string);
-                      Get.offNamedUntil(
-                        AppRoutes.EFB_DETAIL,
-                        (route) => route.settings.name == AppRoutes.EFB_REQUEST,
-                        arguments: {
-                          'device': controller.device,
-                          'feedback': {
-                            'feedback_question':
-                                controller.feedbackQuestion.string,
-                            'battery_question':
-                                controller.batteryQuestion.string,
-                            'confirm_question': {
-                              'q13': controller.q13.string,
-                              'q14': controller.q14.string,
-                              'q15': controller.q15.string,
-                              'q16': controller.q16.string,
-                              'q17': controller.q17.string,
-                              'q18': controller.q18.string,
-                              'q19': controller.q19.text,
-                              'q20': controller.q20.string,
-                              'q21': controller.q21.string,
-                              'q22': controller.q22.string,
-                              'q23': controller.q23.text,
-                            },
-                          },
-                        },
+                      final detailController = Get.find<Detail_Controller>();
+                      detailController.isFeedback.value = true;
+                      detailController.feedback.value = {
+                        'q1': controller.feedbackQuestion['q1'],
+                        'q2': controller.feedbackQuestion['q2'],
+                        'q3': controller.feedbackQuestion['q3'],
+                        'q4': controller.feedbackQuestion['q4'],
+                        'q5': controller.feedbackQuestion['q5'],
+                        'q6': controller.feedbackQuestion['q6'],
+                        'q7': controller.batteryQuestion['q7'],
+                        'q8': controller.batteryQuestion['q8'],
+                        'q9': controller.batteryQuestion['q9'],
+                        'q10': controller.batteryQuestion['q10'],
+                        'q11': controller.batteryQuestion['q11'],
+                        'q12': controller.batteryQuestion['q12'],
+                        'q13': controller.q13.value,
+                        'q14': controller.q14.value,
+                        'q15': controller.q15.value,
+                        'q16': controller.q16.value,
+                        'q17': controller.q17.value,
+                        'q18': controller.q18.value,
+                        'q19': controller.q19.text,
+                        'q20': controller.q20.value,
+                        'q21': controller.q21.value,
+                        'q22': controller.q22.value,
+                        'q23': controller.q23.text,
+                      };
+                      Get.until(
+                        (route) => route.settings.name == AppRoutes.EFB_DETAIL,
                       );
                     },
                     style: ButtonStyle(

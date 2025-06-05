@@ -7,7 +7,6 @@ class Battery_Controller extends GetxController {
   dynamic params = Get.arguments;
 
   final feedbackQuestion = {}.obs;
-  final device = {}.obs;
 
   final q7 = TextEditingController();
   final q8 = TextEditingController();
@@ -19,7 +18,6 @@ class Battery_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    device.value = params['device'];
     feedbackQuestion.value = params['feedback_question'];
   }
 }

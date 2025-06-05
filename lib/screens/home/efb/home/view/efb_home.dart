@@ -469,17 +469,23 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   ColorConstants
                                                       .backgroundColor,
                                               child: ListTile(
-                                                onTap: () {
+                                                onTap: () async {
                                                   log(
                                                     'Tapped on device: ${device['deviceno']}',
                                                   );
 
-                                                  Get.toNamed(
-                                                    AppRoutes.EFB_DETAIL,
-                                                    arguments: {
-                                                      'device': device,
-                                                    },
-                                                  );
+                                                  final result =
+                                                      await Get.toNamed(
+                                                        AppRoutes.EFB_DETAIL,
+                                                        arguments: {
+                                                          'device': device,
+                                                        },
+                                                      );
+
+                                                  if (result == true) {
+                                                    log('RESULT TRUE');
+                                                    controller.refreshData();
+                                                  }
                                                   // showUsedDeviceDialog(
                                                   //   device['deviceno'],
                                                   // );
@@ -605,6 +611,7 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                       Navigator.of(Get.context!).pop();
 
                       QuickAlert.show(
+                        barrierDismissible: false,
                         context: Get.context!,
                         type: QuickAlertType.loading,
                         text: 'Submitting...',

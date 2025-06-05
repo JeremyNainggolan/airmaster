@@ -4,7 +4,7 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/helpers/show_back_alert.dart';
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/secondpage/controller/battery_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -23,7 +23,7 @@ class Battery_View extends GetView<Battery_Controller> {
       canPop: false,
       onPopInvoked: (didPop) async {
         if (didPop) return;
-        final confirmed = await ShowBackAlert.showAlert(context);
+        final confirmed = await ShowAlert.showBackAlert(context);
 
         if (confirmed == true) {
           Get.back();
@@ -33,9 +33,9 @@ class Battery_View extends GetView<Battery_Controller> {
         appBar: AppBar(
           backgroundColor: ColorConstants.primaryColor,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: ColorConstants.blackColor),
+            icon: Icon(Icons.arrow_back, color: ColorConstants.whiteColor),
             onPressed: () async {
-              final confirmed = await ShowBackAlert.showAlert(context);
+              final confirmed = await ShowAlert.showBackAlert(context);
 
               if (confirmed == true) {
                 Get.back();
@@ -210,7 +210,6 @@ class Battery_View extends GetView<Battery_Controller> {
                       Get.toNamed(
                         AppRoutes.EFB_CONFIRM,
                         arguments: {
-                          'device': controller.device,
                           'feedback_question': controller.feedbackQuestion,
                           'battery_question': {
                             'q7': controller.q7.text,

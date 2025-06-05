@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/helpers/show_back_alert.dart';
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/feedback/firstpage/controller/feedback_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -20,7 +20,7 @@ class Feedback_View extends GetView<Feedback_Controller> {
       canPop: false,
       onPopInvoked: ((didPop) async {
         if (didPop) return;
-        final confirmed = await ShowBackAlert.showAlert(context);
+        final confirmed = await ShowAlert.showBackAlert(context);
 
         if (confirmed == true) {
           Get.back();
@@ -32,7 +32,7 @@ class Feedback_View extends GetView<Feedback_Controller> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
             onPressed: () async {
-              final confirmed = await ShowBackAlert.showAlert(context);
+              final confirmed = await ShowAlert.showBackAlert(context);
 
               if (confirmed == true) {
                 Get.back();
@@ -486,7 +486,6 @@ class Feedback_View extends GetView<Feedback_Controller> {
                       Get.toNamed(
                         AppRoutes.EFB_BATTERY,
                         arguments: {
-                          'device': controller.device,
                           'feedback_question': {
                             'q1': controller.q1.value,
                             'q2': controller.q2.value,
