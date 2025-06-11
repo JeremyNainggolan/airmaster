@@ -34,6 +34,8 @@ class EFB_Home_Controller extends GetxController
   final occReturn = false.obs;
   final pilotHandover = false.obs;
 
+  final status = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -77,6 +79,10 @@ class EFB_Home_Controller extends GetxController
           'Accept': 'application/json',
         },
       );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      log("Checking Request Data: ${responseData.toString()}");
 
       if (response.statusCode == 200) {
         checkRequest.value = true;

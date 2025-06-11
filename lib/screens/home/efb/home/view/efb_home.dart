@@ -294,7 +294,29 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                     ),
                                   ),
                                 )
-                                : SizedBox(),
+                                : SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () {},
+                                    label: Text(
+                                      'To request a device, please wait for confirmation.',
+                                      style: GoogleFonts.notoSans(
+                                        color: ColorConstants.textPrimary,
+                                        fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide(
+                                        color: ColorConstants.blackColor,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: SizeConstant.CARD_ELEVATION,
+                                    ),
+                                  ),
+                                ),
                       ),
                       TabBar(
                         controller: controller.pilotTabController,
@@ -471,7 +493,7 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                               child: ListTile(
                                                 onTap: () async {
                                                   log(
-                                                    'Tapped on device: ${device['deviceno']}',
+                                                    'Tapped on device: ${device.toString()}',
                                                   );
 
                                                   final result =

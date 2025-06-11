@@ -4,16 +4,17 @@ import 'dart:typed_data';
 
 import 'package:airmaster/config/api_config.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
-class Pilot_Handover_Controller extends GetxController {
+class Occ_Return_Controller extends GetxController {
   dynamic params = Get.arguments;
 
   final signatureKey = GlobalKey<SfSignaturePadState>();
+  final remark = TextEditingController();
   Uint8List? signatureImg;
 
   final device = {}.obs;
@@ -29,54 +30,22 @@ class Pilot_Handover_Controller extends GetxController {
     }
   }
 
-  Future<bool> getUser(String userId) async {
-    String token = await UserPreferences().getToken();
-
-    try {
-      final response = await http.get(
-        Uri.parse(
-          ApiConfig.get_user_by_id,
-        ).replace(queryParameters: {'id': userId}),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
-      );
-
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        final dynamic data = responseData['data'];
-        if (data != null && data.isNotEmpty) {
-          user.value = data[0];
-          await Future.delayed(const Duration(seconds: 2));
-          return true;
-        }
-
-        await Future.delayed(const Duration(seconds: 2));
-        return false;
-      } else {
-        await Future.delayed(const Duration(seconds: 2));
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> saveHandover() async {
+  Future<bool> returnOCC() async {
     String token = await UserPreferences().getToken();
 
     try {
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse(ApiConfig.pilot_handover),
+        Uri.parse(ApiConfig.occ_return),
       );
 
       request.headers['Authorization'] = 'Bearer $token';
       request.headers['Accept'] = 'application/json';
       request.headers['Content-Type'] = 'multipart/form-data';
       request.fields['request_id'] = device['id']['\$oid'];
-      request.fields['handover_to'] = user['id_number'];
+      if (remark.text.isNotEmpty) {
+        request.fields['remark'] = remark.text;
+      }
       if (feedback.isNotEmpty) {
         request.fields['feedback'] = jsonEncode(feedback);
       }

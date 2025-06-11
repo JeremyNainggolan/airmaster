@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -9,7 +10,6 @@ import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/contro
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/widgets/build_row.dart';
-import 'package:airmaster/widgets/input_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -286,6 +286,8 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                                           onPressed: () {
                                             controller.signatureKey.currentState
                                                 ?.clear();
+
+                                            controller.signatureImg = null;
                                           },
                                         ),
                                       ),
@@ -314,7 +316,58 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                                   : SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        if (controller.signatureImg == null) {
+                                          ShowAlert.showErrorAlertWithoutLoading(
+                                            Get.context!,
+                                            'Signature Required',
+                                            'Please provide your signature before proceeding.',
+                                          );
+                                          return;
+                                        }
+
+                                        log('Feedback: ${controller.feedback}');
+                                        log('Device: ${controller.device}');
+                                        log(
+                                          'User: ${jsonEncode(controller.user)}',
+                                        );
+
+                                        final confirm =
+                                            await ShowAlert.showConfirmAlert(
+                                              Get.context!,
+                                              'Confirm Handover',
+                                              'Are you sure you want to hand over the device to the next FO?',
+                                            );
+
+                                        if (confirm == true) {
+                                          QuickAlert.show(
+                                            barrierDismissible: false,
+                                            context: Get.context!,
+                                            type: QuickAlertType.loading,
+                                            text: 'Handing over...',
+                                          );
+                                          final success =
+                                              await controller.saveHandover();
+                                          if (Get.isDialogOpen ?? false) {
+                                            Get.back();
+                                          }
+                                          if (success) {
+                                            await ShowAlert.showFetchSuccess(
+                                              Get.context!,
+                                              'Success',
+                                              'Device handover completed successfully.',
+                                            );
+                                            Get.back();
+                                            Get.back(result: true);
+                                          } else {
+                                            await ShowAlert.showErrorAlert(
+                                              Get.context!,
+                                              'Error',
+                                              'Failed to complete the handover. Please try again.',
+                                            );
+                                          }
+                                        }
+                                      },
                                       child: Text(
                                         'Hand Over',
                                         style: GoogleFonts.notoSans(

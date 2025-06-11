@@ -39,6 +39,7 @@ class AppRoutes {
   static const String EFB_BATTERY = '/main/efb/home/detail/battery';
   static const String EFB_CONFIRM = '/main/efb/home/detail/confirm';
   static const String EFB_HANDOVER = '/main/efb/home/detail/handover';
+  static const String EFB_OCC_RETURN = '/main/efb/home/detail/occ-return';
 
   static const String EFB_DEVICES = '/main/efb/devices';
   static const String EFB_HISTORY = '/main/efb/history';

@@ -48,6 +48,28 @@ class ShowAlert {
     );
   }
 
+  static Future<bool?> showErrorAlertWithoutLoading(
+    BuildContext dialogContext,
+    String title,
+    String message,
+  ) async {
+    return await QuickAlert.show(
+      context: dialogContext,
+      type: QuickAlertType.error,
+      title: title,
+      text: message,
+      confirmBtnTextStyle: GoogleFonts.notoSans(
+        color: ColorConstants.textSecondary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+      confirmBtnText: 'Okay',
+      onConfirmBtnTap: () {
+        Get.back();
+      },
+    );
+  }
+
   static Future<bool?> showSuccessAlert(
     BuildContext dialogContext,
     String title,
@@ -116,6 +138,9 @@ class ShowAlert {
         fontWeight: FontWeight.normal,
       ),
       cancelBtnText: 'Cancel',
+      onCancelBtnTap: () {
+        Get.back(result: false);
+      },
       confirmBtnText: 'Okay',
       onConfirmBtnTap: () {
         Get.back(result: true);

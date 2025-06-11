@@ -37,17 +37,13 @@ class AuthService {
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-      log("Response from server: ${responseData.toString()}");
-
       if (response.statusCode == 200) {
         var userData = responseData['data'];
-        log("UserData: $userData");
 
         User authUser = User.fromJson(userData['user']);
 
         await UserPreferences().saveUser(authUser);
 
-        // log("Login success: ${response.body}");
         return true;
       } else {
         log("Server error: ${response.body}");

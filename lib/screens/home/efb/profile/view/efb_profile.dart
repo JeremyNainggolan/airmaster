@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:quickalert/quickalert.dart';
 
 class EFB_Profile extends GetView<EFB_Profile_Controller> {
   const EFB_Profile({super.key});
@@ -202,7 +203,32 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  showLogoutDialog(context);
+                  QuickAlert.show(
+                    context: Get.context!,
+                    barrierDismissible: false,
+                    type: QuickAlertType.confirm,
+                    title: 'Log Out',
+                    confirmBtnTextStyle: GoogleFonts.notoSans(
+                      color: ColorConstants.textSecondary,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    cancelBtnTextStyle: GoogleFonts.notoSans(
+                      color: ColorConstants.textPrimary,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    text: 'Are you sure you want to log out?',
+                    confirmBtnText: 'Yes',
+                    cancelBtnText: 'No',
+                    onConfirmBtnTap: () async {
+                      await controller.logout();
+                      Get.offAllNamed(AppRoutes.LOGIN_SCREEN);
+                    },
+                    onCancelBtnTap: () {
+                      Get.back();
+                    },
+                  );
                 },
                 style: ButtonStyle(
                   padding: WidgetStateProperty.all(

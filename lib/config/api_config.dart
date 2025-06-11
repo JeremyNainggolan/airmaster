@@ -26,4 +26,6 @@ class ApiConfig {
   static const String check_request = '$EFB/check-request';
   static const String submit_request = '$EFB/submit-request';
   static const String cancel_request = '$EFB/cancel-request';
+  static const String pilot_handover = '$EFB/pilot-handover';
+  static const String occ_return = '$EFB/occ-return';
 }

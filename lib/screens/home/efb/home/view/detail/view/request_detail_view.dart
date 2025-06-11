@@ -342,47 +342,26 @@ class Detail_View extends GetView<Detail_Controller> {
                             );
 
                             if (controller.handOverTo.value == 'occHandover') {
-                              final loading = await controller.returnOCC();
-                              if (Get.isDialogOpen ?? false) {
-                                Get.back();
-                              }
-                              if (loading) {
-                                log('Device return at: OCC');
-                                await ShowAlert.showSuccessAlert(
-                                  Get.context!,
-                                  'Success',
-                                  'Device returned successfully.',
-                                );
-                              } else {
-                                await ShowAlert.showErrorAlert(
-                                  Get.context!,
-                                  'Failed',
-                                  'Failed to return device. Please try again later.',
-                                );
-                              }
+                              await Future.delayed(const Duration(seconds: 2));
+                              Get.back();
+                              Get.toNamed(
+                                AppRoutes.EFB_OCC_RETURN,
+                                arguments: {
+                                  'device': controller.device,
+                                  'feedback': controller.feedback,
+                                },
+                              );
                             } else if (controller.handOverTo.value ==
                                 'pilotHandover') {
                               await Future.delayed(const Duration(seconds: 2));
-                              log('Feedback: ${controller.feedback}');
-                              log('Device: ${controller.device}');
                               Get.back();
-                              if (controller.feedback.isEmpty) {
-                                log('EMPTY FEEDBACK');
-                                Get.toNamed(
-                                  AppRoutes.EFB_HANDOVER,
-                                  arguments: {'device': controller.device},
-                                );
-                              } else {
-                                log('NOT EMPTY FEEDBACK');
-                                Get.toNamed(
-                                  AppRoutes.EFB_HANDOVER,
-                                  arguments: {
-                                    'device': controller.device,
-                                    'feedback': controller.feedback,
-                                  },
-                                );
-                              }
-                              log('Device return at: Pilot Handover');
+                              Get.toNamed(
+                                AppRoutes.EFB_HANDOVER,
+                                arguments: {
+                                  'device': controller.device,
+                                  'feedback': controller.feedback,
+                                },
+                              );
                             }
                           }
                         }

@@ -5,6 +5,8 @@ import 'package:airmaster/screens/auth/login.dart';
 import 'package:airmaster/screens/home/dashboard.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindings/pilot_handover_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/bindings/occ_return_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/view/occ_return_view.dart';
 import 'package:get/get.dart';
 import 'package:airmaster/screens/home/efb/analytics/bindings/efb_analytics_binding.dart';
 import 'package:airmaster/screens/home/efb/analytics/view/efb_analytics.dart';
@@ -213,6 +215,13 @@ class AppPages {
       name: AppRoutes.EFB_HANDOVER,
       page: () => const Pilot_Handover_View(),
       binding: Pilot_Handover_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_OCC_RETURN,
+      page: () => const Occ_Return_View(),
+      binding: Occ_Return_Binding(),
       transition: Transition.native,
     ),
 
