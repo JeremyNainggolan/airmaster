@@ -48,11 +48,12 @@ class TC_Training_Controller extends GetxController {
         if (response.statusCode == 200) {
           // log('Data: ${data['data']}');
           log('Training cards fetched successfully');
+          return data['data'];
+          
         } else {
           log('Failed to fetch training cards: ${data['message']}');
         }
 
-      return data['data'];
         
     } catch (e) {
       log('Error fetching training cards: $e');

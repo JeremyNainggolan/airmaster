@@ -12,8 +12,12 @@ class ApiConfig {
   static const String get_flight_details = '$TS_1/get-flight-details';
 
   static const String TC = '$baseUrl/tc';
-  static const String get_training_cards = '$TC/index';
-  static const String new_training_card = '$TC/store';
+  static const String get_training_cards = '$TC/get-training-cards';
+  static const String new_training_card = '$TC/new-training-card';
+  static const String get_att_instructor = '$TC/get-att-instructor';
+  static const String new_training_attendance = '$TC/new-training-attendance';
+  static const String get_attendance_list = '$TC/get-attendance-list';
+  static const String delete_training_card = '$TC/delete-training-card';
 
   static const String EFB = '$baseUrl/efb';
   static const String get_count_devices = '$EFB/get-count-devices';

@@ -9,6 +9,7 @@ import 'package:airmaster/utils/const_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class TC_NewTraining extends GetView<TC_NewTrainingController> {
   const TC_NewTraining({super.key});
@@ -44,7 +45,7 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                 const SizedBox(height: 20),
                 //-------------------------SUBJECT-----------------------
                 TextFormField(
-                  controller: controller.subjectController,
+                  controller: controller.trainingController,
                   validator: (value) {
                     if (value == null || value.isEmpty || value == " ") {
                       // Validation Logic
@@ -100,7 +101,9 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                               ),
                             )
                             .toList(),
-                    onChanged: (value) => log('dropdown: $value'),
+                    onChanged: (value) {
+                      controller.selectedTrainingType.value = value!;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty || value == 'NONE') {
                         return 'Please select a training type';
@@ -112,6 +115,7 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
 
                 const SizedBox(height: 10),
                 TextFormField(
+                  controller: controller.descriptionController,
                   maxLines: 4,
                   keyboardType: TextInputType.multiline,
                   validator: (value) {
@@ -144,11 +148,25 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (controller.formKey.currentState!.validate()) {
-                        controller.saveTraining().then(
-                          (value) => Get.toNamed(AppRoutes.TC_TRAINING),
-                        );
+                        final response = await controller.saveTraining();
+                        if (response == true) {
+                          QuickAlert.show(
+                            context: Get.context!,
+                            type: QuickAlertType.success,
+                            text: 'Add Training Completed Successfully',
+                            onConfirmBtnTap: () {
+                              Get.back();
+                              Get.back();
+                            },
+                            confirmBtnTextStyle: GoogleFonts.notoSans(
+                              color: ColorConstants.textSecondary,
+                              fontSize: SizeConstant.TEXT_SIZE_HINT,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ); 
+                        }
                       } else {
                         Get.snackbar(
                           'Error',

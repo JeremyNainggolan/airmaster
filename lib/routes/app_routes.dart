@@ -27,6 +27,7 @@ class AppRoutes {
   static const String TC_TRAINING = '/main/tc/training';
   static const String TC_NEW_TRAINING = '/main/tc/new_training';
   static const String TC_TRAINING_LIST_DETAIL = '/main/tc/training_list_detail';
+  static const String TC_ADD_ATTENDANCE = '/main/tc/add_attendance';
 
   static const String TC_PILOT_CREW = '/main/tc/pilot_crew';
   static const String TC_PROFILE = '/main/tc/profile';

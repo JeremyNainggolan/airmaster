@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:flutter/material.dart';
@@ -8,34 +9,49 @@ import 'package:airmaster/config/api_config.dart';
 
 class TC_NewTrainingController extends GetxController {
   // Define your variables and methods
-  final formKey = GlobalKey<FormState>();
 
-  TextEditingController subjectController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  late GlobalKey<FormState> formKey;
+
+  final trainingController = TextEditingController();
+  final descriptionController = TextEditingController();
   // ignore: non_constant_identifier_names
-  bool is_delete = false;
 
-  Future saveTraining() async {
+  RxString selectedTrainingType = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    formKey = GlobalKey<FormState>();
+  }
+
+  Future<bool?> saveTraining() async {
     String token = await UserPreferences().getToken();
     try {
-      final response = await http.post(Uri.parse(ApiConfig.new_training_card), body: {
-      'subject': subjectController.text,
-      'date': dateController.text,
-      'description': descriptionController.text,
-      'is_delete': is_delete,
-      },
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json',
-      });
-        
-      return jsonDecode(response.body);
-      
+      final response = await http.post(
+        Uri.parse(ApiConfig.new_training_card),
+        body: {
+          'training': trainingController.text,
+          'recurrent': selectedTrainingType.value,
+          'training_description': descriptionController.text,
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      log(jsonDecode(response.body).toString());
+
+      if (response.statusCode == 200) {
+        log('Training saved successfully');
+        return true;
+      } else {
+        log('Failed to save training: ${jsonDecode(response.body)['message']}');
+        return false;
+      }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to save training: $e');
+      log('Error saving training: $e');
+      return false;
     }
-    
   }
 }

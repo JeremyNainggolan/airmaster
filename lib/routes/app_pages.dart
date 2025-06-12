@@ -63,6 +63,8 @@ import 'package:airmaster/screens/home/training_card/training/view/new_training/
 import 'package:airmaster/screens/home/training_card/training/view/new_training/bindings/new_training_bindings.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/bindings/training_list_detail_bindings.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/training_list_detail_view.dart';
+import 'package:airmaster/screens/home/training_card/training/view/add_attendance/view/tc_add_attendance_view.dart';
+import 'package:airmaster/screens/home/training_card/training/view/add_attendance/bindings/tc_add_attendance_binding.dart';
 
 class AppPages {
   static final routes = [
@@ -163,6 +165,12 @@ class AppPages {
       name: AppRoutes.TC_TRAINING_LIST_DETAIL,
       page: () => TC_TrainingListDetail(),
       binding: TC_TrainingListDetail_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_ADD_ATTENDANCE,
+      page: () => TC_AddAttendance(),
+      binding: TC_AddAttendance_Binding(),
       transition: Transition.native,
     ),
 
