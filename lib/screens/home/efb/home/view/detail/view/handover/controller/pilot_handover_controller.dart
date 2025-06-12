@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:airmaster/config/api_config.dart';
@@ -76,6 +75,7 @@ class Pilot_Handover_Controller extends GetxController {
       request.headers['Accept'] = 'application/json';
       request.headers['Content-Type'] = 'multipart/form-data';
       request.fields['request_id'] = device['id']['\$oid'];
+      request.fields['request_user'] = device['request_user'];
       request.fields['handover_to'] = user['id_number'];
       if (feedback.isNotEmpty) {
         request.fields['feedback'] = jsonEncode(feedback);

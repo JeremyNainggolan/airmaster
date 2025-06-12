@@ -41,6 +41,10 @@ class AppRoutes {
   static const String EFB_HANDOVER = '/main/efb/home/detail/handover';
   static const String EFB_OCC_RETURN = '/main/efb/home/detail/occ-return';
 
+  static const String EFB_REQUESTED_TO_OCC = '/main/efb/home/requested-to-occ';
+  static const String EFB_USED_TO_OCC = '/main/efb/home/used-to-occ';
+  static const String EFB_RETURNED_TO_OCC = '/main/efb/home/returned-to-occ';
+
   static const String EFB_DEVICES = '/main/efb/devices';
   static const String EFB_HISTORY = '/main/efb/history';
   static const String EFB_ANALYTICS = '/main/efb/analytics';

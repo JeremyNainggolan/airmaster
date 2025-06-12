@@ -371,7 +371,90 @@ class Request_View extends GetView<Request_Controller> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      _showConfirmationDialog(context);
+                                      QuickAlert.show(
+                                        context: Get.context!,
+                                        type: QuickAlertType.confirm,
+                                        title: 'Confirm Request',
+                                        text:
+                                            'Are you sure you want to submit this request?',
+                                        cancelBtnTextStyle:
+                                            GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                        confirmBtnTextStyle:
+                                            GoogleFonts.notoSans(
+                                              color:
+                                                  ColorConstants.textSecondary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                        onConfirmBtnTap: () async {
+                                          Get.back();
+                                          QuickAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: QuickAlertType.loading,
+                                            text: 'Submitting...',
+                                          );
+
+                                          var submitResult =
+                                              await controller.submitRequest();
+
+                                          if (Get.isDialogOpen ?? false) {
+                                            Get.back();
+                                          }
+
+                                          if (submitResult) {
+                                            QuickAlert.show(
+                                              barrierDismissible: false,
+                                              context: Get.context!,
+                                              type: QuickAlertType.success,
+                                              title: 'Success!',
+                                              text:
+                                                  'Your request has been submitted successfully.',
+                                              confirmBtnTextStyle:
+                                                  GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textSecondary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                              onConfirmBtnTap: () async {
+                                                Get.back();
+                                                Get.back();
+                                                Get.back(result: true);
+                                              },
+                                            );
+                                          } else {
+                                            QuickAlert.show(
+                                              context: Get.context!,
+                                              type: QuickAlertType.error,
+                                              title: 'Failed',
+                                              text:
+                                                  'Failed to submit your request. Please try again.',
+                                              confirmBtnTextStyle:
+                                                  GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textSecondary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                            );
+                                          }
+                                        },
+                                      );
                                     },
                                     style: ButtonStyle(
                                       padding: WidgetStateProperty.all(
@@ -401,117 +484,6 @@ class Request_View extends GetView<Request_Controller> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> _showConfirmationDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          backgroundColor: ColorConstants.backgroundColor,
-          shadowColor: ColorConstants.shadowColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          title: Text(
-            'Confirm Request',
-            style: GoogleFonts.notoSans(
-              color: ColorConstants.textPrimary,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Text(
-            'Are you sure you want to submit this request?',
-            style: GoogleFonts.notoSans(
-              color: ColorConstants.textPrimary,
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                'No',
-                style: GoogleFonts.notoSans(
-                  color: ColorConstants.textPrimary,
-                  fontSize: SizeConstant.TEXT_SIZE_HINT,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              child: Text(
-                'Yes',
-                style: GoogleFonts.notoSans(
-                  color: ColorConstants.textSecondary,
-                  fontSize: SizeConstant.TEXT_SIZE_HINT,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
-
-                QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.loading,
-                  text: 'Submitting...',
-                );
-
-                var submitResult = await controller.submitRequest();
-                log(submitResult.toString());
-
-                if (Get.isDialogOpen ?? false) {
-                  Get.back();
-                }
-
-                if (submitResult) {
-                  QuickAlert.show(
-                    barrierDismissible: false,
-                    context: Get.context!,
-                    type: QuickAlertType.success,
-                    title: 'Success!',
-                    text: 'Your request has been submitted successfully.',
-                    confirmBtnTextStyle: GoogleFonts.notoSans(
-                      color: ColorConstants.textSecondary,
-                      fontSize: SizeConstant.TEXT_SIZE_HINT,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    onConfirmBtnTap: () async {
-                      Get.back();
-                      Get.back();
-                      Get.back(result: true);
-                    },
-                  );
-                } else {
-                  QuickAlert.show(
-                    context: Get.context!,
-                    type: QuickAlertType.error,
-                    title: 'Failed',
-                    text: 'Failed to submit your request. Please try again.',
-                    confirmBtnTextStyle: GoogleFonts.notoSans(
-                      color: ColorConstants.textSecondary,
-                      fontSize: SizeConstant.TEXT_SIZE_HINT,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

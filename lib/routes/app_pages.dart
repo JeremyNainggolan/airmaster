@@ -7,6 +7,12 @@ import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindin
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/bindings/occ_return_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/view/occ_return_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/request/bindings/occ_requested_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/request/view/occ_requested_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/return/bindings/occ_returned_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/return/view/occ_returned_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/used/bindings/occ_used_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/occ-pages/used/view/occ_used_view.dart';
 import 'package:get/get.dart';
 import 'package:airmaster/screens/home/efb/analytics/bindings/efb_analytics_binding.dart';
 import 'package:airmaster/screens/home/efb/analytics/view/efb_analytics.dart';
@@ -222,6 +228,27 @@ class AppPages {
       name: AppRoutes.EFB_OCC_RETURN,
       page: () => const Occ_Return_View(),
       binding: Occ_Return_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_REQUESTED_TO_OCC,
+      page: () => const OCC_Requested_View(),
+      binding: OCC_Requested_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_USED_TO_OCC,
+      page: () => const OCC_Used_View(),
+      binding: OCC_Used_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_RETURNED_TO_OCC,
+      page: () => const OCC_Returned_View(),
+      binding: OCC_Returned_Binding(),
       transition: Transition.native,
     ),
 

@@ -150,13 +150,11 @@ class ShowAlert {
 
   static Future<bool?> showLoadingAlert(
     BuildContext dialogContext,
-    String title,
     String message,
   ) async {
     return await QuickAlert.show(
       context: dialogContext,
       type: QuickAlertType.loading,
-      title: title,
       text: message,
       barrierDismissible: false,
       confirmBtnTextStyle: GoogleFonts.notoSans(
@@ -164,6 +162,37 @@ class ShowAlert {
         fontSize: SizeConstant.TEXT_SIZE_HINT,
         fontWeight: FontWeight.normal,
       ),
+    );
+  }
+
+  static Future<bool?> showInfoAlert(
+    BuildContext dialogContext,
+    String title,
+    String message,
+  ) async {
+    return await QuickAlert.show(
+      context: dialogContext,
+      type: QuickAlertType.warning,
+      title: title,
+      text: message,
+      barrierDismissible: false,
+      showCancelBtn: true,
+      confirmBtnText: 'Yes',
+      confirmBtnTextStyle: GoogleFonts.notoSans(
+        color: ColorConstants.textSecondary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+      cancelBtnText: 'No',
+      cancelBtnTextStyle: GoogleFonts.notoSans(
+        color: ColorConstants.textPrimary,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
+      ),
+      onCancelBtnTap: () => Get.back(),
+      onConfirmBtnTap: () {
+        Get.back(result: true);
+      },
     );
   }
 }

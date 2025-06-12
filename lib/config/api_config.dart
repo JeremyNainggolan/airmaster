@@ -28,4 +28,9 @@ class ApiConfig {
   static const String cancel_request = '$EFB/cancel-request';
   static const String pilot_handover = '$EFB/pilot-handover';
   static const String occ_return = '$EFB/occ-return';
+
+  static const String get_confirmation_occ = '$EFB/get-confirmation-occ';
+  static const String reject_request_device = '$EFB/reject-request-device';
+  static const String approve_request_device = '$EFB/approve-request-device';
+  static const String confirm_return = '$EFB/confirm-return';
 }

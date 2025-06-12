@@ -227,9 +227,9 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                       TabBar(
                         controller: controller.occTabController,
                         tabs: [
-                          Tab(text: 'Confirmed'),
+                          Tab(text: 'Request'),
                           Tab(text: 'In Use'),
-                          Tab(text: 'Returned'),
+                          Tab(text: 'Return'),
                         ],
                         dividerColor: Colors.transparent,
                       ),
@@ -238,9 +238,335 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                         child: TabBarView(
                           controller: controller.occTabController,
                           children: [
-                            Center(child: Text('Confirmed Devices')),
-                            Center(child: Text('In Use Devices')),
-                            Center(child: Text('Returned Devices')),
+                            Obx(() {
+                              return RefreshIndicator(
+                                onRefresh: controller.refreshDataOCC,
+                                child:
+                                    controller.requestConfirmationOCC.isEmpty
+                                        ? ListView(
+                                          children: [
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.device_hub,
+                                                    size: 40,
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                  ),
+                                                  Text(
+                                                    'No Request Coming',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        : ListView.builder(
+                                          itemCount:
+                                              controller
+                                                  .requestConfirmationOCC
+                                                  .length,
+                                          itemBuilder: (context, index) {
+                                            final device =
+                                                controller
+                                                    .requestConfirmationOCC[index];
+                                            return Card(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color:
+                                                      ColorConstants.blackColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      SizeConstant
+                                                          .BORDER_RADIUS,
+                                                    ),
+                                              ),
+                                              color:
+                                                  ColorConstants
+                                                      .backgroundColor,
+                                              child: ListTile(
+                                                onTap: () async {
+                                                  final result =
+                                                      await Get.toNamed(
+                                                        AppRoutes
+                                                            .EFB_REQUESTED_TO_OCC,
+                                                        arguments: {
+                                                          'device': device,
+                                                        },
+                                                      );
+
+                                                  if (result == true) {
+                                                    controller.refreshDataOCC();
+                                                  }
+                                                },
+                                                leading: Icon(Icons.device_hub),
+                                                trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.black,
+                                                ),
+                                                title: Text(
+                                                  device['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant.TEXT_SIZE,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                              );
+                            }),
+
+                            Obx(() {
+                              return RefreshIndicator(
+                                onRefresh: controller.refreshDataOCC,
+                                child:
+                                    controller.deviceUsedOCC.isEmpty
+                                        ? ListView(
+                                          children: [
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.device_hub,
+                                                    size: 40,
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                  ),
+                                                  Text(
+                                                    'No Devices in Use',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        : ListView.builder(
+                                          itemCount:
+                                              controller.deviceUsedOCC.length,
+                                          itemBuilder: (context, index) {
+                                            final device =
+                                                controller.deviceUsedOCC[index];
+                                            return Card(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color:
+                                                      ColorConstants.blackColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      SizeConstant
+                                                          .BORDER_RADIUS,
+                                                    ),
+                                              ),
+                                              color:
+                                                  ColorConstants
+                                                      .backgroundColor,
+                                              child: ListTile(
+                                                onTap: () async {
+                                                  final result =
+                                                      await Get.toNamed(
+                                                        AppRoutes
+                                                            .EFB_USED_TO_OCC,
+                                                        arguments: {
+                                                          'device': device,
+                                                        },
+                                                      );
+
+                                                  if (result == true) {
+                                                    controller.refreshDataOCC();
+                                                  }
+                                                },
+                                                leading: Icon(Icons.device_hub),
+                                                trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.black,
+                                                ),
+                                                title: Text(
+                                                  device['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant.TEXT_SIZE,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                              );
+                            }),
+
+                            Obx(() {
+                              return RefreshIndicator(
+                                onRefresh: controller.refreshDataOCC,
+                                child:
+                                    controller.returnConfirmationOCC.isEmpty
+                                        ? ListView(
+                                          children: [
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.device_hub,
+                                                    size: 40,
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                  ),
+                                                  Text(
+                                                    'No Return Request Coming',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        : ListView.builder(
+                                          itemCount:
+                                              controller
+                                                  .returnConfirmationOCC
+                                                  .length,
+                                          itemBuilder: (context, index) {
+                                            final device =
+                                                controller
+                                                    .returnConfirmationOCC[index];
+                                            return Card(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color:
+                                                      ColorConstants.blackColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      SizeConstant
+                                                          .BORDER_RADIUS,
+                                                    ),
+                                              ),
+                                              color:
+                                                  ColorConstants
+                                                      .backgroundColor,
+                                              child: ListTile(
+                                                onTap: () async {
+                                                  final result =
+                                                      await Get.toNamed(
+                                                        AppRoutes
+                                                            .EFB_RETURNED_TO_OCC,
+                                                        arguments: {
+                                                          'device': device,
+                                                        },
+                                                      );
+
+                                                  if (result == true) {
+                                                    controller.refreshDataOCC();
+                                                  }
+                                                },
+                                                leading: Icon(Icons.device_hub),
+                                                trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.black,
+                                                ),
+                                                title: Text(
+                                                  device['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant.TEXT_SIZE,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -622,7 +948,8 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                 BuildRow(
                   label: 'Status',
-                  value: device['status'].toString().toUpperCase(),
+                  value:
+                      device['status'].toString() == 'waiting' ? 'Waiting' : '',
                 ),
 
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_DOUBLE),

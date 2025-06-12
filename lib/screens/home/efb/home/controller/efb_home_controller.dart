@@ -31,6 +31,10 @@ class EFB_Home_Controller extends GetxController
   final waitingConfirmation = <Map<String, dynamic>>[].obs;
   final inUse = <Map<String, dynamic>>[].obs;
 
+  final requestConfirmationOCC = <Map<String, dynamic>>[].obs;
+  final deviceUsedOCC = <Map<String, dynamic>>[].obs;
+  final returnConfirmationOCC = <Map<String, dynamic>>[].obs;
+
   final occReturn = false.obs;
   final pilotHandover = false.obs;
 
@@ -46,6 +50,10 @@ class EFB_Home_Controller extends GetxController
     getAvailableDevices();
     getWaitingConfirmation();
     getInUse();
+
+    getOCCRequestStatus();
+    getDeviceOCCUsed();
+    getOCCReturnStatus();
 
     var hour = DateTime.now().hour;
     if (hour < 12) {
@@ -64,6 +72,20 @@ class EFB_Home_Controller extends GetxController
     super.onClose();
   }
 
+  /*
+    |--------------------------------------------------------------------------
+    | Line 81 - 290 is the EFB API handle from Pilot Request
+    |--------------------------------------------------------------------------
+    |
+    | This section handles the API requests related to checking pilot requests,
+    | loading user data, fetching available devices, and managing confirmation
+    | statuses. It includes methods for checking requests, loading user data,
+    | fetching available devices, and managing waiting confirmations and in-use
+    | devices. Each method interacts with the API and updates the relevant
+    | observable variables in the controller.
+    |
+    */
+
   Future<void> checkingRequest() async {
     String token = await _userPrefs.getToken();
     String hub = await _userPrefs.getHub();
@@ -79,10 +101,6 @@ class EFB_Home_Controller extends GetxController
           'Accept': 'application/json',
         },
       );
-
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-
-      log("Checking Request Data: ${responseData.toString()}");
 
       if (response.statusCode == 200) {
         checkRequest.value = true;
@@ -104,12 +122,13 @@ class EFB_Home_Controller extends GetxController
 
   Future<void> getAvailableDevices() async {
     String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
 
     try {
       final response = await http.get(
         Uri.parse(
           ApiConfig.get_count_devices,
-        ).replace(queryParameters: {'hub': hub.value}),
+        ).replace(queryParameters: {'hub': hub}),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -119,11 +138,13 @@ class EFB_Home_Controller extends GetxController
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        availableDevicesCount.value = responseData['data']['available'] ?? 0;
-        usedDevicesCount.value = responseData['data']['used'] ?? 0;
+        availableDevicesCount.value = responseData['data']['available'];
+        usedDevicesCount.value = responseData['data']['used'];
       }
     } catch (e) {
-      log('Error fetching devices: $e');
+      log('Error fetching available devices: $e');
+      availableDevicesCount.value = 0;
+      usedDevicesCount.value = 0;
     }
   }
 
@@ -273,11 +294,138 @@ class EFB_Home_Controller extends GetxController
     }
   }
 
+  /*
+    |--------------------------------------------------------------------------
+    | Line 305 - ... is the EFB API handle from OCC Request
+    |--------------------------------------------------------------------------
+    |
+    | This section handles the API requests related to OCC requests,
+    |
+    */
+
+  Future<void> getOCCRequestStatus() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          ApiConfig.get_confirmation_occ,
+        ).replace(queryParameters: {'hub': hub, 'status': 'waiting'}),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        requestConfirmationOCC.clear();
+        if (responseData['data'] != null) {
+          requestConfirmationOCC.addAll(
+            (responseData['data'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList(),
+          );
+
+          log("OCC Request Data: ${requestConfirmationOCC.toString()}");
+        } else {
+          requestConfirmationOCC.clear();
+        }
+      } else {
+        requestConfirmationOCC.clear();
+      }
+    } catch (e) {
+      log('Error fetching OCC request status: $e');
+    }
+  }
+
+  Future<void> getDeviceOCCUsed() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          ApiConfig.get_confirmation_occ,
+        ).replace(queryParameters: {'hub': hub, 'status': 'used'}),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        deviceUsedOCC.clear();
+        if (responseData['data'] != null) {
+          deviceUsedOCC.addAll(
+            (responseData['data'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList(),
+          );
+        } else {
+          deviceUsedOCC.clear();
+        }
+      } else {
+        deviceUsedOCC.clear();
+      }
+    } catch (e) {
+      log('Error fetching OCC request status: $e');
+    }
+  }
+
+  Future<void> getOCCReturnStatus() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          ApiConfig.get_confirmation_occ,
+        ).replace(queryParameters: {'hub': hub, 'status': 'occ_returned'}),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        returnConfirmationOCC.clear();
+        if (responseData['data'] != null) {
+          returnConfirmationOCC.addAll(
+            (responseData['data'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList(),
+          );
+        } else {
+          returnConfirmationOCC.clear();
+        }
+      } else {
+        returnConfirmationOCC.clear();
+      }
+    } catch (e) {
+      log('Error fetching OCC request status: $e');
+    }
+  }
+
   Future<void> refreshData() async {
     await loadUserData();
     await getAvailableDevices();
     await getWaitingConfirmation();
     await getInUse();
     await checkingRequest();
+  }
+
+  Future<void> refreshDataOCC() async {
+    await loadUserData();
+    await getAvailableDevices();
+    await getOCCRequestStatus();
+    await getDeviceOCCUsed();
+    await getOCCReturnStatus();
   }
 }
