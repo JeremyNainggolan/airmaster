@@ -20,6 +20,16 @@ class ApiConfig {
   static const String delete_training_card = '$TC/delete-training-card';
 
   static const String EFB = '$baseUrl/efb';
+
+  /*
+    |--------------------------------------------------------------------------
+    | Line 29 - 45 EFB HOME API ENDPOINTS
+    |--------------------------------------------------------------------------
+    |
+    | These endpoints are used for the EFB home screen functionalities.
+    |
+    */
+
   static const String get_count_devices = '$EFB/get-count-devices';
   static const String get_user_by_id = '$EFB/get-user-by-id';
   static const String get_devices = '$EFB/get-devices';
@@ -37,4 +47,18 @@ class ApiConfig {
   static const String reject_request_device = '$EFB/reject-request-device';
   static const String approve_request_device = '$EFB/approve-request-device';
   static const String confirm_return = '$EFB/confirm-return';
+
+  /*
+    |--------------------------------------------------------------------------
+    | Line 56 - .. EFB HISTORY API ENDPOINTS
+    |--------------------------------------------------------------------------
+    |
+    | These endpoints are used for the EFB home screen functionalities.
+    |
+    */
+
+  static const String get_history = '$EFB/get-history-occ';
+  static const String get_device_image = '$EFB/get-device-image';
+  static const String get_feedback_detail = '$EFB/get-feedback-detail';
+  static const String get_feedback_format_pdf = '$EFB/get-feedback-format-pdf';
 }

@@ -3,6 +3,12 @@
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/auth/login.dart';
 import 'package:airmaster/screens/home/dashboard.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/bindings/history_detail_binding.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/bindings/detail_feedback_binding.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/detail_feedback_view.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/format-pdf/bindings/format_pdf_binding.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/format-pdf/view/format_pdf_view.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/history_detail_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindings/pilot_handover_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/bindings/occ_return_binding.dart';
@@ -273,6 +279,27 @@ class AppPages {
       name: AppRoutes.EFB_HISTORY,
       page: () => const EFB_History(),
       binding: EFB_History_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_HISTORY_DETAIL,
+      page: () => const History_Detail_View(),
+      binding: History_Detail_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_HISTORY_DETAIL_FEEDBACK,
+      page: () => const Detail_Feedback_View(),
+      binding: Detail_Feedback_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_HISTORY_DETAIL_FORMAT_PDF,
+      page: () => const Format_Pdf_View(),
+      binding: Format_Pdf_Binding(),
       transition: Transition.native,
     ),
 

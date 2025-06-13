@@ -106,8 +106,8 @@ class CustomInputDecoration {
       labelText: labelText,
       labelStyle: GoogleFonts.notoSans(
         color: ColorConstants.textPrimary,
-        fontSize: SizeConstant.TEXT_SIZE,
-        fontWeight: FontWeight.bold,
+        fontSize: SizeConstant.TEXT_SIZE_HINT,
+        fontWeight: FontWeight.normal,
       ),
     );
   }

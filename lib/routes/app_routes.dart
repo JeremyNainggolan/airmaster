@@ -47,7 +47,14 @@ class AppRoutes {
   static const String EFB_RETURNED_TO_OCC = '/main/efb/home/returned-to-occ';
 
   static const String EFB_DEVICES = '/main/efb/devices';
+
   static const String EFB_HISTORY = '/main/efb/history';
+  static const String EFB_HISTORY_DETAIL = '/main/efb/history/detail';
+  static const String EFB_HISTORY_DETAIL_FEEDBACK =
+      '/main/efb/history/detail/feedback';
+  static const String EFB_HISTORY_DETAIL_FORMAT_PDF =
+      '/main/efb/history/detail/feedback/format-pdf';
+
   static const String EFB_ANALYTICS = '/main/efb/analytics';
   static const String EFB_PROFILE = '/main/efb/profile';
 }

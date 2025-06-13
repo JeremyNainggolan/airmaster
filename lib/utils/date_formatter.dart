@@ -17,4 +17,14 @@ class DateFormatter {
     return DateTime(now.year, now.month, now.day);
   }
 
+  static DateTime convertToDate(String input, String format) {
+    try {
+      final formatter = DateFormat(format);
+      return formatter.parseStrict(input);
+    } catch (e) {
+      throw FormatException(
+        "Gagal mengonversi '$input' ke DateTime dengan format '$format': $e",
+      );
+    }
+  }
 }

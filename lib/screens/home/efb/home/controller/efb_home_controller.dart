@@ -74,7 +74,7 @@ class EFB_Home_Controller extends GetxController
 
   /*
     |--------------------------------------------------------------------------
-    | Line 81 - 290 is the EFB API handle from Pilot Request
+    | Line 89 - 290 is the EFB API handle from Pilot Request
     |--------------------------------------------------------------------------
     |
     | This section handles the API requests related to checking pilot requests,
@@ -296,7 +296,7 @@ class EFB_Home_Controller extends GetxController
 
   /*
     |--------------------------------------------------------------------------
-    | Line 305 - ... is the EFB API handle from OCC Request
+    | Line 305 - 414 is the EFB API handle from OCC Request
     |--------------------------------------------------------------------------
     |
     | This section handles the API requests related to OCC requests,
