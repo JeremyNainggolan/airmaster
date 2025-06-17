@@ -1,10 +1,15 @@
+// format_pdf_view.dart
+
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/format-pdf/controller/format_pdf_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
-import 'package:airmaster/widgets/build_row.dart';
+import 'package:airmaster/widgets/build_row_text_field.dart';
+import 'package:airmaster/widgets/shimmer_box.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
   const Format_Pdf_View({super.key});
@@ -16,9 +21,7 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
         backgroundColor: ColorConstants.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
         ),
         title: Text(
           "EFB | PDF Format",
@@ -30,8 +33,66 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
         ),
       ),
       backgroundColor: ColorConstants.backgroundColor,
-      body: Obx(
-        () => Padding(
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Padding(
+            padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerBox(width: 200, height: 24),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.tertiaryColor,
+                    borderRadius: BorderRadius.circular(
+                      SizeConstant.BORDER_RADIUS,
+                    ),
+                    border: Border.all(color: ColorConstants.blackColor),
+                  ),
+                  width: double.infinity,
+                  padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      ShimmerBox(width: 100, height: 18),
+                      SizedBox(height: 8),
+                      ShimmerBox(width: double.infinity, height: 16),
+                      SizedBox(height: 8),
+                      ShimmerBox(width: double.infinity, height: 16),
+                      SizedBox(height: 16),
+                      ShimmerBox(width: 100, height: 18),
+                      SizedBox(height: 8),
+                      ShimmerBox(width: double.infinity, height: 16),
+                      SizedBox(height: 8),
+                      ShimmerBox(width: double.infinity, height: 16),
+                      SizedBox(height: 24),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ShimmerBox(width: 100, height: 36),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (controller.format.isEmpty) {
+          return Center(
+            child: Text(
+              controller.errorMessage.value,
+              style: GoogleFonts.notoSans(
+                color: ColorConstants.textPrimary,
+                fontSize: SizeConstant.TEXT_SIZE_HINT,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+
+        return Padding(
           padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
           child: Column(
             children: [
@@ -69,11 +130,69 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
                         color: ColorConstants.textPrimary,
                       ),
                     ),
-                    BuildRow(
+                    BuildRowWithTextField(
                       label: 'Rec No.',
-                      value: controller.format['rec_number'],
+                      controller: controller.recNumberController,
                     ),
-                    BuildRow(label: 'Date ', value: controller.format['date']),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.0),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Date',
+                                  style: GoogleFonts.notoSans(
+                                    color: ColorConstants.textPrimary,
+                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Text(
+                                ":",
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textPrimary,
+                                  fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                ),
+                              ),
+                            ),
+
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: TextFormField(
+                                  readOnly: true,
+                                  controller: controller.dateController,
+                                  style: GoogleFonts.notoSans(
+                                    color: ColorConstants.textPrimary,
+                                    fontSize: SizeConstant.TEXT_SIZE,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 12.0,
+                                    ),
+                                  ),
+                                  onTap: () async {
+                                    await controller.selectDate();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                     Text(
                       'Footer',
@@ -83,13 +202,13 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
                         color: ColorConstants.textPrimary,
                       ),
                     ),
-                    BuildRow(
+                    BuildRowWithTextField(
                       label: 'Footer Left',
-                      value: controller.format['left_footer'],
+                      controller: controller.footerLeftController,
                     ),
-                    BuildRow(
-                      label: 'Footer Right ',
-                      value: controller.format['right_footer'],
+                    BuildRowWithTextField(
+                      label: 'Footer Right',
+                      controller: controller.footerRightController,
                     ),
                     SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
                     Row(
@@ -103,7 +222,48 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
                               horizontal: SizeConstant.HORIZONTAL_PADDING * 4,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final isConfirmed = await ShowAlert.showConfirmAlert(
+                              Get.context!,
+                              'Confirm',
+                              'Are you sure you want to update the PDF format?',
+                            );
+
+                            if (isConfirmed == true) {
+                              ShowAlert.showLoadingAlert(
+                                Get.context!,
+                                'Updating PDF format...',
+                              );
+
+                              final isSuccess = await controller.saveFormat();
+
+                              if (isSuccess) {
+                                QuickAlert.show(
+                                  barrierDismissible: false,
+                                  context: Get.context!,
+                                  type: QuickAlertType.success,
+                                  title: 'Success',
+                                  text: 'PDF format updated successfully.',
+                                  confirmBtnTextStyle: GoogleFonts.notoSans(
+                                    color: ColorConstants.textSecondary,
+                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  onConfirmBtnTap: () async {
+                                    Get.back();
+                                    Get.back();
+                                  },
+                                );
+                                controller.loadFormat();
+                              } else {
+                                ShowAlert.showErrorAlert(
+                                  Get.context!,
+                                  'Error',
+                                  'Failed to update PDF format. Please try again.',
+                                );
+                              }
+                            }
+                          },
                           child: Text(
                             'Update',
                             style: GoogleFonts.notoSans(
@@ -120,8 +280,8 @@ class Format_Pdf_View extends GetView<Format_Pdf_Controller> {
               ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/controller/detail_feedback_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -31,8 +34,16 @@ class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
         ),
       ),
       backgroundColor: ColorConstants.backgroundColor,
-      body: Obx(
-        () => SingleChildScrollView(
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: ColorConstants.primaryColor,
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
             child: Column(
@@ -577,8 +588,8 @@ class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
               ],
             ),
           ),
-        ),
-      ),
+        );
+      }),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
         child: SizedBox(
@@ -592,7 +603,23 @@ class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
                 backgroundColor: ColorConstants.successColor,
                 padding: EdgeInsets.symmetric(vertical: 14),
               ),
-              onPressed: () async {},
+              onPressed: () async {
+                ShowAlert.showLoadingAlert(Get.context!, 'Please wait...');
+
+                await Future.delayed(Duration(seconds: 2));
+
+                final isSuccess = await controller.createDocument();
+
+                if (isSuccess == true) {
+                  Get.back();
+                } else {
+                  ShowAlert.showErrorAlert(
+                    Get.context!,
+                    'Failed to create document',
+                    'Please try again later.',
+                  );
+                }
+              },
               child: Text(
                 'Open Attachment Feedback',
                 style: GoogleFonts.notoSans(

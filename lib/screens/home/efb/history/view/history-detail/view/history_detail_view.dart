@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/controller/history_detail_controller.dart';
-import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/controller/detail_feedback_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/utils/date_formatter.dart';
@@ -256,37 +257,10 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                                 controller.detail['feedback']
                                     ? GestureDetector(
                                       onTap: () async {
-                                        final feedbackDetailController =
-                                            Get.put(
-                                              Detail_Feedback_Controller(),
-                                            );
-
-                                        Get.dialog(
-                                          Center(
-                                            child:
-                                                LoadingAnimationWidget.flickr(
-                                                  leftDotColor:
-                                                      ColorConstants
-                                                          .primaryColor,
-                                                  rightDotColor:
-                                                      ColorConstants
-                                                          .secondaryColor,
-                                                  size: 45,
-                                                ),
-                                          ),
-                                          barrierDismissible: false,
+                                        log(
+                                          'request_id: ${controller.detail['_id']['\$oid']}',
                                         );
-
-                                        await feedbackDetailController
-                                            .getFeedbackDetail(
-                                              controller.detail['_id']['\$oid'],
-                                            );
-
-                                        await Future.delayed(
-                                          const Duration(seconds: 2),
-                                        );
-
-                                        Get.back();
+                                        log('history: ${controller.detail}');
 
                                         Get.toNamed(
                                           AppRoutes.EFB_HISTORY_DETAIL_FEEDBACK,
@@ -294,6 +268,7 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                                             'request_id':
                                                 controller
                                                     .detail['_id']['\$oid'],
+                                            'history': controller.detail,
                                           },
                                         );
                                       },
