@@ -17,6 +17,8 @@ class Detail_Feedback_Controller extends GetxController {
 
   final isLoading = true.obs;
 
+  final rank = ''.obs;
+
   final history = {}.obs;
   final feedback = {}.obs;
   final format = {}.obs;
@@ -26,10 +28,15 @@ class Detail_Feedback_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getRank();
 
     history.value = params['history'];
     reqId.value = params['request_id'];
     getFeedbackDetail(reqId.value);
+  }
+
+  Future<void> getRank() async {
+    rank.value = await UserPreferences().getRank();
   }
 
   Future<void> getFeedbackDetail(String requestId) async {

@@ -1,7 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:developer';
-
 import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/controller/efb_history_controller.dart';
@@ -21,10 +19,245 @@ class EFB_History extends GetView<EFB_History_Controller> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
-      body: Obx(
-        () => Padding(
+    return Obx(() {
+      if (controller.rank.value == 'OCC') {
+        return Scaffold(
+          backgroundColor: ColorConstants.backgroundColor,
+          body: Padding(
+            padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        autofocus: false,
+                        controller: controller.textSearchField,
+                        decoration:
+                            CustomInputDecoration.customInputDecorationWithPrefixIcon(
+                              labelText: 'Search History',
+                              icon: Icon(
+                                Icons.search,
+                                color: ColorConstants.blackColor,
+                              ),
+                            ),
+                        onChanged: (value) {
+                          controller.searchHistory(value);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(SizeConstant.PADDING_MIN),
+                      child: IconButton(
+                        icon: Icon(Icons.filter_list, size: 32.0),
+                        onPressed: () async {
+                          _showFilterDialog();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+                Expanded(
+                  child:
+                      controller.isLoading.value
+                          ? Center(
+                            child: LoadingAnimationWidget.hexagonDots(
+                              color: ColorConstants.activeColor,
+                              size: 48,
+                            ),
+                          )
+                          : RefreshIndicator(
+                            onRefresh: controller.refreshData,
+                            child:
+                                controller.occFilteredHistory.isEmpty
+                                    ? ListView(
+                                      children: [
+                                        Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.device_hub,
+                                                size: 40,
+                                                color:
+                                                    ColorConstants.primaryColor,
+                                              ),
+                                              Text(
+                                                'No History Found',
+                                                style: GoogleFonts.notoSans(
+                                                  color:
+                                                      ColorConstants
+                                                          .textPrimary,
+                                                  fontSize:
+                                                      SizeConstant
+                                                          .TEXT_SIZE_HINT,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                    : ListView.builder(
+                                      itemCount:
+                                          controller.occFilteredHistory.length,
+                                      itemBuilder: (context, index) {
+                                        final history =
+                                            controller
+                                                .occFilteredHistory[index];
+                                        return Card(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: ColorConstants.blackColor,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              SizeConstant.BORDER_RADIUS,
+                                            ),
+                                          ),
+                                          color: ColorConstants.backgroundColor,
+                                          child: ListTile(
+                                            onTap: () {
+                                              Get.toNamed(
+                                                AppRoutes.EFB_HISTORY_DETAIL,
+                                                arguments: {'detail': history},
+                                              );
+                                            },
+                                            leading: CircleAvatar(
+                                              radius: 25,
+                                              backgroundImage:
+                                                  history['request_user_photo'] !=
+                                                          null
+                                                      ? NetworkImage(
+                                                        history['request_user_photo'],
+                                                      )
+                                                      : AssetImage(
+                                                            'assets/images/default_picture.png',
+                                                          )
+                                                          as ImageProvider,
+                                            ),
+                                            trailing: Icon(
+                                              Icons.chevron_right,
+                                              color: Colors.black,
+                                            ),
+                                            title: Text(
+                                              history['request_user_name'],
+                                              style: GoogleFonts.notoSans(
+                                                color:
+                                                    ColorConstants.textPrimary,
+                                                fontSize:
+                                                    SizeConstant.TEXT_SIZE + 2,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  history['request_user_rank'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  history['deviceno'],
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  DateFormatter.convertDateTimeDisplay(
+                                                    history['request_date'],
+                                                    'dd MMMM yyyy',
+                                                  ),
+                                                  style: GoogleFonts.notoSans(
+                                                    color:
+                                                        ColorConstants
+                                                            .textPrimary,
+                                                    fontSize:
+                                                        SizeConstant
+                                                            .TEXT_SIZE_HINT,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                          ),
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final isConfirmed = await ShowAlert.showConfirmAlert(
+                Get.context!,
+                'Export to Excel',
+                'Are you sure you want to export the history to Excel?',
+              );
+
+              if (isConfirmed == true) {
+                ShowAlert.showLoadingAlert(
+                  Get.context!,
+                  'Exporting to excel...',
+                );
+
+                final isSuccess = await controller.exportToExcel();
+                Get.back();
+
+                if (isSuccess == true) {
+                  QuickAlert.show(
+                    context: Get.context!,
+                    type: QuickAlertType.success,
+                    title: 'Success',
+                    text: 'History exported successfully.',
+                    onConfirmBtnTap: () {
+                      Get.back();
+                    },
+                  );
+                } else {
+                  QuickAlert.show(
+                    context: Get.context!,
+                    type: QuickAlertType.error,
+                    title: 'Error',
+                    text: 'Failed to export history. Please try again later.',
+                    onConfirmBtnTap: () {
+                      Get.back();
+                    },
+                  );
+                }
+              }
+            },
+            child: Icon(
+              Icons.playlist_add_circle_rounded,
+              size: 38.0,
+              color: ColorConstants.whiteColor,
+            ),
+          ),
+        );
+      }
+
+      return Scaffold(
+        backgroundColor: ColorConstants.backgroundColor,
+        body: Padding(
           padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
           child: Column(
             children: [
@@ -43,16 +276,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                             ),
                           ),
                       onChanged: (value) {
-                        controller.searchHistory(value);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(SizeConstant.PADDING_MIN),
-                    child: IconButton(
-                      icon: Icon(Icons.filter_list, size: 32.0),
-                      onPressed: () async {
-                        _showFilterDialog();
+                        controller.searchOtherHistory(value);
                       },
                     ),
                   ),
@@ -71,7 +295,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                         : RefreshIndicator(
                           onRefresh: controller.refreshData,
                           child:
-                              controller.filteredHistory.isEmpty
+                              controller.otherFilteredHistory.isEmpty
                                   ? ListView(
                                     children: [
                                       Center(
@@ -102,10 +326,11 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                   )
                                   : ListView.builder(
                                     itemCount:
-                                        controller.filteredHistory.length,
+                                        controller.otherFilteredHistory.length,
                                     itemBuilder: (context, index) {
                                       final history =
-                                          controller.filteredHistory[index];
+                                          controller
+                                              .otherFilteredHistory[index];
                                       return Card(
                                         shape: RoundedRectangleBorder(
                                           side: BorderSide(
@@ -203,53 +428,8 @@ class EFB_History extends GetView<EFB_History_Controller> {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          log('Total Data: ${controller.filteredHistory.length}');
-          log('Data: ${controller.history.toString()}');
-          final isConfirmed = await ShowAlert.showConfirmAlert(
-            Get.context!,
-            'Export to Excel',
-            'Are you sure you want to export the history to Excel?',
-          );
-
-          if (isConfirmed == true) {
-            ShowAlert.showLoadingAlert(Get.context!, 'Exporting to excel...');
-
-            final isSuccess = await controller.exportToExcel();
-            Get.back();
-
-            if (isSuccess == true) {
-              QuickAlert.show(
-                context: Get.context!,
-                type: QuickAlertType.success,
-                title: 'Success',
-                text: 'History exported successfully.',
-                onConfirmBtnTap: () {
-                  Get.back();
-                },
-              );
-            } else {
-              QuickAlert.show(
-                context: Get.context!,
-                type: QuickAlertType.error,
-                title: 'Error',
-                text: 'Failed to export history. Please try again later.',
-                onConfirmBtnTap: () {
-                  Get.back();
-                },
-              );
-            }
-          }
-        },
-        child: Icon(
-          Icons.playlist_add_circle_rounded,
-          size: 38.0,
-          color: ColorConstants.whiteColor,
-        ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _showFilterDialog() async {

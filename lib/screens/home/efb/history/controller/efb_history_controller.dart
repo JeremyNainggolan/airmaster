@@ -16,8 +16,11 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class EFB_History_Controller extends GetxController {
-  final RxList<dynamic> history = <dynamic>[].obs;
-  final RxList<dynamic> filteredHistory = <dynamic>[].obs;
+  final RxList<dynamic> occHistory = <dynamic>[].obs;
+  final RxList<dynamic> occFilteredHistory = <dynamic>[].obs;
+
+  final RxList<dynamic> otherHistory = <dynamic>[].obs;
+  final RxList<dynamic> otherFilteredHistory = <dynamic>[].obs;
 
   final RxBool doneCheckBox = false.obs;
   final RxBool handoverCheckBox = false.obs;
@@ -34,19 +37,22 @@ class EFB_History_Controller extends GetxController {
   void onInit() {
     super.onInit();
     loadUserData();
-    getHistory();
+    getOccHistory();
+    getOtherHistory();
   }
 
   Future<void> refreshData() async {
     await loadUserData();
-    await getHistory();
+    await getOccHistory();
+    await getOtherHistory();
   }
 
   Future<void> loadUserData() async {
     rank.value = await UserPreferences().getRank();
+    log('User rank: $rank');
   }
 
-  Future<void> getHistory() async {
+  Future<void> getOccHistory() async {
     isLoading.value = true;
     String token = await UserPreferences().getToken();
 
@@ -62,8 +68,37 @@ class EFB_History_Controller extends GetxController {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
       if (response.statusCode == 200 && responseData['data'] != null) {
-        history.assignAll(responseData['data']);
-        filteredHistory.assignAll(responseData['data']);
+        occHistory.assignAll(responseData['data']);
+        occFilteredHistory.assignAll(responseData['data']);
+      }
+    } catch (e) {
+      log('Error fetching history data: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getOtherHistory() async {
+    isLoading.value = true;
+    String token = await UserPreferences().getToken();
+    String userId = await UserPreferences().getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          ApiConfig.get_other_history,
+        ).replace(queryParameters: {'request_user': userId}),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && responseData['data'] != null) {
+        otherHistory.assignAll(responseData['data']);
+        otherFilteredHistory.assignAll(responseData['data']);
       }
     } catch (e) {
       log('Error fetching history data: $e');
@@ -158,16 +193,31 @@ class EFB_History_Controller extends GetxController {
 
   void searchHistory(String query) {
     if (query.isEmpty) {
-      filteredHistory.assignAll(history);
+      occFilteredHistory.assignAll(occHistory);
     } else {
       final result =
-          history.where((h) {
+          occHistory.where((h) {
             return h['request_user_name'].toString().toLowerCase().contains(
               query.toLowerCase(),
             );
           }).toList();
 
-      filteredHistory.assignAll(result);
+      occFilteredHistory.assignAll(result);
+    }
+  }
+
+  void searchOtherHistory(String query) {
+    if (query.isEmpty) {
+      otherFilteredHistory.assignAll(otherHistory);
+    } else {
+      final result =
+          otherHistory.where((h) {
+            return h['request_user_name'].toString().toLowerCase().contains(
+              query.toLowerCase(),
+            );
+          }).toList();
+
+      otherFilteredHistory.assignAll(result);
     }
   }
 
@@ -188,7 +238,7 @@ class EFB_History_Controller extends GetxController {
     if (parsedTo != null) to = parsedTo;
 
     final result =
-        history.where((history) {
+        occHistory.where((history) {
           final requestDate = DateTime.tryParse(history['request_date']);
           if (requestDate == null) return false;
 
@@ -204,7 +254,7 @@ class EFB_History_Controller extends GetxController {
           return matchDate && matchDone && matchHandover;
         }).toList();
 
-    filteredHistory.assignAll(result);
+    occFilteredHistory.assignAll(result);
     log('Filtered history: ${result.length} items');
   }
 
@@ -214,7 +264,7 @@ class EFB_History_Controller extends GetxController {
     textSearchField.clear();
     fromDate.clear();
     toDate.clear();
-    filteredHistory.assignAll(history);
+    occFilteredHistory.assignAll(occHistory);
   }
 
   Future<bool> exportToExcel() async {
@@ -269,7 +319,7 @@ class EFB_History_Controller extends GetxController {
 
       sheet.appendRow(header);
 
-      for (var item in filteredHistory) {
+      for (var item in occFilteredHistory) {
         final row = [
           TextCellValue(item['request_user'] ?? '-'),
           TextCellValue(item['request_user_name'] ?? '-'),

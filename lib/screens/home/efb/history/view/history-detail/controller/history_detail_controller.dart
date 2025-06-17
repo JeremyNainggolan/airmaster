@@ -17,6 +17,8 @@ class History_Detail_Controller extends GetxController {
 
   final detail = {}.obs;
 
+  final rank = ''.obs;
+
   final format = {}.obs;
 
   Rx<Uint8List?> img = Rx<Uint8List?>(null);
@@ -24,7 +26,12 @@ class History_Detail_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getRank();
     detail.value = params['detail'];
+  }
+
+  Future<void> getRank() async {
+    rank.value = await UserPreferences().getRank();
   }
 
   Future<void> getImage(String imgName) async {
