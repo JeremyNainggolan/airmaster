@@ -56,17 +56,16 @@ class OCC_Requested_Controller extends GetxController {
     String userId = await UserPreferences().getIdNumber();
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiConfig.approve_request_device).replace(
-          queryParameters: {
-            'request_id': device['id']['\$oid'],
-            'approved_by': userId,
-            'approved_at': DateTime.now().toString(),
-          },
-        ),
+      final response = await http.post(
+        Uri.parse(ApiConfig.approve_request_device),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
+        },
+        body: {
+          'request_id': device['id']['\$oid'],
+          'approved_by': userId,
+          'approved_at': DateTime.now().toString(),
         },
       );
 
