@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/controller/detail_feedback_controller.dart';
@@ -635,9 +633,13 @@ class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(AppRoutes.EFB_HISTORY_DETAIL_FORMAT_PDF);
+          Get.toNamed(AppRoutes.EFB_FEEDBACK_FORMAT_PDF);
         },
-        child: Icon(Icons.edit, size: 38.0, color: ColorConstants.whiteColor),
+        child: Icon(
+          Icons.edit_document,
+          size: 38.0,
+          color: ColorConstants.whiteColor,
+        ),
       ),
     );
   }

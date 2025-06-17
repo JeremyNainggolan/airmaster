@@ -8,6 +8,8 @@ import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feed
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/detail_feedback_view.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/format-pdf/bindings/format_pdf_binding.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feedback/view/format-pdf/view/format_pdf_view.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/handover-log-format/bindings/handover_log_format_binding.dart';
+import 'package:airmaster/screens/home/efb/history/view/history-detail/view/handover-log-format/view/handover_log_format_view.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/history_detail_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindings/pilot_handover_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
@@ -297,9 +299,16 @@ class AppPages {
     ),
 
     GetPage(
-      name: AppRoutes.EFB_HISTORY_DETAIL_FORMAT_PDF,
+      name: AppRoutes.EFB_FEEDBACK_FORMAT_PDF,
       page: () => const Format_Pdf_View(),
       binding: Format_Pdf_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_HANDOVER_FORMAT_PDF,
+      page: () => const Handover_Log_Format_View(),
+      binding: Handover_Log_Format_Binding(),
       transition: Transition.native,
     ),
 

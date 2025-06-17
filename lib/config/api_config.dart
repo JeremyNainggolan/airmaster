@@ -59,8 +59,8 @@ class ApiConfig {
 
   static const String get_history = '$EFB/get-history-occ';
   static const String get_device_image = '$EFB/get-device-image';
+  static const String get_signature_image = '$EFB/get-signature-image';
   static const String get_feedback_detail = '$EFB/get-feedback-detail';
-  static const String get_feedback_format_pdf = '$EFB/get-feedback-format-pdf';
-  static const String update_feedback_format_pdf =
-      '$EFB/update-feedback-format-pdf';
+  static const String get_format_pdf = '$EFB/get-format-pdf';
+  static const String update_format_pdf = '$EFB/update-format-pdf';
 }

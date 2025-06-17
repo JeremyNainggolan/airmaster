@@ -64,7 +64,9 @@ class Detail_Feedback_Controller extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(ApiConfig.get_feedback_format_pdf),
+        Uri.parse(
+          ApiConfig.get_format_pdf,
+        ).replace(queryParameters: {'id': 'feedback-form'}),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

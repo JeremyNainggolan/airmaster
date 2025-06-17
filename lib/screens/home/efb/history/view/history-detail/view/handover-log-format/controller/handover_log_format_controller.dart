@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:airmaster/config/api_config.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
@@ -9,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class Format_Pdf_Controller extends GetxController {
+class Handover_Log_Format_Controller extends GetxController {
   final format = {}.obs;
   final isLoading = true.obs;
   final errorMessage = ''.obs;
@@ -34,7 +33,7 @@ class Format_Pdf_Controller extends GetxController {
       final response = await http.get(
         Uri.parse(
           ApiConfig.get_format_pdf,
-        ).replace(queryParameters: {'id': 'feedback-form'}),
+        ).replace(queryParameters: {'id': 'handover-log'}),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -83,15 +82,12 @@ class Format_Pdf_Controller extends GetxController {
 
       if (response.statusCode == 200) {
         await Future.delayed(const Duration(milliseconds: 1500));
-        log('Format saved successfully');
         return true;
       }
       await Future.delayed(const Duration(milliseconds: 1500));
-      log('Failed to save format: ${response.body}');
       return false;
     } catch (e) {
       await Future.delayed(const Duration(milliseconds: 1500));
-      log('Error saving format: $e');
       return false;
     }
   }

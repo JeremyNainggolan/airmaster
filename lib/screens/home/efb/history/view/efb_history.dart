@@ -122,9 +122,10 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                           leading: CircleAvatar(
                                             radius: 25,
                                             backgroundImage:
-                                                history['user_photo'] != null
+                                                history['request_user_photo'] !=
+                                                        null
                                                     ? NetworkImage(
-                                                      history['user_photo'],
+                                                      history['request_user_photo'],
                                                     )
                                                     : AssetImage(
                                                           'assets/images/default_picture.png',
@@ -136,7 +137,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                             color: Colors.black,
                                           ),
                                           title: Text(
-                                            history['user_name'],
+                                            history['request_user_name'],
                                             style: GoogleFonts.notoSans(
                                               color: ColorConstants.textPrimary,
                                               fontSize:
@@ -149,7 +150,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                history['user_rank'],
+                                                history['request_user_rank'],
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants

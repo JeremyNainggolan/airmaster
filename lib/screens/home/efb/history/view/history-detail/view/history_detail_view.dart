@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/controller/history_detail_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -60,14 +61,17 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                       ),
                     ),
                     SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                    BuildRow(label: "ID", value: controller.detail['user_id']),
+                    BuildRow(
+                      label: "ID",
+                      value: controller.detail['request_user'],
+                    ),
                     BuildRow(
                       label: "Name",
-                      value: controller.detail['user_name'],
+                      value: controller.detail['request_user_name'],
                     ),
                     BuildRow(
                       label: "Rank",
-                      value: controller.detail['user_rank'].toString(),
+                      value: controller.detail['request_user_rank'].toString(),
                     ),
                     BuildRow(
                       label: "Request Date",
@@ -306,6 +310,57 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
               ),
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConstant.VERTICAL_PADDING,
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorConstants.successColor,
+                padding: EdgeInsets.symmetric(vertical: 14),
+              ),
+              onPressed: () async {
+                ShowAlert.showLoadingAlert(Get.context!, 'Please wait...');
+
+                await Future.delayed(Duration(seconds: 2));
+
+                final isSuccess = await controller.createDocument();
+
+                if (isSuccess == true) {
+                  Get.back();
+                } else {
+                  ShowAlert.showErrorAlert(
+                    Get.context!,
+                    'Failed to create document',
+                    'Please try again later.',
+                  );
+                }
+              },
+              child: Text(
+                'Open Handover Log',
+                style: GoogleFonts.notoSans(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(AppRoutes.EFB_HANDOVER_FORMAT_PDF);
+        },
+        child: Icon(
+          Icons.edit_document,
+          size: 38.0,
+          color: ColorConstants.whiteColor,
         ),
       ),
     );
