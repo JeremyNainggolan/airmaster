@@ -22,18 +22,20 @@ class EFB_History_Controller extends GetxController {
   final TextEditingController fromDate = TextEditingController();
   final TextEditingController toDate = TextEditingController();
 
+  final isLoading = false.obs;
+
   final rank = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getHistory();
     loadUserData();
+    getHistory();
   }
 
   Future<void> refreshData() async {
-    await getHistory();
     await loadUserData();
+    await getHistory();
   }
 
   Future<void> loadUserData() async {
@@ -41,6 +43,7 @@ class EFB_History_Controller extends GetxController {
   }
 
   Future<void> getHistory() async {
+    isLoading.value = true;
     String token = await UserPreferences().getToken();
 
     try {
@@ -57,16 +60,11 @@ class EFB_History_Controller extends GetxController {
       if (response.statusCode == 200 && responseData['data'] != null) {
         history.assignAll(responseData['data']);
         filteredHistory.assignAll(responseData['data']);
-      } else {
-        log('Failed to fetch history: ${response.statusCode}');
-        Get.snackbar(
-          'Error',
-          'Failed to fetch history (${response.statusCode})',
-        );
       }
     } catch (e) {
       log('Error fetching history data: $e');
-      Get.snackbar('Error', 'Failed to connect to server');
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -23,67 +24,115 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
-      body: Padding(
-        padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
-        child: Column(
-          children: [
-            TextField(
-              autofocus: false,
-              controller: controller.textSearchField,
-              decoration: CustomInputDecoration.customInputDecorationWithIcon(
-                labelText: 'Search by ID',
-                icon: Icon(Icons.search, color: ColorConstants.blackColor),
-              ),
-              onChanged: (value) {
-                controller.searchDevice(value);
-              },
-            ),
-            SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: controller.foundedDevices.length,
-                  itemBuilder: (context, index) {
-                    final device = controller.foundedDevices[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: ColorConstants.blackColor),
-                        borderRadius: BorderRadius.circular(
-                          SizeConstant.BORDER_RADIUS,
-                        ),
-                      ),
-                      color: ColorConstants.backgroundColor,
-                      child: ListTile(
-                        onTap: () {
-                          showDeviceDialog(context, device.deviceNo);
-                        },
-                        leading: Icon(Icons.device_hub),
-                        trailing: Icon(
-                          Icons.chevron_right,
-                          color: Colors.black,
-                        ),
-                        title: Text(
-                          device.deviceNo,
-                          style: GoogleFonts.notoSans(
-                            color: ColorConstants.textPrimary,
-                            fontSize: SizeConstant.TEXT_SIZE,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          device.iosVersion,
-                          style: GoogleFonts.notoSans(
-                            color: ColorConstants.textPrimary,
-                            fontSize: SizeConstant.TEXT_SIZE_HINT,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+      body: Obx(
+        () => Padding(
+          padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
+          child: Column(
+            children: [
+              TextField(
+                autofocus: false,
+                controller: controller.textSearchField,
+                decoration: CustomInputDecoration.customInputDecorationWithIcon(
+                  labelText: 'Search by ID',
+                  icon: Icon(Icons.search, color: ColorConstants.blackColor),
                 ),
+                onChanged: (value) {
+                  controller.searchDevice(value);
+                },
               ),
-            ),
-          ],
+              SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+              Expanded(
+                child:
+                    controller.isLoading.value
+                        ? Center(
+                          child: LoadingAnimationWidget.hexagonDots(
+                            color: ColorConstants.activeColor,
+                            size: 48,
+                          ),
+                        )
+                        : RefreshIndicator(
+                          onRefresh: controller.refreshData,
+                          child:
+                              controller.foundedDevices.isEmpty
+                                  ? ListView(
+                                    children: [
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.device_hub,
+                                              size: 40,
+                                              color:
+                                                  ColorConstants.primaryColor,
+                                            ),
+                                            Text(
+                                              'No Device Found',
+                                              style: GoogleFonts.notoSans(
+                                                color:
+                                                    ColorConstants.textPrimary,
+                                                fontSize:
+                                                    SizeConstant.TEXT_SIZE_HINT,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                  : ListView.builder(
+                                    itemCount: controller.foundedDevices.length,
+                                    itemBuilder: (context, index) {
+                                      final device =
+                                          controller.foundedDevices[index];
+                                      return Card(
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: ColorConstants.blackColor,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            SizeConstant.BORDER_RADIUS,
+                                          ),
+                                        ),
+                                        color: ColorConstants.backgroundColor,
+                                        child: ListTile(
+                                          onTap: () {
+                                            showDeviceDialog(
+                                              context,
+                                              device.deviceNo,
+                                            );
+                                          },
+                                          leading: Icon(Icons.device_hub),
+                                          trailing: Icon(
+                                            Icons.chevron_right,
+                                            color: Colors.black,
+                                          ),
+                                          title: Text(
+                                            device.deviceNo,
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize: SizeConstant.TEXT_SIZE,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            device.iosVersion,
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                        ),
+              ),
+            ],
+          ),
         ),
       ),
     );

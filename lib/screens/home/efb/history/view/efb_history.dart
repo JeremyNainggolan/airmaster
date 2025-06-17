@@ -9,6 +9,8 @@ import 'package:airmaster/widgets/input_decoration.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EFB_History extends GetView<EFB_History_Controller> {
   const EFB_History({super.key});
@@ -54,117 +56,144 @@ class EFB_History extends GetView<EFB_History_Controller> {
               ),
               SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
               Expanded(
-                child: RefreshIndicator(
-                  onRefresh: controller.refreshData,
-                  child:
-                      controller.filteredHistory.isEmpty
-                          ? ListView(
-                            children: [
-                              Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.device_hub,
-                                      size: 40,
-                                      color: ColorConstants.primaryColor,
-                                    ),
-                                    Text(
-                                      'No History Found',
-                                      style: GoogleFonts.notoSans(
-                                        color: ColorConstants.textPrimary,
-                                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                          : ListView.builder(
-                            itemCount: controller.filteredHistory.length,
-                            itemBuilder: (context, index) {
-                              final history = controller.filteredHistory[index];
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: ColorConstants.blackColor,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                    SizeConstant.BORDER_RADIUS,
-                                  ),
-                                ),
-                                color: ColorConstants.backgroundColor,
-                                child: ListTile(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      AppRoutes.EFB_HISTORY_DETAIL,
-                                      arguments: {'detail': history},
-                                    );
-                                  },
-                                  leading: CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage:
-                                        history['user_photo'] != null
-                                            ? NetworkImage(
-                                              history['user_photo'],
-                                            )
-                                            : AssetImage(
-                                                  'assets/images/default_picture.png',
-                                                )
-                                                as ImageProvider,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(
-                                    history['user_name'],
-                                    style: GoogleFonts.notoSans(
-                                      color: ColorConstants.textPrimary,
-                                      fontSize: SizeConstant.TEXT_SIZE + 2,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                child:
+                    controller.isLoading.value
+                        ? Center(
+                          child: LoadingAnimationWidget.hexagonDots(
+                            color: ColorConstants.activeColor,
+                            size: 48,
+                          ),
+                        )
+                        : RefreshIndicator(
+                          onRefresh: controller.refreshData,
+                          child:
+                              controller.filteredHistory.isEmpty
+                                  ? ListView(
                                     children: [
-                                      Text(
-                                        history['user_rank'],
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      Text(
-                                        history['deviceno'],
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      Text(
-                                        DateFormatter.convertDateTimeDisplay(
-                                          history['request_date'],
-                                          'dd MMMM yyyy',
-                                        ),
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.device_hub,
+                                              size: 40,
+                                              color:
+                                                  ColorConstants.primaryColor,
+                                            ),
+                                            Text(
+                                              'No History Found',
+                                              style: GoogleFonts.notoSans(
+                                                color:
+                                                    ColorConstants.textPrimary,
+                                                fontSize:
+                                                    SizeConstant.TEXT_SIZE_HINT,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
+                                  )
+                                  : ListView.builder(
+                                    itemCount:
+                                        controller.filteredHistory.length,
+                                    itemBuilder: (context, index) {
+                                      final history =
+                                          controller.filteredHistory[index];
+                                      return Card(
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: ColorConstants.blackColor,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            SizeConstant.BORDER_RADIUS,
+                                          ),
+                                        ),
+                                        color: ColorConstants.backgroundColor,
+                                        child: ListTile(
+                                          onTap: () {
+                                            Get.toNamed(
+                                              AppRoutes.EFB_HISTORY_DETAIL,
+                                              arguments: {'detail': history},
+                                            );
+                                          },
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundImage:
+                                                history['user_photo'] != null
+                                                    ? NetworkImage(
+                                                      history['user_photo'],
+                                                    )
+                                                    : AssetImage(
+                                                          'assets/images/default_picture.png',
+                                                        )
+                                                        as ImageProvider,
+                                          ),
+                                          trailing: Icon(
+                                            Icons.chevron_right,
+                                            color: Colors.black,
+                                          ),
+                                          title: Text(
+                                            history['user_name'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE + 2,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                history['user_rank'],
+                                                style: GoogleFonts.notoSans(
+                                                  color:
+                                                      ColorConstants
+                                                          .textPrimary,
+                                                  fontSize:
+                                                      SizeConstant
+                                                          .TEXT_SIZE_HINT,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                history['deviceno'],
+                                                style: GoogleFonts.notoSans(
+                                                  color:
+                                                      ColorConstants
+                                                          .textPrimary,
+                                                  fontSize:
+                                                      SizeConstant
+                                                          .TEXT_SIZE_HINT,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                DateFormatter.convertDateTimeDisplay(
+                                                  history['request_date'],
+                                                  'dd MMMM yyyy',
+                                                ),
+                                                style: GoogleFonts.notoSans(
+                                                  color:
+                                                      ColorConstants
+                                                          .textPrimary,
+                                                  fontSize:
+                                                      SizeConstant
+                                                          .TEXT_SIZE_HINT,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                ),
+                        ),
               ),
             ],
           ),
@@ -342,6 +371,38 @@ class EFB_History extends GetView<EFB_History_Controller> {
                   ),
                 ),
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget shimmerList() {
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Card(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              leading: CircleAvatar(radius: 25, backgroundColor: Colors.white),
+              title: Container(
+                height: 12,
+                width: double.infinity,
+                color: Colors.white,
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 8),
+                  Container(height: 10, width: 150, color: Colors.white),
+                  SizedBox(height: 4),
+                  Container(height: 10, width: 100, color: Colors.white),
+                ],
+              ),
             ),
           ),
         );

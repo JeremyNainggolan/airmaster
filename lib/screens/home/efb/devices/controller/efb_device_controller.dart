@@ -19,6 +19,8 @@ class EFB_Device_Controller extends GetxController {
   final screenshotController = ScreenshotController();
   final captureKey = GlobalKey();
 
+  final isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -26,7 +28,14 @@ class EFB_Device_Controller extends GetxController {
     foundedDevices = device;
   }
 
+  Future<void> refreshData() async {
+    await getDevice();
+    foundedDevices = device;
+  }
+
   Future<void> getDevice() async {
+    isLoading.value = true;
+
     String token = await UserPreferences().getToken();
     String hub = await UserPreferences().getHub();
 
@@ -52,6 +61,8 @@ class EFB_Device_Controller extends GetxController {
       }
     } catch (e) {
       log('Error fetching device data: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

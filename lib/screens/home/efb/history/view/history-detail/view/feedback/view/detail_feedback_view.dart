@@ -9,6 +9,7 @@ import 'package:airmaster/widgets/build_row_red_value.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
   const Detail_Feedback_View({super.key});
@@ -37,8 +38,9 @@ class Detail_Feedback_View extends GetView<Detail_Feedback_Controller> {
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
-            child: CircularProgressIndicator(
-              color: ColorConstants.primaryColor,
+            child: LoadingAnimationWidget.hexagonDots(
+              color: ColorConstants.activeColor,
+              size: 48,
             ),
           );
         }
