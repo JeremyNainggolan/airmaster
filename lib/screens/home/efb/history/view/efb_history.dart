@@ -1,5 +1,8 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:developer';
+
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/efb/history/controller/efb_history_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -10,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shimmer/shimmer.dart';
 
 class EFB_History extends GetView<EFB_History_Controller> {
@@ -201,7 +205,44 @@ class EFB_History extends GetView<EFB_History_Controller> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          log('Total Data: ${controller.filteredHistory.length}');
+          log('Data: ${controller.history.toString()}');
+          final isConfirmed = await ShowAlert.showConfirmAlert(
+            Get.context!,
+            'Export to Excel',
+            'Are you sure you want to export the history to Excel?',
+          );
+
+          if (isConfirmed == true) {
+            ShowAlert.showLoadingAlert(Get.context!, 'Exporting to excel...');
+
+            final isSuccess = await controller.exportToExcel();
+            Get.back();
+
+            if (isSuccess == true) {
+              QuickAlert.show(
+                context: Get.context!,
+                type: QuickAlertType.success,
+                title: 'Success',
+                text: 'History exported successfully.',
+                onConfirmBtnTap: () {
+                  Get.back();
+                },
+              );
+            } else {
+              QuickAlert.show(
+                context: Get.context!,
+                type: QuickAlertType.error,
+                title: 'Error',
+                text: 'Failed to export history. Please try again later.',
+                onConfirmBtnTap: () {
+                  Get.back();
+                },
+              );
+            }
+          }
+        },
         child: Icon(
           Icons.playlist_add_circle_rounded,
           size: 38.0,

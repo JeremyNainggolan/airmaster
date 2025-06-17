@@ -2,14 +2,18 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:airmaster/config/api_config.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/date_formatter.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EFB_History_Controller extends GetxController {
   final RxList<dynamic> history = <dynamic>[].obs;
@@ -211,5 +215,112 @@ class EFB_History_Controller extends GetxController {
     fromDate.clear();
     toDate.clear();
     filteredHistory.assignAll(history);
+  }
+
+  Future<bool> exportToExcel() async {
+    try {
+      var excel = Excel.createExcel();
+
+      Sheet sheet;
+      if (excel.sheets.isEmpty) {
+        sheet = excel['History'];
+      } else {
+        sheet = excel['History'];
+      }
+
+      final header = [
+        TextCellValue('Crew ID'),
+        TextCellValue('Crew Name'),
+        TextCellValue('Crew Rank'),
+        TextCellValue('Crew Hub'),
+        TextCellValue('Device 1'),
+        TextCellValue('iOS Version (1st)'),
+        TextCellValue('Flysmart Version (1st)'),
+        TextCellValue('Docunet Version (1st)'),
+        TextCellValue('LiDo Version (1st)'),
+        TextCellValue('Device Hub (1st)'),
+        TextCellValue('Device Condition (1st)'),
+        TextCellValue('Device 2'),
+        TextCellValue('iOS Version (2nd)'),
+        TextCellValue('Flysmart Version (2nd)'),
+        TextCellValue('Docunet Version (2nd)'),
+        TextCellValue('LiDo Version (2nd)'),
+        TextCellValue('Device Hub (2nd)'),
+        TextCellValue('Device Condition (2nd)'),
+        TextCellValue('Device 3'),
+        TextCellValue('iOS Version (3rd)'),
+        TextCellValue('Flysmart Version (3rd)'),
+        TextCellValue('Docunet Version (3rd)'),
+        TextCellValue('LiDo Version (3rd)'),
+        TextCellValue('Device Hub (3rd)'),
+        TextCellValue('Device Condition (3rd)'),
+        TextCellValue('Status'),
+        TextCellValue('OCC On Duty (ID)'),
+        TextCellValue('OCC On Duty (Name)'),
+        TextCellValue('OCC On Duty (Hub)'),
+        TextCellValue('OCC Accept (ID)'),
+        TextCellValue('OCC Accept (Name)'),
+        TextCellValue('OCC Accept (Hub)'),
+        TextCellValue('Handover To (ID)'),
+        TextCellValue('Handover To (Name)'),
+        TextCellValue('Handover To (Rank)'),
+        TextCellValue('Handover To (Hub)'),
+      ];
+
+      sheet.appendRow(header);
+
+      for (var item in filteredHistory) {
+        final row = [
+          TextCellValue(item['request_user'] ?? ''),
+          TextCellValue(item['request_user_name'] ?? ''),
+          TextCellValue(item['request_user_rank'] ?? ''),
+          TextCellValue(item['request_user_hub'] ?? ''),
+          TextCellValue(item['deviceno'] ?? ''),
+          TextCellValue(item['ios_version'] ?? ''),
+          TextCellValue(item['fly_smart'] ?? ''),
+          TextCellValue(item['doc_version'] ?? ''),
+          TextCellValue(item['lido_version'] ?? ''),
+          TextCellValue(item['hub'] ?? ''),
+          TextCellValue(item['category'] ?? ''),
+          TextCellValue(item['deviceno_2'] ?? ''),
+          TextCellValue(item['ios_version_2'] ?? ''),
+          TextCellValue(item['fly_smart_2'] ?? ''),
+          TextCellValue(item['doc_version_2'] ?? ''),
+          TextCellValue(item['lido_version_2'] ?? ''),
+          TextCellValue(item['hub_2'] ?? ''),
+          TextCellValue(item['category_2'] ?? ''),
+          TextCellValue(item['deviceno_3'] ?? ''),
+          TextCellValue(item['ios_version_3'] ?? ''),
+          TextCellValue(item['fly_smart_3'] ?? ''),
+          TextCellValue(item['doc_version_3'] ?? ''),
+          TextCellValue(item['lido_version_3'] ?? ''),
+          TextCellValue(item['hub_3'] ?? ''),
+          TextCellValue(item['category_3'] ?? ''),
+          TextCellValue(item['status']),
+          TextCellValue(item['approved_by'] ?? '-'),
+          TextCellValue(item['approved_by_name'] ?? '-'),
+          TextCellValue(item['approved_by_hub'] ?? '-'),
+          TextCellValue(item['received_by'] ?? '-'),
+          TextCellValue(item['received_user_name'] ?? '-'),
+          TextCellValue(item['received_user_hub'] ?? '-'),
+          TextCellValue(item['handover_to_id'] ?? '-'),
+          TextCellValue(item['handover_to_name'] ?? '-'),
+          TextCellValue(item['handover_to_rank'] ?? '-'),
+          TextCellValue(item['handover_to_hub'] ?? '-'),
+        ];
+        sheet.appendRow(row);
+      }
+
+      final excelByte = excel.encode();
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/history_export.xlsx';
+      final file = File(filePath);
+      await file.writeAsBytes(excelByte!);
+      await OpenFile.open(filePath);
+
+      return true;
+    } catch (e) {
+      throw Exception('Error exporting to Excel: $e');
+    }
   }
 }
