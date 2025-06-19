@@ -62,6 +62,16 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                         ),
                       ),
                       SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+                      controller.detail['handover_to'] != null
+                          ? Text(
+                            "Handover to: ${controller.detail['handover_to']}",
+                            style: GoogleFonts.notoSans(
+                              color: ColorConstants.primaryColor,
+                              fontSize: SizeConstant.TEXT_SIZE,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                          : SizedBox(),
                       BuildRow(
                         label: "ID",
                         value: controller.detail['request_user'],
@@ -82,13 +92,15 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                           'dd MMMM yyyy',
                         ),
                       ),
-                      BuildRow(
-                        label: "Return Date",
-                        value: DateFormatter.convertDateTimeDisplay(
-                          controller.detail['received_at'].toString(),
-                          'dd MMMM yyyy',
-                        ),
-                      ),
+                      controller.detail['received_at'] == null
+                          ? BuildRow(label: "Handover Date", value: 'Biawak')
+                          : BuildRow(
+                            label: "Return Date",
+                            value: DateFormatter.convertDateTimeDisplay(
+                              controller.detail['received_at'].toString(),
+                              'dd MMMM yyyy',
+                            ),
+                          ),
                       CustomDivider(divider: 'Device Information'),
                       BuildRow(
                         label: "Device No",
@@ -116,23 +128,32 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                         label: "Given Remark",
                         value: controller.detail['remark'] ?? '-',
                       ),
-                      BuildRow(
-                        label: "Received Condition",
-                        value: controller.detail['receive_category'],
-                      ),
-                      BuildRow(
-                        label: "Received Remark",
-                        value: controller.detail['receive_remark'] ?? '-',
-                      ),
+                      controller.detail['receive_category'] != null
+                          ? BuildRow(
+                            label: "Received Condition",
+                            value: controller.detail['receive_category'],
+                          )
+                          : SizedBox(),
+                      controller.detail['receive_remark'] != null
+                          ? BuildRow(
+                            label: "Received Remark",
+                            value: controller.detail['receive_remark'] ?? '-',
+                          )
+                          : SizedBox(),
                       CustomDivider(divider: 'Handling Information'),
                       BuildRow(
                         label: "Given By",
                         value: controller.detail['request_user_name'],
                       ),
-                      BuildRow(
-                        label: "Received By",
-                        value: controller.detail['received_user_name'],
-                      ),
+                      controller.detail['received_user_name'] == null
+                          ? BuildRow(
+                            label: "Received By",
+                            value: controller.detail['handover_user_name'],
+                          )
+                          : BuildRow(
+                            label: "Received By",
+                            value: controller.detail['received_user_name'],
+                          ),
                       CustomDivider(divider: 'Additional Information'),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -218,7 +239,6 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                                         style: GoogleFonts.notoSans(
                                           decorationColor:
                                               ColorConstants.primaryColor,
-                                          decoration: TextDecoration.underline,
                                           decorationThickness: 2,
                                           fontStyle: FontStyle.italic,
                                           color: ColorConstants.primaryColor,
@@ -407,6 +427,16 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                       ),
                     ),
                     SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+                    controller.detail['handover_to'] != null
+                        ? Text(
+                          "Handover to: ${controller.detail['handover_to']}",
+                          style: GoogleFonts.notoSans(
+                            color: ColorConstants.primaryColor,
+                            fontSize: SizeConstant.TEXT_SIZE,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                        : SizedBox(),
                     BuildRow(
                       label: "ID",
                       value: controller.detail['request_user'],
@@ -426,13 +456,15 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                         'dd MMMM yyyy',
                       ),
                     ),
-                    BuildRow(
-                      label: "Return Date",
-                      value: DateFormatter.convertDateTimeDisplay(
-                        controller.detail['received_at'].toString(),
-                        'dd MMMM yyyy',
-                      ),
-                    ),
+                    controller.detail['received_at'] == null
+                        ? BuildRow(label: "Handover Date", value: 'Biawak')
+                        : BuildRow(
+                          label: "Return Date",
+                          value: DateFormatter.convertDateTimeDisplay(
+                            controller.detail['received_at'].toString(),
+                            'dd MMMM yyyy',
+                          ),
+                        ),
                     CustomDivider(divider: 'Device Information'),
                     BuildRow(
                       label: "Device No",
@@ -460,23 +492,32 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                       label: "Given Remark",
                       value: controller.detail['remark'] ?? '-',
                     ),
-                    BuildRow(
-                      label: "Received Condition",
-                      value: controller.detail['receive_category'],
-                    ),
-                    BuildRow(
-                      label: "Received Remark",
-                      value: controller.detail['receive_remark'] ?? '-',
-                    ),
+                    controller.detail['receive_category'] != null
+                        ? BuildRow(
+                          label: "Received Condition",
+                          value: controller.detail['receive_category'],
+                        )
+                        : SizedBox(),
+                    controller.detail['receive_remark'] != null
+                        ? BuildRow(
+                          label: "Received Remark",
+                          value: controller.detail['receive_remark'] ?? '-',
+                        )
+                        : SizedBox(),
                     CustomDivider(divider: 'Handling Information'),
                     BuildRow(
                       label: "Given By",
                       value: controller.detail['request_user_name'],
                     ),
-                    BuildRow(
-                      label: "Received By",
-                      value: controller.detail['received_user_name'],
-                    ),
+                    controller.detail['received_user_name'] == null
+                        ? BuildRow(
+                          label: "Received By",
+                          value: controller.detail['handover_user_name'],
+                        )
+                        : BuildRow(
+                          label: "Received By",
+                          value: controller.detail['received_user_name'],
+                        ),
                     CustomDivider(divider: 'Additional Information'),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -561,7 +602,6 @@ class History_Detail_View extends GetView<History_Detail_Controller> {
                                       style: GoogleFonts.notoSans(
                                         decorationColor:
                                             ColorConstants.primaryColor,
-                                        decoration: TextDecoration.underline,
                                         decorationThickness: 2,
                                         fontStyle: FontStyle.italic,
                                         color: ColorConstants.primaryColor,

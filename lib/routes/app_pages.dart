@@ -11,6 +11,8 @@ import 'package:airmaster/screens/home/efb/history/view/history-detail/view/feed
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/handover-log-format/bindings/handover_log_format_binding.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/handover-log-format/view/handover_log_format_view.dart';
 import 'package:airmaster/screens/home/efb/history/view/history-detail/view/history_detail_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/accept-handover/bindings/accept_handover_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/accept-handover/view/accept_handover_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindings/pilot_handover_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/bindings/occ_return_binding.dart';
@@ -202,6 +204,13 @@ class AppPages {
       name: AppRoutes.EFB_REQUEST,
       page: () => const Request_View(),
       binding: Request_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_ACCEPT_HANDOVER,
+      page: () => const Accept_Handover_View(),
+      binding: Accept_Handover_Binding(),
       transition: Transition.native,
     ),
 

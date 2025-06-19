@@ -28,6 +28,7 @@ class History_Detail_Controller extends GetxController {
     super.onInit();
     getRank();
     detail.value = params['detail'];
+    log('Detail: ${detail.toString()}');
   }
 
   Future<void> getRank() async {
@@ -209,9 +210,10 @@ class History_Detail_Controller extends GetxController {
         }
 
         pw.Widget otherCrewSignatureWidget;
-        if (detail['other_crew_signature'] != null) {
+        if (detail['handover_signature'] != null) {
+          log('Fetching other crew signature: ${detail['handover_signature']}');
           try {
-            final imageBytes = await fetchImage(detail['other_crew_signature']);
+            final imageBytes = await fetchImage(detail['handover_signature']);
             final image = pw.MemoryImage(imageBytes);
             otherCrewSignatureWidget = pw.Image(image);
           } catch (e) {
@@ -393,7 +395,9 @@ class History_Detail_Controller extends GetxController {
                       ),
                       pw.Align(
                         child: pw.Text(
-                          _formatTimestamp(detail['received_at']),
+                          detail['received_at'] == null
+                              ? _formatTimestamp(detail['handover_date'])
+                              : _formatTimestamp(detail['received_at']),
                           style: const pw.TextStyle(fontSize: 12),
                         ),
                       ),
@@ -637,7 +641,7 @@ class History_Detail_Controller extends GetxController {
                             pw.Container(
                               height: 20.0,
                               child: buildHeaderCellRight(
-                                detail['requet_user'],
+                                detail['request_user'],
                                 context,
                               ),
                             ),
@@ -662,7 +666,7 @@ class History_Detail_Controller extends GetxController {
                             pw.Container(
                               height: 20.0,
                               child: buildHeaderCellLeft(
-                                detail['handover_user'],
+                                detail['handover_to'],
                                 context,
                               ),
                             ),

@@ -77,6 +77,7 @@ class Pilot_Handover_Controller extends GetxController {
       request.fields['request_id'] = device['id']['\$oid'];
       request.fields['request_user'] = device['request_user'];
       request.fields['handover_to'] = user['id_number'];
+      request.fields['handover_date'] = DateTime.now().toString();
       if (feedback.isNotEmpty) {
         request.fields['feedback'] = jsonEncode(feedback);
       }

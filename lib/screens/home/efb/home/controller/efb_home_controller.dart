@@ -28,34 +28,46 @@ class EFB_Home_Controller extends GetxController
   final availableDevicesCount = 0.obs;
   final usedDevicesCount = 0.obs;
 
-  final waitingConfirmation = <Map<String, dynamic>>[].obs;
-  final inUse = <Map<String, dynamic>>[].obs;
+  final waitingConfirmation = {}.obs;
+  final inUse = {}.obs;
+  final pilotHandover = {}.obs;
 
   final requestConfirmationOCC = <Map<String, dynamic>>[].obs;
   final deviceUsedOCC = <Map<String, dynamic>>[].obs;
   final returnConfirmationOCC = <Map<String, dynamic>>[].obs;
 
-  final occReturn = false.obs;
-  final pilotHandover = false.obs;
-
-  final status = ''.obs;
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     occTabController = TabController(length: 3, vsync: this);
     pilotTabController = TabController(length: 2, vsync: this);
-    loadUserData();
-    checkingRequest();
-    getAvailableDevices();
-    getWaitingConfirmation();
-    getInUse();
 
-    getOCCRequestStatus();
-    getDeviceOCCUsed();
-    getOCCReturnStatus();
+    initData();
+    setGreeting();
+  }
 
-    var hour = DateTime.now().hour;
+  void initData() async {
+    try {
+      isLoading.value = true;
+
+      await loadUserData();
+      await checkingRequest();
+      await getAvailableDevices();
+      await getWaitingConfirmation();
+      await getPilotHandover();
+      await getInUse();
+      await getOCCRequestStatus();
+      await getDeviceOCCUsed();
+      await getOCCReturnStatus();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void setGreeting() {
+    final hour = DateTime.now().hour;
     if (hour < 12) {
       greetings.value = "Morning";
     } else if (hour < 17) {
@@ -171,15 +183,7 @@ class EFB_Home_Controller extends GetxController
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         waitingConfirmation.clear();
-        if (responseData['data'] != null) {
-          waitingConfirmation.addAll(
-            (responseData['data'] as List)
-                .map((item) => item as Map<String, dynamic>)
-                .toList(),
-          );
-        } else {
-          waitingConfirmation.clear();
-        }
+        waitingConfirmation.value = responseData['data'];
       } else {
         waitingConfirmation.clear();
       }
@@ -211,20 +215,45 @@ class EFB_Home_Controller extends GetxController
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         inUse.clear();
-        if (responseData['data'] != null) {
-          inUse.addAll(
-            (responseData['data'] as List)
-                .map((item) => item as Map<String, dynamic>)
-                .toList(),
-          );
-        } else {
-          inUse.clear();
-        }
+        inUse.value = responseData['data'];
       } else {
         inUse.clear();
       }
     } catch (e) {
       inUse.clear();
+    }
+  }
+
+  Future<void> getPilotHandover() async {
+    String token = await _userPrefs.getToken();
+    String hub = await _userPrefs.getHub();
+    String userId = await _userPrefs.getIdNumber();
+
+    try {
+      final response = await http.get(
+        Uri.parse(ApiConfig.get_handover_device).replace(
+          queryParameters: {
+            'hub': hub,
+            'request_user': userId,
+            'status': 'handover_confirmation',
+          },
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        pilotHandover.clear();
+        pilotHandover.value = responseData['data'];
+        log("Pilot Handover Data: ${pilotHandover.toString()}");
+      } else {
+        pilotHandover.clear();
+      }
+    } catch (e) {
+      pilotHandover.clear();
     }
   }
 
@@ -414,18 +443,30 @@ class EFB_Home_Controller extends GetxController
   }
 
   Future<void> refreshData() async {
-    await loadUserData();
-    await getAvailableDevices();
-    await getWaitingConfirmation();
-    await getInUse();
-    await checkingRequest();
+    try {
+      isLoading.value = true;
+
+      await loadUserData();
+      await checkingRequest();
+      await getAvailableDevices();
+      await getWaitingConfirmation();
+      await getPilotHandover();
+      await getInUse();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> refreshDataOCC() async {
-    await loadUserData();
-    await getAvailableDevices();
-    await getOCCRequestStatus();
-    await getDeviceOCCUsed();
-    await getOCCReturnStatus();
+    try {
+      isLoading.value = true;
+      await loadUserData();
+      await getAvailableDevices();
+      await getOCCRequestStatus();
+      await getDeviceOCCUsed();
+      await getOCCReturnStatus();
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

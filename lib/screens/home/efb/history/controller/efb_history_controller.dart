@@ -99,6 +99,8 @@ class EFB_History_Controller extends GetxController {
       if (response.statusCode == 200 && responseData['data'] != null) {
         otherHistory.assignAll(responseData['data']);
         otherFilteredHistory.assignAll(responseData['data']);
+        log('Other history data fetched: ${otherHistory.length} items');
+        log('Data: ${otherHistory.toString()}');
       }
     } catch (e) {
       log('Error fetching history data: $e');
@@ -353,10 +355,10 @@ class EFB_History_Controller extends GetxController {
           TextCellValue(item['received_by'] ?? '-'),
           TextCellValue(item['received_user_name'] ?? '-'),
           TextCellValue(item['received_user_hub'] ?? '-'),
-          TextCellValue(item['handover_to_id'] ?? '-'),
-          TextCellValue(item['handover_to_name'] ?? '-'),
-          TextCellValue(item['handover_to_rank'] ?? '-'),
-          TextCellValue(item['handover_to_hub'] ?? '-'),
+          TextCellValue(item['handover_to'] ?? '-'),
+          TextCellValue(item['handover_user_name'] ?? '-'),
+          TextCellValue(item['handover_user_rank'] ?? '-'),
+          TextCellValue(item['handover_user_hub'] ?? '-'),
         ];
         sheet.appendRow(row);
       }
