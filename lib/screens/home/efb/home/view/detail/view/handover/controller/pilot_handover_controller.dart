@@ -19,6 +19,8 @@ class Pilot_Handover_Controller extends GetxController {
   final feedback = {}.obs;
   final user = {}.obs;
 
+  final message = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -46,12 +48,24 @@ class Pilot_Handover_Controller extends GetxController {
       if (response.statusCode == 200) {
         final dynamic data = responseData['data'];
         if (data != null && data.isNotEmpty) {
-          user.value = data[0];
-          await Future.delayed(const Duration(seconds: 2));
-          return true;
+          if (device['isFoRequest'] == true) {
+            if (data[0]['rank'] == 'FO') {
+              user.value = data[0];
+              await Future.delayed(const Duration(seconds: 2));
+              return true;
+            } else {
+              message.value = 'You can only handover to a First Officer.';
+              return false;
+            }
+          } else {
+            user.value = data[0];
+            await Future.delayed(const Duration(seconds: 2));
+            return true;
+          }
         }
 
         await Future.delayed(const Duration(seconds: 2));
+        message.value = 'User not found.';
         return false;
       } else {
         await Future.delayed(const Duration(seconds: 2));
@@ -74,7 +88,7 @@ class Pilot_Handover_Controller extends GetxController {
       request.headers['Authorization'] = 'Bearer $token';
       request.headers['Accept'] = 'application/json';
       request.headers['Content-Type'] = 'multipart/form-data';
-      request.fields['request_id'] = device['id']['\$oid'];
+      request.fields['request_id'] = device['_id']['\$oid'];
       request.fields['request_user'] = device['request_user'];
       request.fields['handover_to'] = user['id_number'];
       request.fields['handover_date'] = DateTime.now().toString();
@@ -101,7 +115,7 @@ class Pilot_Handover_Controller extends GetxController {
       }
     } catch (e) {
       await Future.delayed(const Duration(seconds: 2));
-      return true;
+      return false;
     }
   }
 }

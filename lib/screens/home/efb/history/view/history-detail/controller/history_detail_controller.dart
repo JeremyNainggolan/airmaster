@@ -381,193 +381,516 @@ class History_Detail_Controller extends GetxController {
                     ),
                   ),
                   pw.SizedBox(height: 10),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Align(
-                        child: pw.Text(
-                          '1st Device',
-                          style: pw.TextStyle(
-                            fontSize: 12,
-                            fontWeight: pw.FontWeight.bold,
+                  if (detail['isFoRequest']) ...[
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Align(
+                          child: pw.Text(
+                            '2nd & 3rd Device',
+                            style: pw.TextStyle(
+                              fontSize: 12,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      pw.Align(
-                        child: pw.Text(
-                          detail['received_at'] == null
-                              ? _formatTimestamp(detail['handover_date'])
-                              : _formatTimestamp(detail['received_at']),
-                          style: const pw.TextStyle(fontSize: 12),
+                        pw.Align(
+                          child: pw.Text(
+                            detail['received_at'] == null
+                                ? _formatTimestamp(detail['handover_date'])
+                                : _formatTimestamp(detail['received_at']),
+                            style: const pw.TextStyle(fontSize: 12),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  pw.SizedBox(height: 10),
-                  pw.Table(
-                    tableWidth: pw.TableWidth.min,
-                    border: pw.TableBorder.all(),
-                    columnWidths: {0: const pw.FlexColumnWidth(1)},
-                    children: [
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 25.0,
-                            child: buildHeaderCell('EFB Device', context),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  pw.Table(
-                    tableWidth: pw.TableWidth.min,
-                    border: pw.TableBorder.all(),
-                    columnWidths: {
-                      0: const pw.FlexColumnWidth(2),
-                      1: const pw.FlexColumnWidth(3),
-                    },
-                    children: [
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft('Device No 1', context),
-                          ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['deviceno'],
-                              context,
+                      ],
+                    ),
+                    pw.SizedBox(height: 10),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {0: const pw.FlexColumnWidth(1)},
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 25.0,
+                              child: buildHeaderCell('EFB Device', context),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(2),
+                        1: const pw.FlexColumnWidth(3),
+                        2: const pw.FlexColumnWidth(2),
+                        3: const pw.FlexColumnWidth(3),
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device No 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceNo'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device No 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceNo'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // pw.TableRow(
+                        //   children: [
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellLeft('Charger No 2', context),
+                        //     ),
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellRight('xxxx', context),
+                        //     ),
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellLeft('Charger No 3', context),
+                        //     ),
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellRight('xxxx', context),
+                        //     ),
+                        //   ],
+                        // ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'IOS Version 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceiOSVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'IOS Version 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceiOSVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(1),
+                        1: const pw.FlexColumnWidth(4),
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft('Charger No', context),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['charger'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {0: const pw.FlexColumnWidth(1)},
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 25.0,
+                              child: buildHeaderCell('EFB Software', context),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(2),
+                        1: const pw.FlexColumnWidth(3),
+                        2: const pw.FlexColumnWidth(2),
+                        3: const pw.FlexColumnWidth(3),
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'FlySmart Version 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceFlySmart'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'FlySmart Version 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceFlySmart'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Lido mPilot Version 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceLidoVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Lido mPilot Version 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceLidoVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Docunet Version 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceDocuVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Docunet Version 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceDocuVersion'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device Condition 2',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['mainDeviceCategory'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device Condition 3',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['backupDeviceCategory'] ?? 'N/A',
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ] else ...[
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Align(
+                          child: pw.Text(
+                            '1st Device',
+                            style: pw.TextStyle(
+                              fontSize: 12,
+                              fontWeight: pw.FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      // pw.TableRow(
-                      //   children: [
-                      //     pw.Container(
-                      //       height: 20.0,
-                      //       child: _buildHeaderCellLeft('Charger No', context),
-                      //     ),
-                      //     pw.Container(
-                      //       height: 20.0,
-                      //       child: _buildHeaderCellRight('xxxx', context),
-                      //     ),
-                      //   ],
-                      // ),
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft('IOS Version', context),
+                        ),
+                        pw.Align(
+                          child: pw.Text(
+                            detail['received_at'] == null
+                                ? _formatTimestamp(detail['handover_date'])
+                                : _formatTimestamp(detail['received_at']),
+                            style: const pw.TextStyle(fontSize: 12),
                           ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['ios_version'],
-                              context,
+                        ),
+                      ],
+                    ),
+                    pw.SizedBox(height: 10),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {0: const pw.FlexColumnWidth(1)},
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 25.0,
+                              child: buildHeaderCell('EFB Device', context),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  pw.Table(
-                    tableWidth: pw.TableWidth.min,
-                    border: pw.TableBorder.all(),
-                    columnWidths: {0: const pw.FlexColumnWidth(1)},
-                    children: [
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 25.0,
-                            child: buildHeaderCell('EFB Software', context),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  pw.Table(
-                    tableWidth: pw.TableWidth.min,
-                    border: pw.TableBorder.all(),
-                    columnWidths: {
-                      0: const pw.FlexColumnWidth(2),
-                      1: const pw.FlexColumnWidth(3),
-                    },
-                    children: [
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft(
-                              'FlySmart Version',
-                              context,
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(2),
+                        1: const pw.FlexColumnWidth(3),
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device No 1',
+                                context,
+                              ),
                             ),
-                          ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['fly_smart'],
-                              context,
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['deviceno'],
+                                context,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft(
-                              'Lido mPilot Version',
-                              context,
+                          ],
+                        ),
+                        // pw.TableRow(
+                        //   children: [
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellLeft('Charger No', context),
+                        //     ),
+                        //     pw.Container(
+                        //       height: 20.0,
+                        //       child: _buildHeaderCellRight('xxxx', context),
+                        //     ),
+                        //   ],
+                        // ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'IOS Version',
+                                context,
+                              ),
                             ),
-                          ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['lido_version'],
-                              context,
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['ios_version'],
+                                context,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft(
-                              'Docunet Version',
-                              context,
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {0: const pw.FlexColumnWidth(1)},
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 25.0,
+                              child: buildHeaderCell('EFB Software', context),
                             ),
-                          ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['doc_version'],
-                              context,
+                          ],
+                        ),
+                      ],
+                    ),
+                    pw.Table(
+                      tableWidth: pw.TableWidth.min,
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(2),
+                        1: const pw.FlexColumnWidth(3),
+                      },
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'FlySmart Version',
+                                context,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      pw.TableRow(
-                        children: [
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellLeft(
-                              'Device Condition',
-                              context,
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['fly_smart'],
+                                context,
+                              ),
                             ),
-                          ),
-                          pw.Container(
-                            height: 20.0,
-                            child: buildHeaderCellRight(
-                              detail['category'],
-                              context,
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Lido mPilot Version',
+                                context,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['lido_version'],
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Docunet Version',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['doc_version'],
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellLeft(
+                                'Device Condition',
+                                context,
+                              ),
+                            ),
+                            pw.Container(
+                              height: 20.0,
+                              child: buildHeaderCellRight(
+                                detail['category'],
+                                context,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                   pw.Table(
                     tableWidth: pw.TableWidth.min,
                     border: pw.TableBorder.all(),

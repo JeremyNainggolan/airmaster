@@ -17,6 +17,20 @@ import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/bindin
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/view/pilot_handover_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/bindings/occ_return_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/return-occ/view/occ_return_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/handover/bindings/fo_handover_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/handover/view/fo_handover_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/bindings/fo_used_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/firstpage/bindings/fo_feedback_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/firstpage/view/fo_feedback_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/secondpage/bindings/fo_battery_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/secondpage/view/fo_battery_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/thirdpage/bindings/fo_confirm_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/feedback/thirdpage/view/fo_confirm_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/in-use/view/fo_used_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/request/bindings/fo_request_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/request/view/fo_request_view.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/waiting-confirmation/bindings/fo_waiting_binding.dart';
+import 'package:airmaster/screens/home/efb/home/view/fo-pages/waiting-confirmation/view/fo_waiting_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/request/bindings/occ_requested_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/request/view/occ_requested_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/return/bindings/occ_returned_binding.dart';
@@ -249,6 +263,57 @@ class AppPages {
       transition: Transition.native,
     ),
 
+    // FO PAGES
+    GetPage(
+      name: AppRoutes.EFB_FO_REQUEST,
+      page: () => const Fo_Request_View(),
+      binding: Fo_Request_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_WAITING_CONFIRMATION,
+      page: () => const Fo_Waiting_View(),
+      binding: Fo_Waiting_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_IN_USE,
+      page: () => const Fo_Used_View(),
+      binding: Fo_Used_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_FEEDBACK,
+      page: () => const Fo_Feedback_View(),
+      binding: Fo_Feedback_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_BATTERY,
+      page: () => const Fo_Battery_View(),
+      binding: Fo_Battery_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_CONFIRM,
+      page: () => const Fo_Confirm_View(),
+      binding: Fo_Confirm_Binding(),
+      transition: Transition.native,
+    ),
+
+    GetPage(
+      name: AppRoutes.EFB_FO_HANDOVER,
+      page: () => const Fo_Handover_View(),
+      binding: Fo_Handover_Binding(),
+      transition: Transition.native,
+    ),
+
+    // OCC PAGES
     GetPage(
       name: AppRoutes.EFB_OCC_RETURN,
       page: () => const Occ_Return_View(),

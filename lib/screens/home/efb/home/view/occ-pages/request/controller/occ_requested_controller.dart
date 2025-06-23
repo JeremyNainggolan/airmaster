@@ -21,22 +21,41 @@ class OCC_Requested_Controller extends GetxController {
     String userId = await UserPreferences().getIdNumber();
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiConfig.reject_request_device).replace(
-          queryParameters: {
-            'request_id': device['id']['\$oid'],
-            'rejected_by': userId,
-            'rejected_at': DateTime.now().toString(),
-            'deviceno': device['deviceno'],
+      var response = http.Response('', 500); // Initialize response
+      if (device['isFoRequest']) {
+        response = await http.get(
+          Uri.parse(ApiConfig.reject_request_device).replace(
+            queryParameters: {
+              'isFoRequest': device['isFoRequest'].toString(),
+              'request_id': device['_id']['\$oid'],
+              'rejected_by': userId,
+              'rejected_at': DateTime.now().toString(),
+              'mainDeviceNo': device['mainDeviceNo'],
+              'backupDeviceNo': device['backupDeviceNo'],
+            },
+          ),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
           },
-        ),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
-      );
-
-      log('Response: ${response.body}');
+        );
+      } else {
+        response = await http.get(
+          Uri.parse(ApiConfig.reject_request_device).replace(
+            queryParameters: {
+              'isFoRequest': device['isFoRequest'].toString(),
+              'request_id': device['_id']['\$oid'],
+              'rejected_by': userId,
+              'rejected_at': DateTime.now().toString(),
+              'deviceno': device['deviceno'],
+            },
+          ),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        );
+      }
 
       if (response.statusCode == 200) {
         await Future.delayed(const Duration(seconds: 2));
@@ -63,7 +82,7 @@ class OCC_Requested_Controller extends GetxController {
           'Accept': 'application/json',
         },
         body: {
-          'request_id': device['id']['\$oid'],
+          'request_id': device['_id']['\$oid'],
           'approved_by': userId,
           'approved_at': DateTime.now().toString(),
         },

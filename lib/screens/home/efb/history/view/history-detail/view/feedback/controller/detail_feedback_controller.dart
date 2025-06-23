@@ -231,17 +231,10 @@ class Detail_Feedback_Controller extends GetxController {
                                     ),
                                   ),
                                   pw.SizedBox(height: 5),
-                                  // if (devicename2 == '-' && devicename3 == '-')
-                                  //   pw.Text(
-                                  //     '$devicename1',
-                                  //     style: pw.TextStyle(
-                                  //       // font: ttf,
-                                  //       fontSize: 12,
-                                  //     ),
-                                  //   ),
-                                  // if (devicename1 == '-')
                                   pw.Text(
-                                    '${history['deviceno'] ?? '-'}',
+                                    history['isFoRequest'] == true
+                                        ? '${history['mainDeviceNo']} & ${history['backupDeviceNo']}'
+                                        : '${history['deviceno'].toString().isEmpty ? '-' : history['deviceno']}',
                                     style: pw.TextStyle(
                                       // font: ttf,
                                       fontSize: 12,
@@ -275,7 +268,7 @@ class Detail_Feedback_Controller extends GetxController {
                                         ),
                                       ),
                                       pw.Text(
-                                        '${format['rec_number'] ?? '-'}',
+                                        '${format['rec_number'].toString().isEmpty ? '-' : format['rec_number']}',
                                         style: pw.TextStyle(
                                           font: ttf,
                                           fontSize: 8,
@@ -296,7 +289,7 @@ class Detail_Feedback_Controller extends GetxController {
                                         ),
                                       ),
                                       pw.Text(
-                                        '${format['date'] ?? '-'}',
+                                        '${format['date'].toString().isEmpty ? '-' : format['date']}',
                                         style: pw.TextStyle(
                                           font: ttf,
                                           fontSize: 8,
@@ -317,7 +310,7 @@ class Detail_Feedback_Controller extends GetxController {
                                         ),
                                       ),
                                       pw.Text(
-                                        '${format['page'] ?? '-'}',
+                                        '${format['page'].toString().isEmpty ? '-' : format['page']}',
                                         style: pw.TextStyle(
                                           font: ttf,
                                           fontSize: 8,
@@ -375,7 +368,7 @@ class Detail_Feedback_Controller extends GetxController {
                           pw.Container(
                             height: 20.0,
                             child: reguler(
-                              "${history['user_rank'] ?? '-'}",
+                              "${history['request_user_rank'].toString().isEmpty ? '-' : history['request_user_rank']}",
                               context,
                             ),
                           ),
@@ -396,7 +389,11 @@ class Detail_Feedback_Controller extends GetxController {
                           pw.Container(
                             height: 20.0,
                             child: reguler(
-                              "${history['deviceno'] ?? '-'}",
+                              history['isFoRequest'] == true
+                                  ? '${history['mainDeviceNo']} & ${history['backupDeviceNo']}'
+                                  : history['deviceno'].toString().isEmpty
+                                  ? '-'
+                                  : history['deviceno'],
                               context,
                             ),
                           ),
@@ -407,7 +404,7 @@ class Detail_Feedback_Controller extends GetxController {
                           pw.Container(
                             height: 20.0,
                             child: reguler(
-                              "${history['user_name'] ?? '-'}",
+                              "${history['request_user_name'].toString().isEmpty ? '-' : history['request_user_name']}",
                               context,
                             ),
                           ),
@@ -445,7 +442,7 @@ class Detail_Feedback_Controller extends GetxController {
                             children: [
                               reguler(
                                 "Do you charge the device during your duty?\n "
-                                '${feedback['q1'] ?? '-'}',
+                                '${feedback['q1'].toString().isEmpty ? '-' : feedback['q1']}',
                                 context,
                               ),
                               bold(
@@ -456,12 +453,12 @@ class Detail_Feedback_Controller extends GetxController {
                                 children: [
                                   reguler(
                                     "1.  Flight Phase\n"
-                                    '${feedback['q3'] ?? '-'}',
+                                    '${feedback['q3'].toString().isEmpty ? '-' : feedback['q3']}',
                                     context,
                                   ),
                                   reguler(
                                     "2.  Charging duration\n"
-                                    '${feedback['q4'] ?? '-'}',
+                                    '${feedback['q4'].toString().isEmpty ? '-' : feedback['q4']}',
                                     context,
                                   ),
                                 ],
@@ -472,7 +469,7 @@ class Detail_Feedback_Controller extends GetxController {
                             children: [
                               reguler(
                                 "Do you find any risk or concern on the cabling?\n"
-                                '${feedback['q2'] ?? '-'}',
+                                '${feedback['q2'].toString().isEmpty ? '-' : feedback['q2']}',
                                 context,
                               ),
                               bold(
@@ -483,12 +480,12 @@ class Detail_Feedback_Controller extends GetxController {
                                 children: [
                                   reguler(
                                     "1.  Did you utilize ALL EFB software during your duty?\n"
-                                    '${feedback['q5'] ?? '-'}',
+                                    '${feedback['q5'].toString().isEmpty ? '-' : feedback['q5']}',
                                     context,
                                   ),
                                   reguler(
                                     "2.  Which software did you utilize the most?\n"
-                                    '${feedback['q6'] ?? '-'}',
+                                    '${feedback['q6'].toString().isEmpty ? '-' : feedback['q6']}',
                                     context,
                                   ),
                                 ],
@@ -534,12 +531,30 @@ class Detail_Feedback_Controller extends GetxController {
                       pw.TableRow(
                         children: [
                           reguler("%", context),
-                          reguler('1st   ${feedback['q7'] ?? '-'}', context),
-                          reguler('2nd   ${feedback['q8'] ?? '-'}', context),
-                          reguler('3rd   ${feedback['q9'] ?? '-'}', context),
-                          reguler('4th   ${feedback['q10'] ?? '-'}', context),
-                          reguler('5th   ${feedback['q11'] ?? '-'}', context),
-                          reguler('6th   ${feedback['q12'] ?? '-'}', context),
+                          reguler(
+                            '1st   ${feedback['q7'].toString().isEmpty ? '-' : feedback['q7']}',
+                            context,
+                          ),
+                          reguler(
+                            '2nd   ${feedback['q8'].toString().isEmpty ? '-' : feedback['q8']}',
+                            context,
+                          ),
+                          reguler(
+                            '3rd   ${feedback['q9'].toString().isEmpty ? '-' : feedback['q9']}',
+                            context,
+                          ),
+                          reguler(
+                            '4th   ${feedback['q10'].toString().isEmpty ? '-' : feedback['q10']}',
+                            context,
+                          ),
+                          reguler(
+                            '5th   ${feedback['q11'].toString().isEmpty ? '-' : feedback['q11']}',
+                            context,
+                          ),
+                          reguler(
+                            '6th   ${feedback['q12'].toString().isEmpty ? '-' : feedback['q12']}',
+                            context,
+                          ),
                         ],
                       ),
                     ],
@@ -576,19 +591,19 @@ class Detail_Feedback_Controller extends GetxController {
 Please observe the bracket and tick on your answer :
 
   1.  Strong Mechanical Integrity Flight
-       ${feedback['q13'] ?? '-'}
+       ${feedback['q13'].toString().isEmpty ? '-' : feedback['q13']}
   2.  Easy to use
-       ${feedback['q14'] ?? '-'}
+       ${feedback['q14'].toString().isEmpty ? '-' : feedback['q14']}
   3.  Easy to detached during emergency, if required
-       ${feedback['q15'] ?? '-'}
+       ${feedback['q15'].toString().isEmpty ? '-' : feedback['q15']}
   4.  Obstruct emergency egress
-       ${feedback['q16'] ?? '-'}
+       ${feedback['q16'].toString().isEmpty ? '-' : feedback['q16']}
   5.  Bracket position obstruct Pilot vision
-       ${feedback['q17'] ?? '-'} 
+       ${feedback['q17'].toString().isEmpty ? '-' : feedback['q17']} 
       (If Yes, How severe did it obstruct your vision)?
-       ${feedback['q18'] ?? '-'}
+       ${feedback['q18'].toString().isEmpty ? '-' : feedback['q18']}
       (If high please write down your comment below)
-       ${feedback['q19'] ?? '-'}
+       ${feedback['q19'].toString().isEmpty ? '-' : feedback['q19']}
 ''', context),
                             ],
                           ),
@@ -623,11 +638,11 @@ Please observe the bracket and tick on your answer :
                             children: [
                               reguler(
                                 '  1.  Airbus Flysmart (Performance)' +
-                                    "             ${feedback['q20'] ?? '-'}\n" +
+                                    "             ${feedback['q20'].toString().isEmpty ? '-' : feedback['q20']}\n" +
                                     '  2.  Lido (Navigation)' +
-                                    "                                   ${feedback['q21'] ?? '-'}\n" +
+                                    "                                   ${feedback['q21'].toString().isEmpty ? '-' : feedback['q21']}\n" +
                                     '  3.  Vistair Docunet (Library Document)' +
-                                    "      ${feedback['q22'] ?? '-'}\n",
+                                    "      ${feedback['q22'].toString().isEmpty ? '-' : feedback['q22']}\n",
                                 context,
                               ),
                             ],
@@ -639,7 +654,7 @@ Please observe the bracket and tick on your answer :
                   pw.Align(
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(
-                      'Additional comment on all observation : ${feedback['q23'] ?? '-'}',
+                      'Additional comment on all observation : ${feedback['q23'].toString().isEmpty ? '-' : feedback['q23']}',
                       style: pw.TextStyle(font: ttf, fontSize: 8),
                     ),
                   ),

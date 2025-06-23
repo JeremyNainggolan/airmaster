@@ -128,8 +128,9 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                             leading: CircleAvatar(
                                               radius: 25,
                                               backgroundImage:
-                                                  history['request_user_photo'] !=
-                                                          null
+                                                  history['request_user_photo']
+                                                          .toString()
+                                                          .isNotEmpty
                                                       ? NetworkImage(
                                                         history['request_user_photo'],
                                                       )
@@ -148,7 +149,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                 color:
                                                     ColorConstants.textPrimary,
                                                 fontSize:
-                                                    SizeConstant.TEXT_SIZE + 2,
+                                                    SizeConstant.TEXT_SIZE,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -169,7 +170,11 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  history['deviceno'],
+                                                  history['request_user_rank']
+                                                              .toString() ==
+                                                          'FO'
+                                                      ? '${history['mainDeviceNo']} & ${history['backupDeviceNo']}'
+                                                      : history['deviceno'],
                                                   style: GoogleFonts.notoSans(
                                                     color:
                                                         ColorConstants
@@ -181,10 +186,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  DateFormatter.convertDateTimeDisplay(
-                                                    history['request_date'],
-                                                    'dd MMMM yyyy',
-                                                  ),
+                                                  'Request Date: ${DateFormatter.convertDateTimeDisplay(history['request_date'], "MMM d, yyyy")}',
                                                   style: GoogleFonts.notoSans(
                                                     color:
                                                         ColorConstants
@@ -351,8 +353,9 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                           leading: CircleAvatar(
                                             radius: 25,
                                             backgroundImage:
-                                                history['request_user_photo'] !=
-                                                        null
+                                                history['request_user_photo']
+                                                        .toString()
+                                                        .isNotEmpty
                                                     ? NetworkImage(
                                                       history['request_user_photo'],
                                                     )
@@ -369,8 +372,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                             history['request_user_name'],
                                             style: GoogleFonts.notoSans(
                                               color: ColorConstants.textPrimary,
-                                              fontSize:
-                                                  SizeConstant.TEXT_SIZE + 2,
+                                              fontSize: SizeConstant.TEXT_SIZE,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -391,7 +393,11 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                 ),
                                               ),
                                               Text(
-                                                history['deviceno'],
+                                                history['request_user_rank']
+                                                            .toString() ==
+                                                        'FO'
+                                                    ? '${history['mainDeviceNo']} & ${history['backupDeviceNo']}'
+                                                    : history['deviceno'],
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants
@@ -403,10 +409,7 @@ class EFB_History extends GetView<EFB_History_Controller> {
                                                 ),
                                               ),
                                               Text(
-                                                DateFormatter.convertDateTimeDisplay(
-                                                  history['request_date'],
-                                                  'dd MMMM yyyy',
-                                                ),
+                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(history['request_date'], "MMM d, yyyy")}',
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants

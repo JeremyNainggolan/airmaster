@@ -43,6 +43,15 @@ class AppRoutes {
   static const String EFB_HANDOVER = '/main/efb/home/detail/handover';
   static const String EFB_OCC_RETURN = '/main/efb/home/detail/occ-return';
 
+  static const String EFB_FO_REQUEST = '/main/efb/home/fo/request';
+  static const String EFB_FO_WAITING_CONFIRMATION =
+      '/main/efb/home/fo/waiting-confirmation';
+  static const String EFB_FO_IN_USE = '/main/efb/home/fo/in-use';
+  static const String EFB_FO_FEEDBACK = '/main/efb/home/fo/in-use/feedback';
+  static const String EFB_FO_BATTERY = '/main/efb/home/fo/in-use/battery';
+  static const String EFB_FO_CONFIRM = '/main/efb/home/fo/in-use/confirm';
+  static const String EFB_FO_HANDOVER = '/main/efb/home/fo/handover';
+
   static const String EFB_REQUESTED_TO_OCC = '/main/efb/home/requested-to-occ';
   static const String EFB_USED_TO_OCC = '/main/efb/home/used-to-occ';
   static const String EFB_RETURNED_TO_OCC = '/main/efb/home/returned-to-occ';

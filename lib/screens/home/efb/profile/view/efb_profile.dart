@@ -68,7 +68,7 @@ class EFB_Profile extends GetView<EFB_Profile_Controller> {
                                           fit: BoxFit.cover,
                                         )
                                         : Image.asset(
-                                          'assets/images/airasia_logo_circle.png',
+                                          'assets/images/default_picture.png',
                                           fit: BoxFit.cover,
                                         ),
                               ),

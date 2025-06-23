@@ -51,14 +51,20 @@ class OCC_Returned_Controller extends GetxController {
       );
 
       request.headers['Authorization'] = 'Bearer $token';
-      request.headers['Accept'] = 'application/json';
       request.headers['Content-Type'] = 'multipart/form-data';
-      request.fields['request_id'] = device['id']['\$oid'];
+      request.fields['request_id'] = device['_id']['\$oid'];
       request.fields['received_at'] = DateTime.now().toString();
       request.fields['received_by'] = userId;
       request.fields['category'] = category.value;
       request.fields['remark'] = remark.value;
-      request.fields['deviceno'] = device['deviceno'];
+      request.fields['isFoRequest'] = device['isFoRequest'].toString();
+
+      if (device['isFoRequest']) {
+        request.fields['mainDeviceNo'] = device['mainDeviceNo'];
+        request.fields['backupDeviceNo'] = device['backupDeviceNo'];
+      } else {
+        request.fields['deviceno'] = device['deviceno'];
+      }
 
       request.files.add(
         http.MultipartFile.fromBytes(

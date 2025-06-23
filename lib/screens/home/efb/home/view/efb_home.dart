@@ -313,13 +313,26 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   controller.refreshDataOCC();
                                                 }
                                               },
-                                              leading: Icon(Icons.device_hub),
+                                              leading: CircleAvatar(
+                                                radius: 25,
+                                                backgroundImage:
+                                                    device['request_user_photo']
+                                                            .toString()
+                                                            .isNotEmpty
+                                                        ? NetworkImage(
+                                                          device['request_user_photo'],
+                                                        )
+                                                        : AssetImage(
+                                                              'assets/images/default_picture.png',
+                                                            )
+                                                            as ImageProvider,
+                                              ),
                                               trailing: Icon(
                                                 Icons.chevron_right,
                                                 color: Colors.black,
                                               ),
                                               title: Text(
-                                                device['deviceno'],
+                                                device['request_user_name'],
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants
@@ -329,17 +342,54 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                              subtitle: Text(
-                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
-                                                style: GoogleFonts.notoSans(
-                                                  color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
-                                                      SizeConstant
-                                                          .TEXT_SIZE_HINT,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    device['request_user_rank'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    device['request_user_rank']
+                                                                .toString() ==
+                                                            'FO'
+                                                        ? '${device['mainDeviceNo']} & ${device['backupDeviceNo']}'
+                                                        : device['deviceno'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           );
@@ -411,13 +461,26 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   controller.refreshDataOCC();
                                                 }
                                               },
-                                              leading: Icon(Icons.device_hub),
+                                              leading: CircleAvatar(
+                                                radius: 25,
+                                                backgroundImage:
+                                                    device['request_user_photo']
+                                                            .toString()
+                                                            .isNotEmpty
+                                                        ? NetworkImage(
+                                                          device['request_user_photo'],
+                                                        )
+                                                        : AssetImage(
+                                                              'assets/images/default_picture.png',
+                                                            )
+                                                            as ImageProvider,
+                                              ),
                                               trailing: Icon(
                                                 Icons.chevron_right,
                                                 color: Colors.black,
                                               ),
                                               title: Text(
-                                                device['deviceno'],
+                                                device['request_user_name'],
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants
@@ -427,17 +490,54 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                              subtitle: Text(
-                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
-                                                style: GoogleFonts.notoSans(
-                                                  color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
-                                                      SizeConstant
-                                                          .TEXT_SIZE_HINT,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    device['request_user_rank'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    device['request_user_rank']
+                                                                .toString() ==
+                                                            'FO'
+                                                        ? '${device['mainDeviceNo']} & ${device['backupDeviceNo']}'
+                                                        : device['deviceno'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           );
@@ -514,13 +614,26 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   controller.refreshDataOCC();
                                                 }
                                               },
-                                              leading: Icon(Icons.device_hub),
+                                              leading: CircleAvatar(
+                                                radius: 25,
+                                                backgroundImage:
+                                                    device['request_user_photo']
+                                                            .toString()
+                                                            .isNotEmpty
+                                                        ? NetworkImage(
+                                                          device['request_user_photo'],
+                                                        )
+                                                        : AssetImage(
+                                                              'assets/images/default_picture.png',
+                                                            )
+                                                            as ImageProvider,
+                                              ),
                                               trailing: Icon(
                                                 Icons.chevron_right,
                                                 color: Colors.black,
                                               ),
                                               title: Text(
-                                                device['deviceno'],
+                                                device['request_user_name'],
                                                 style: GoogleFonts.notoSans(
                                                   color:
                                                       ColorConstants
@@ -530,17 +643,54 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                              subtitle: Text(
-                                                'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
-                                                style: GoogleFonts.notoSans(
-                                                  color:
-                                                      ColorConstants
-                                                          .textPrimary,
-                                                  fontSize:
-                                                      SizeConstant
-                                                          .TEXT_SIZE_HINT,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    device['request_user_rank'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    device['request_user_rank']
+                                                                .toString() ==
+                                                            'FO'
+                                                        ? '${device['mainDeviceNo']} & ${device['backupDeviceNo']}'
+                                                        : device['deviceno'],
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Request Date: ${DateFormatter.convertDateTimeDisplay(device['request_date'], "MMM d, yyyy")}',
+                                                    style: GoogleFonts.notoSans(
+                                                      color:
+                                                          ColorConstants
+                                                              .textPrimary,
+                                                      fontSize:
+                                                          SizeConstant
+                                                              .TEXT_SIZE_HINT,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           );
@@ -566,9 +716,16 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: () async {
-                              final result = await Get.toNamed(
-                                AppRoutes.EFB_REQUEST,
-                              );
+                              final result;
+                              if (controller.rank.value.toString() == 'FO') {
+                                result = await Get.toNamed(
+                                  AppRoutes.EFB_FO_REQUEST,
+                                );
+                              } else {
+                                result = await Get.toNamed(
+                                  AppRoutes.EFB_REQUEST,
+                                );
+                              }
 
                               if (result == true) {
                                 controller.refreshData();
@@ -672,32 +829,96 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                     color: ColorConstants.backgroundColor,
                                     child: ListTile(
                                       onTap: () async {
-                                        showWaitingDeviceDialog(
-                                          controller
-                                              .waitingConfirmation['deviceno'],
-                                        );
+                                        if (controller.rank.value.toString() ==
+                                            'FO') {
+                                          final result = await Get.toNamed(
+                                            AppRoutes
+                                                .EFB_FO_WAITING_CONFIRMATION,
+                                            arguments: {
+                                              'device':
+                                                  controller
+                                                      .waitingConfirmation,
+                                            },
+                                          );
+
+                                          if (result == true) {
+                                            controller.refreshData();
+                                            return;
+                                          }
+                                        } else {
+                                          showWaitingDeviceDialog(
+                                            controller
+                                                .waitingConfirmation['deviceno'],
+                                          );
+                                        }
                                       },
-                                      leading: Icon(Icons.device_hub),
+                                      leading: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage:
+                                            controller
+                                                    .waitingConfirmation['request_user_photo']
+                                                    .toString()
+                                                    .isNotEmpty
+                                                ? NetworkImage(
+                                                  controller
+                                                      .waitingConfirmation['request_user_photo'],
+                                                )
+                                                : AssetImage(
+                                                      'assets/images/default_picture.png',
+                                                    )
+                                                    as ImageProvider,
+                                      ),
                                       trailing: Icon(
                                         Icons.chevron_right,
                                         color: Colors.black,
                                       ),
                                       title: Text(
                                         controller
-                                            .waitingConfirmation['deviceno'],
+                                            .waitingConfirmation['request_user_name'],
                                         style: GoogleFonts.notoSans(
                                           color: ColorConstants.textPrimary,
                                           fontSize: SizeConstant.TEXT_SIZE,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      subtitle: Text(
-                                        'Request Date: ${DateFormatter.convertDateTimeDisplay(controller.waitingConfirmation['request_date'], "MMM d, yyyy")}',
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            controller
+                                                .waitingConfirmation['request_user_rank'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            controller.waitingConfirmation['request_user_rank']
+                                                        .toString() ==
+                                                    'FO'
+                                                ? '${controller.waitingConfirmation['mainDeviceNo']} & ${controller.waitingConfirmation['backupDeviceNo']}'
+                                                : controller
+                                                    .waitingConfirmation['deviceno'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Request Date: ${DateFormatter.convertDateTimeDisplay(controller.waitingConfirmation['request_date'], "MMM d, yyyy")}',
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -743,38 +964,96 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                     color: ColorConstants.backgroundColor,
                                     child: ListTile(
                                       onTap: () async {
-                                        final result = await Get.toNamed(
-                                          AppRoutes.EFB_DETAIL,
-                                          arguments: {
-                                            'device': controller.inUse,
-                                          },
-                                        );
+                                        final result;
+                                        if (controller
+                                                .inUse['request_user_rank']
+                                                .toString() ==
+                                            'FO') {
+                                          result = await Get.toNamed(
+                                            AppRoutes.EFB_FO_IN_USE,
+                                            arguments: {
+                                              'device': controller.inUse,
+                                            },
+                                          );
+                                        } else {
+                                          result = await Get.toNamed(
+                                            AppRoutes.EFB_DETAIL,
+                                            arguments: {
+                                              'device': controller.inUse,
+                                            },
+                                          );
+                                        }
 
                                         if (result == true) {
                                           log('RESULT TRUE');
                                           controller.refreshData();
                                         }
                                       },
-                                      leading: Icon(Icons.device_hub),
+                                      leading: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage:
+                                            controller
+                                                    .inUse['request_user_photo']
+                                                    .toString()
+                                                    .isNotEmpty
+                                                ? NetworkImage(
+                                                  controller
+                                                      .inUse['request_user_photo'],
+                                                )
+                                                : AssetImage(
+                                                      'assets/images/default_picture.png',
+                                                    )
+                                                    as ImageProvider,
+                                      ),
                                       trailing: Icon(
                                         Icons.chevron_right,
                                         color: Colors.black,
                                       ),
                                       title: Text(
-                                        controller.inUse['deviceno'],
+                                        controller.inUse['request_user_name'],
                                         style: GoogleFonts.notoSans(
                                           color: ColorConstants.textPrimary,
                                           fontSize: SizeConstant.TEXT_SIZE,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      subtitle: Text(
-                                        'Request Date: ${DateFormatter.convertDateTimeDisplay(controller.inUse['request_date'], "MMM d, yyyy")}',
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            controller
+                                                .inUse['request_user_rank'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            controller.inUse['request_user_rank']
+                                                        .toString() ==
+                                                    'FO'
+                                                ? '${controller.inUse['mainDeviceNo']} & ${controller.inUse['backupDeviceNo']}'
+                                                : controller.inUse['deviceno'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Request Date: ${DateFormatter.convertDateTimeDisplay(controller.inUse['request_date'], "MMM d, yyyy")}',
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -820,42 +1099,101 @@ class EFB_Home extends GetView<EFB_Home_Controller> {
                                     color: ColorConstants.backgroundColor,
                                     child: ListTile(
                                       onTap: () async {
-                                        log(
-                                          'Pilot Handover: ${controller.pilotHandover}',
-                                        );
-                                        final result = await Get.toNamed(
-                                          AppRoutes.EFB_ACCEPT_HANDOVER,
-                                          arguments: {
-                                            'request_id':
-                                                controller
-                                                    .pilotHandover['id']['\$oid'],
-                                          },
-                                        );
+                                        final result;
+                                        if (controller
+                                                .pilotHandover['request_user_rank']
+                                                .toString() ==
+                                            'FO') {
+                                          result = await Get.toNamed(
+                                            AppRoutes.EFB_FO_HANDOVER,
+                                            arguments: {
+                                              'request_id':
+                                                  controller
+                                                      .pilotHandover['_id']['\$oid'],
+                                            },
+                                          );
+                                        } else {
+                                          result = await Get.toNamed(
+                                            AppRoutes.EFB_ACCEPT_HANDOVER,
+                                            arguments: {
+                                              'request_id':
+                                                  controller
+                                                      .pilotHandover['_id']['\$oid'],
+                                            },
+                                          );
+                                        }
 
                                         if (result == true) {
                                           controller.refreshData();
                                         }
                                       },
-                                      leading: Icon(Icons.device_hub),
+                                      leading: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage:
+                                            controller
+                                                    .pilotHandover['request_user_photo']
+                                                    .toString()
+                                                    .isNotEmpty
+                                                ? NetworkImage(
+                                                  controller
+                                                      .pilotHandover['request_user_photo'],
+                                                )
+                                                : AssetImage(
+                                                      'assets/images/default_picture.png',
+                                                    )
+                                                    as ImageProvider,
+                                      ),
                                       trailing: Icon(
                                         Icons.chevron_right,
                                         color: Colors.black,
                                       ),
                                       title: Text(
-                                        controller.pilotHandover['deviceno'],
+                                        controller
+                                            .pilotHandover['request_user_name'],
                                         style: GoogleFonts.notoSans(
                                           color: ColorConstants.textPrimary,
                                           fontSize: SizeConstant.TEXT_SIZE,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      subtitle: Text(
-                                        'Handover Date: ${DateFormatter.convertDateTimeDisplay(controller.pilotHandover['handover_date'], "MMM d, yyyy")}',
-                                        style: GoogleFonts.notoSans(
-                                          color: ColorConstants.textPrimary,
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          fontWeight: FontWeight.w400,
-                                        ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            controller
+                                                .pilotHandover['request_user_rank'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            controller.pilotHandover['request_user_rank']
+                                                        .toString() ==
+                                                    'FO'
+                                                ? '${controller.pilotHandover['mainDeviceNo']} & ${controller.pilotHandover['backupDeviceNo']}'
+                                                : controller
+                                                    .pilotHandover['deviceno'],
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Request Date: ${DateFormatter.convertDateTimeDisplay(controller.pilotHandover['request_date'], "MMM d, yyyy")}',
+                                            style: GoogleFonts.notoSans(
+                                              color: ColorConstants.textPrimary,
+                                              fontSize:
+                                                  SizeConstant.TEXT_SIZE_HINT,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

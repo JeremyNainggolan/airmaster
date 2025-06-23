@@ -113,11 +113,11 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                           text: 'Loading...',
                         );
 
-                        final confirmed = await controller.getUser(result);
+                        final isSuccess = await controller.getUser(result);
                         if (Get.isDialogOpen ?? false) {
                           Get.back();
                         }
-                        if (confirmed == true) {
+                        if (isSuccess == true) {
                           await ShowAlert.showFetchSuccess(
                             Get.context!,
                             'Success',
@@ -126,8 +126,8 @@ class Pilot_Handover_View extends GetView<Pilot_Handover_Controller> {
                         } else {
                           await ShowAlert.showErrorAlert(
                             Get.context!,
-                            'User Not Found',
-                            'Unable to fetch user information. Please make sure the QR code is valid and try again.',
+                            'Failed',
+                            controller.message.value,
                           );
                         }
                       }

@@ -42,7 +42,7 @@ class Occ_Return_Controller extends GetxController {
       request.headers['Accept'] = 'application/json';
       request.headers['Content-Type'] = 'multipart/form-data';
       request.fields['request_user'] = device['request_user'];
-      request.fields['request_id'] = device['id']['\$oid'];
+      request.fields['request_id'] = device['_id']['\$oid'];
       if (remark.text.isNotEmpty) {
         request.fields['remark'] = remark.text;
       }
@@ -69,7 +69,7 @@ class Occ_Return_Controller extends GetxController {
       }
     } catch (e) {
       await Future.delayed(const Duration(seconds: 2));
-      return true;
+      return false;
     }
   }
 }

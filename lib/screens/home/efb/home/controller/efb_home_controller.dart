@@ -51,16 +51,19 @@ class EFB_Home_Controller extends GetxController
   void initData() async {
     try {
       isLoading.value = true;
-
       await loadUserData();
-      await checkingRequest();
-      await getAvailableDevices();
-      await getWaitingConfirmation();
-      await getPilotHandover();
-      await getInUse();
-      await getOCCRequestStatus();
-      await getDeviceOCCUsed();
-      await getOCCReturnStatus();
+
+      if (rank.value == 'OCC') {
+        await getOCCRequestStatus();
+        await getDeviceOCCUsed();
+        await getOCCReturnStatus();
+        await getAvailableDevices();
+      } else {
+        await checkingRequest();
+        await getWaitingConfirmation();
+        await getPilotHandover();
+        await getInUse();
+      }
     } finally {
       isLoading.value = false;
     }
@@ -114,7 +117,11 @@ class EFB_Home_Controller extends GetxController
         },
       );
 
+      log('ID Number: $userId');
+      log('Hub: $hub');
+
       if (response.statusCode == 200) {
+        log("Checking Request Response: ${response.body}");
         checkRequest.value = true;
       } else {
         checkRequest.value = false;
@@ -162,17 +169,12 @@ class EFB_Home_Controller extends GetxController
 
   Future<void> getWaitingConfirmation() async {
     String token = await _userPrefs.getToken();
-    String hub = await _userPrefs.getHub();
     String userId = await _userPrefs.getIdNumber();
 
     try {
       final response = await http.get(
         Uri.parse(ApiConfig.get_confirmation_status).replace(
-          queryParameters: {
-            'hub': hub,
-            'request_user': userId,
-            'status': 'waiting',
-          },
+          queryParameters: {'request_user': userId, 'status': 'waiting'},
         ),
         headers: {
           'Authorization': 'Bearer $token',
@@ -181,6 +183,9 @@ class EFB_Home_Controller extends GetxController
       );
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      log("Waiting Confirmation Response Code: ${response.statusCode}");
+
       if (response.statusCode == 200) {
         waitingConfirmation.clear();
         waitingConfirmation.value = responseData['data'];
@@ -188,24 +193,20 @@ class EFB_Home_Controller extends GetxController
         waitingConfirmation.clear();
       }
     } catch (e) {
+      waitingConfirmation.clear();
       log('Error fetching waiting confirmation: $e');
     }
   }
 
   Future<void> getInUse() async {
     String token = await _userPrefs.getToken();
-    String hub = await _userPrefs.getHub();
     String userId = await _userPrefs.getIdNumber();
 
     try {
       final response = await http.get(
-        Uri.parse(ApiConfig.get_confirmation_status).replace(
-          queryParameters: {
-            'hub': hub,
-            'request_user': userId,
-            'status': 'used',
-          },
-        ),
+        Uri.parse(
+          ApiConfig.get_confirmation_status,
+        ).replace(queryParameters: {'request_user': userId, 'status': 'used'}),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -213,6 +214,9 @@ class EFB_Home_Controller extends GetxController
       );
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      log("In Use Response Code: ${response.statusCode}");
+
       if (response.statusCode == 200) {
         inUse.clear();
         inUse.value = responseData['data'];
@@ -226,14 +230,12 @@ class EFB_Home_Controller extends GetxController
 
   Future<void> getPilotHandover() async {
     String token = await _userPrefs.getToken();
-    String hub = await _userPrefs.getHub();
     String userId = await _userPrefs.getIdNumber();
 
     try {
       final response = await http.get(
         Uri.parse(ApiConfig.get_handover_device).replace(
           queryParameters: {
-            'hub': hub,
             'request_user': userId,
             'status': 'handover_confirmation',
           },
@@ -245,6 +247,7 @@ class EFB_Home_Controller extends GetxController
       );
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
+      log("Pilot Handover Response Code: ${response.statusCode}");
       if (response.statusCode == 200) {
         pilotHandover.clear();
         pilotHandover.value = responseData['data'];

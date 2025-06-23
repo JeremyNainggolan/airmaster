@@ -41,6 +41,7 @@ class ApiConfig {
   static const String get_handover_device_detail =
       '$EFB/get-handover-device-detail';
   static const String check_request = '$EFB/check-request';
+  static const String fo_submit_request = '$EFB/fo-submit-request';
   static const String submit_request = '$EFB/submit-request';
   static const String cancel_request = '$EFB/cancel-request';
   static const String pilot_handover = '$EFB/pilot-handover';
