@@ -69,4 +69,17 @@ class ApiConfig {
   static const String get_feedback_detail = '$EFB/get-feedback-detail';
   static const String get_format_pdf = '$EFB/get-format-pdf';
   static const String update_format_pdf = '$EFB/update-format-pdf';
+
+  /*
+    |--------------------------------------------------------------------------
+    | Line 83 - .. EFB ANALYTICS API ENDPOINTS
+    |--------------------------------------------------------------------------
+    |
+    | These endpoints are used for the EFB analytics screen functionalities.
+    |
+    */
+
+  static const String get_hub = '$EFB/get-hub';
+  static const String get_count_hub = '$EFB/get-count-hub';
+  static const String get_all_pilot_devices = '$EFB/get-all-pilot-devices';
 }

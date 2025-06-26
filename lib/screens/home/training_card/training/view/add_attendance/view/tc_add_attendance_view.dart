@@ -10,13 +10,9 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:airmaster/helpers/date_picker.dart';
+import 'package:airmaster/widgets/date_picker.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:quickalert/quickalert.dart';
-
-
-
-
 
 class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
   TC_AddAttendance({super.key});
@@ -53,10 +49,10 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
               children: [
                 const SizedBox(height: 20),
 
-
                 Builder(
                   builder: (context) {
-                    if (controller.trainingAttendanceName.text.isEmpty && trainingName != null) {
+                    if (controller.trainingAttendanceName.text.isEmpty &&
+                        trainingName != null) {
                       controller.trainingAttendanceName.text = trainingName;
                     }
                     return TextFormField(
@@ -74,7 +70,9 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                           horizontal: 10,
                         ),
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: ColorConstants.borderColor),
+                          borderSide: BorderSide(
+                            color: ColorConstants.borderColor,
+                          ),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.green),
@@ -90,7 +88,7 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                   text: 'Date',
                   textController: controller.trainingAttendanceDate,
                 ),
-                
+
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
@@ -102,17 +100,14 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                       border: OutlineInputBorder(),
                     ),
                     items:
-                    [
-                      'Initial',
-                      'Recurrent'
-                    ]
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e, overflow: TextOverflow.ellipsis),
-                          ),
-                        )
-                        .toList(),
+                        ['Initial', 'Recurrent']
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e, overflow: TextOverflow.ellipsis),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       controller.trainingAttendanceType.value = value!;
                     },
@@ -136,16 +131,14 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                       border: OutlineInputBorder(),
                     ),
                     items:
-                        [
-                          'Filght Ops',
-                        ]
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e, overflow: TextOverflow.ellipsis),
-                          ),
-                        )
-                        .toList(),
+                        ['Filght Ops']
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e, overflow: TextOverflow.ellipsis),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       controller.trainingAttendanceDepartment.value = value!;
                     },
@@ -171,20 +164,20 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                     ),
                     items:
                         [
-                          'Throttle',
-                          'Wing Tip',
-                          'Sharklet',
-                          'Windshear',
-                          'Joy Stick',
-                          'Fuselage',
-                        ]
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e, overflow: TextOverflow.ellipsis),
-                          ),
-                        )
-                        .toList(),
+                              'Throttle',
+                              'Wing Tip',
+                              'Sharklet',
+                              'Windshear',
+                              'Joy Stick',
+                              'Fuselage',
+                            ]
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e, overflow: TextOverflow.ellipsis),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       controller.trainingAttendanceRoom.value = value!;
                     },
@@ -196,7 +189,7 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                     },
                   ),
                 ),
-                
+
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
@@ -208,16 +201,14 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                       border: OutlineInputBorder(),
                     ),
                     items:
-                        [
-                          'IAA RH',
-                        ]
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e, overflow: TextOverflow.ellipsis),
-                          ),
-                        )
-                        .toList(),
+                        ['IAA RH']
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e, overflow: TextOverflow.ellipsis),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) {
                       controller.trainingAttendanceVenue.value = value!;
                     },
@@ -231,9 +222,8 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                 ),
 
                 const SizedBox(height: 10),
-                
+
                 TypeAheadField<Instructor>(
-                
                   controller: controller.instructorController,
                   builder: (context, textController, focusNode) {
                     return TextFormField(
@@ -269,7 +259,7 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                     );
                   },
                   emptyBuilder: (context) {
-                      return ListTile(
+                    return ListTile(
                       title: Text(
                         'No users found.',
                         style: GoogleFonts.notoSans(
@@ -282,7 +272,8 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                     );
                   },
                   onSelected: (Instructor suggestion) {
-                    controller.instructorController.text = '${suggestion.name} (${suggestion.id})';
+                    controller.instructorController.text =
+                        '${suggestion.name} (${suggestion.id})';
                     controller.selectedInstructorId.value = suggestion.id;
                   },
                 ),
@@ -309,7 +300,7 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                               fontSize: SizeConstant.TEXT_SIZE_HINT,
                               fontWeight: FontWeight.normal,
                             ),
-                          ); 
+                          );
                         }
                       } else {
                         Get.snackbar(

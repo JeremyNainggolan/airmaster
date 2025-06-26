@@ -6,7 +6,7 @@ import 'package:airmaster/screens/home/efb/history/controller/efb_history_contro
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/utils/date_formatter.dart';
-import 'package:airmaster/widgets/input_decoration.dart';
+import 'package:airmaster/helpers/input_decoration.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

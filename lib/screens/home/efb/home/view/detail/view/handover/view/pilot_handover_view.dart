@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:airmaster/helpers/qr_scanner.dart';
+import 'package:airmaster/widgets/qr_scanner.dart';
 import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/screens/home/efb/home/view/detail/view/handover/controller/pilot_handover_controller.dart';
 import 'package:airmaster/utils/const_color.dart';

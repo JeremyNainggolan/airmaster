@@ -17,10 +17,14 @@ class DateFormatter {
     return DateTime(now.year, now.month, now.day);
   }
 
+  static DateTime getStartOfYear() {
+    DateTime now = DateTime.now();
+    return DateTime(now.year, 1, 1);
+  }
+
   static DateTime convertToDate(String input, String format) {
     try {
-      final formatter = DateFormat(format);
-      return formatter.parseStrict(input);
+      return DateFormat(format).parse(input);
     } catch (e) {
       throw FormatException(
         "Gagal mengonversi '$input' ke DateTime dengan format '$format': $e",

@@ -2,13 +2,13 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/helpers/qr_scanner.dart';
+import 'package:airmaster/widgets/qr_scanner.dart';
 import 'package:airmaster/model/devices/device.dart';
 import 'package:airmaster/screens/home/efb/home/view/request/controller/request_device_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
 import 'package:airmaster/widgets/build_row.dart';
-import 'package:airmaster/widgets/input_decoration.dart';
+import 'package:airmaster/helpers/input_decoration.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
