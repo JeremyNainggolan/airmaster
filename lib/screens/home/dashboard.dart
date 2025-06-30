@@ -50,12 +50,12 @@ class _HomeViewState extends State<HomeView> {
               () => Get.toNamed(AppRoutes.EFB_MAIN),
             ),
           ] else ...[
-            _buildOption(
-              "TS-1",
-              "Training Simulator",
-              () => Get.toNamed(AppRoutes.TS1_MAIN),
-            ),
-            const SizedBox(height: 10),
+            // _buildOption(
+            //   "TS-1",
+            //   "Training Simulator",
+            //   () => Get.toNamed(AppRoutes.MAINTENANCE_SCREEN),
+            // ),
+            // const SizedBox(height: 10),
             _buildOption(
               "Training Card",
               "Pilot Training and Proficiency Control Card",
