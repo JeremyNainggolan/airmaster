@@ -37,6 +37,10 @@ import 'package:airmaster/screens/home/efb/home/view/occ-pages/return/bindings/o
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/return/view/occ_returned_view.dart';
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/used/bindings/occ_used_binding.dart';
 import 'package:airmaster/screens/home/efb/home/view/occ-pages/used/view/occ_used_view.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/declaration/bindings/declaration_binding.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/declaration/view/declaration_view.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/overall_performance/bindings/overall_perform_binding.dart';
+import 'package:airmaster/screens/home/ts_1/home/view/assessment/overall_performance/view/overall_perform_view.dart';
 import 'package:get/get.dart';
 import 'package:airmaster/screens/home/efb/analytics/bindings/efb_analytics_binding.dart';
 import 'package:airmaster/screens/home/efb/analytics/view/efb_analytics.dart';
@@ -137,6 +141,19 @@ class AppPages {
       binding: Evaluation_Binding(),
       transition: Transition.native,
     ),
+    GetPage(
+      name: AppRoutes.TS1_OVERALL_PERFORMANCE,
+      page: () => const Overall_Perform_View(),
+      binding: Overall_Perform_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TS1_DECLARATION,
+      page: () => const Declaration_View(),
+      binding: Declaration_Binding(),
+      transition: Transition.native,
+    ),
+
     GetPage(
       name: AppRoutes.TS1_ANALYTICS,
       page: () => const TS1_Analytics(),

@@ -1,8 +1,6 @@
 // ignore_for_file: camel_case_types, deprecated_member_use
-import 'dart:developer';
-
-import 'package:airmaster/data/asessment/candidate/candidate_preferences.dart';
 import 'package:airmaster/helpers/airport_route_formatter.dart';
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/model/users/user.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/candidate/controller/candidate_assessment_controller.dart';
@@ -17,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Candidate_View extends GetView<Candidate_Controller> {
   const Candidate_View({super.key});
@@ -30,8 +27,9 @@ class Candidate_View extends GetView<Candidate_Controller> {
       canPop: false,
       onPopInvoked: (didPop) async {
         if (!didPop) {
-          final bool shouldPop = await _showBackDialog() ?? false;
-          if (shouldPop) {
+          final shouldPop = await ShowAlert.showBackAlert(Get.context!);
+
+          if (shouldPop == true) {
             Get.back();
           }
         }
@@ -42,8 +40,9 @@ class Candidate_View extends GetView<Candidate_Controller> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
             onPressed: () async {
-              final bool shouldPop = await _showBackDialog() ?? false;
-              if (shouldPop) {
+              final shouldPop = await ShowAlert.showBackAlert(Get.context!);
+
+              if (shouldPop == true) {
                 Get.back();
               }
             },
@@ -309,21 +308,20 @@ class Candidate_View extends GetView<Candidate_Controller> {
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              tileColor: ColorConstants.backgroundColor,
                             );
                           },
                           emptyBuilder: (context) {
-                            return SizedBox(
-                              height: 40,
-                              child: Center(
-                                child: Text(
-                                  'No users found.',
-                                  style: GoogleFonts.notoSans(
-                                    color: ColorConstants.textPrimary,
-                                    fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                            return ListTile(
+                              title: Text(
+                                'No users found.',
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textPrimary,
+                                  fontSize: SizeConstant.TEXT_SIZE,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              tileColor: ColorConstants.backgroundColor,
                             );
                           },
                           onSelected: (User? suggestion) {
@@ -534,109 +532,43 @@ class Candidate_View extends GetView<Candidate_Controller> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: SizeConstant.TOP_PADDING),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (controller.formKey.currentState!.validate()) {
-                          Get.dialog(
-                            Center(
-                              child: LoadingAnimationWidget.hexagonDots(
-                                color: ColorConstants.primaryColor,
-                                size: 50,
-                              ),
-                            ),
-                          );
-
-                          await controller.candidateAssessment();
-                          await Future.delayed(Duration(seconds: 1));
-
-                          Get.toNamed(AppRoutes.TS1_FLIGHT_DETAILS);
-                        } else {
-                          log('Form is invalid');
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorConstants.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            SizeConstant.BORDER_RADIUS,
-                          ),
-                        ),
-                      ),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 48,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Next",
-                            style: GoogleFonts.notoSans(
-                              color: ColorConstants.textSecondary,
-                              fontSize: SizeConstant.TEXT_SIZE,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(SizeConstant.PADDING),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ColorConstants.primaryColor,
+              padding: EdgeInsets.symmetric(vertical: 14),
+            ),
+            onPressed: () async {
+              await controller.setCandidateAssessment();
 
-  Future<bool?> _showBackDialog() {
-    return Get.dialog<bool>(
-      AlertDialog(
-        backgroundColor: ColorConstants.backgroundColor,
-        title: Text(
-          'Are you sure?',
-          style: GoogleFonts.notoSans(
-            color: ColorConstants.textPrimary,
-            fontSize: SizeConstant.SUB_SUB_HEADING_SIZE,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          'Exiting will discard all changes made to this form and you have to start over.',
-          style: GoogleFonts.notoSans(
-            color: ColorConstants.textPrimary,
-            fontSize: SizeConstant.TEXT_SIZE,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              'No',
-              style: GoogleFonts.notoSans(
-                color: ColorConstants.primaryColor,
-                fontSize: SizeConstant.TEXT_SIZE,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onPressed: () => Get.back(result: false),
-          ),
-          TextButton(
-            child: Text(
-              'Yes',
-              style: GoogleFonts.notoSans(
-                color: ColorConstants.primaryColor,
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onPressed: () {
-              CandidatePreferences().clearCandidate();
-              Get.back(result: true);
+              if (controller.formKey.currentState!.validate()) {
+                Get.toNamed(
+                  AppRoutes.TS1_FLIGHT_DETAILS,
+                  arguments: {'candidate': controller.candidate},
+                );
+              } else {
+                ShowAlert.showInfoAlert(
+                  Get.context!,
+                  'Caution!',
+                  'Please fill all required fields correctly.',
+                );
+              }
             },
+            child: Text(
+              'Next',
+              style: GoogleFonts.notoSans(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

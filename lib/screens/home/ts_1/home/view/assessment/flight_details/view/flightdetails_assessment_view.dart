@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types, deprecated_member_use
-
-import 'package:airmaster/data/asessment/flight_details/flight_details_preferences.dart';
+import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/ts_1/home/view/assessment/flight_details/controller/flightdetails_assessment_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -22,8 +21,9 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
       canPop: false,
       onPopInvoked: (didPop) async {
         if (!didPop) {
-          final bool shouldPop = await _showBackDialog() ?? false;
-          if (shouldPop) {
+          final shouldPop = await ShowAlert.showBackAlert(Get.context!);
+
+          if (shouldPop == true) {
             Get.back();
           }
         }
@@ -34,8 +34,9 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
             onPressed: () async {
-              final bool shouldPop = await _showBackDialog() ?? false;
-              if (shouldPop) {
+              final shouldPop = await ShowAlert.showBackAlert(Get.context!);
+
+              if (shouldPop == true) {
                 Get.back();
               }
             },
@@ -50,46 +51,53 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
           ),
         ),
         backgroundColor: ColorConstants.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
-          child: Form(
-            key: controller.formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      CustomDivider(divider: 'Flight Crew 1'),
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return Center(
+              child: LoadingAnimationWidget.hexagonDots(
+                color: ColorConstants.activeColor,
+                size: 48,
+              ),
+            );
+          }
 
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: SizeConstant.BOT_PADDING,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConstant.PADDING),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        CustomDivider(divider: 'Flight Crew 1'),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConstant.BOT_PADDING,
+                          ),
+                          child: DropdownButtonFormField(
+                            dropdownColor: ColorConstants.backgroundColor,
+                            decoration:
+                                CustomInputDecoration.customInputDecoration(
+                                  labelText: 'Training or Checking Detail',
+                                ),
+                            items:
+                                AssessmentFlightDetailsDropdownItem.getFlightDetailsDropdownItems(
+                                  ['Training', 'Checking', 'Re - Training'],
+                                ),
+                            validator: (value) {
+                              if (value == null) {
+                                return "Select one of the options available";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              controller.firstCandidateAnotated = value!;
+                            },
+                          ),
                         ),
-                        child: DropdownButtonFormField(
-                          dropdownColor: ColorConstants.backgroundColor,
-                          decoration:
-                              CustomInputDecoration.customInputDecoration(
-                                labelText: 'Training or Checking Detail',
-                              ),
-                          items:
-                              AssessmentFlightDetailsDropdownItem.getFlightDetailsDropdownItems(
-                                ['Training', 'Checking', 'Re - Training'],
-                              ),
-                          validator: (value) {
-                            if (value == null) {
-                              return "Select one of the options available";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            controller.firstCandidateAnotated = value!;
-                          },
-                        ),
-                      ),
-
-                      Obx(
-                        () => Column(
+                        Column(
                           children:
                               controller.firstCandidateAnotatedMap.keys.map<
                                 Widget
@@ -251,38 +259,38 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                 );
                               }).toList(),
                         ),
-                      ),
+                      ],
+                    ),
 
-                      CustomDivider(divider: 'Flight Crew 2'),
-
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: SizeConstant.BOT_PADDING,
+                    Column(
+                      children: [
+                        CustomDivider(divider: 'Flight Crew 2'),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConstant.BOT_PADDING,
+                          ),
+                          child: DropdownButtonFormField(
+                            dropdownColor: ColorConstants.backgroundColor,
+                            decoration:
+                                CustomInputDecoration.customInputDecoration(
+                                  labelText: 'Training or Checking Detail',
+                                ),
+                            items:
+                                AssessmentFlightDetailsDropdownItem.getFlightDetailsDropdownItems(
+                                  ['Training', 'Checking', 'Re - Training'],
+                                ),
+                            validator: (value) {
+                              if (value == null) {
+                                return "Select one of the options available";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              controller.secondCandidateAnotated = value!;
+                            },
+                          ),
                         ),
-                        child: DropdownButtonFormField(
-                          dropdownColor: ColorConstants.backgroundColor,
-                          decoration:
-                              CustomInputDecoration.customInputDecoration(
-                                labelText: 'Training or Checking Detail',
-                              ),
-                          items:
-                              AssessmentFlightDetailsDropdownItem.getFlightDetailsDropdownItems(
-                                ['Training', 'Checking', 'Re - Training'],
-                              ),
-                          validator: (value) {
-                            if (value == null) {
-                              return "Select one of the options available";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            controller.secondCandidateAnotated = value!;
-                          },
-                        ),
-                      ),
-
-                      Obx(
-                        () => Column(
+                        Column(
                           children:
                               controller.secondCandidateAnotatedMap.keys.map<
                                 Widget
@@ -444,250 +452,61 @@ class FlightDetails_View extends GetView<FlightDetails_Controller> {
                                 );
                               }).toList(),
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: SizeConstant.TOP_PADDING),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await controller.getValidation();
-
-                        if (controller.formKey.currentState!.validate()) {
-                          if (controller.firstCandidateIndex <= 2) {
-                            showModalBottomSheet(
-                              context: Get.context!,
-                              backgroundColor: ColorConstants.warningColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                ),
-                              ),
-                              builder: (BuildContext context) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Wrap(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.warning_amber_rounded,
-                                            color: ColorConstants.textPrimary,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            "Warning!",
-                                            style: GoogleFonts.notoSans(
-                                              fontSize: SizeConstant.TEXT_SIZE,
-                                              color: ColorConstants.textPrimary,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 30),
-                                      Text(
-                                        "Please select at least 3 items for Flight Crew 1",
-                                        style: GoogleFonts.notoSans(
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          color: ColorConstants.textPrimary,
-                                        ),
-                                      ),
-                                      SizedBox(height: 30),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          } else if (controller.secondCandidateIndex <= 2) {
-                            showModalBottomSheet(
-                              context: Get.context!,
-                              backgroundColor: ColorConstants.warningColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                ),
-                              ),
-                              builder: (BuildContext context) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Wrap(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.warning_amber_rounded,
-                                            color: ColorConstants.textPrimary,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            "Warning!",
-                                            style: GoogleFonts.notoSans(
-                                              fontSize: SizeConstant.TEXT_SIZE,
-                                              color: ColorConstants.textPrimary,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 30),
-                                      Text(
-                                        "Please select at least 3 items for Flight Crew 2",
-                                        style: GoogleFonts.notoSans(
-                                          fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                          color: ColorConstants.textPrimary,
-                                        ),
-                                      ),
-                                      SizedBox(height: 30),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          } else {
-                            Get.dialog(
-                              Center(
-                                child: LoadingAnimationWidget.hexagonDots(
-                                  color: ColorConstants.primaryColor,
-                                  size: 50,
-                                ),
-                              ),
-                            );
-
-                            await controller.candidateAnotated();
-                            await Future.delayed(Duration(seconds: 1));
-
-                            Get.toNamed(AppRoutes.TS1_EVALUATION);
-                          }
-                        } else {
-                          showModalBottomSheet(
-                            context: Get.context!,
-                            backgroundColor: ColorConstants.warningColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (BuildContext context) {
-                              return Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Wrap(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.warning_amber_rounded,
-                                          color: ColorConstants.textPrimary,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Warning!",
-                                          style: GoogleFonts.notoSans(
-                                            fontSize: SizeConstant.TEXT_SIZE,
-                                            color: ColorConstants.textPrimary,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30),
-                                    Text(
-                                      "Please fill all the required fields",
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: SizeConstant.TEXT_SIZE_HINT,
-                                        color: ColorConstants.textPrimary,
-                                      ),
-                                    ),
-                                    SizedBox(height: 30),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorConstants.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            SizeConstant.BORDER_RADIUS,
-                          ),
-                        ),
-                      ),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 48,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Next",
-                            style: GoogleFonts.notoSans(
-                              color: ColorConstants.textSecondary,
-                              fontSize: SizeConstant.TEXT_SIZE,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+          );
+        }),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(SizeConstant.PADDING),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ColorConstants.primaryColor,
+              padding: EdgeInsets.symmetric(vertical: 14),
+            ),
+            onPressed: () async {
+              await controller.getValidation();
 
-  Future<bool?> _showBackDialog() {
-    return Get.dialog<bool>(
-      AlertDialog(
-        backgroundColor: ColorConstants.backgroundColor,
-        title: Text(
-          'Are you sure?',
-          style: GoogleFonts.notoSans(
-            color: ColorConstants.textPrimary,
-            fontSize: SizeConstant.SUB_SUB_HEADING_SIZE,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          'Exiting will discard all changes made to this form and you have to start over.',
-          style: GoogleFonts.notoSans(
-            color: ColorConstants.textPrimary,
-            fontSize: SizeConstant.TEXT_SIZE,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              'No',
-              style: GoogleFonts.notoSans(
-                color: ColorConstants.primaryColor,
-                fontSize: SizeConstant.TEXT_SIZE,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onPressed: () => Get.back(result: false),
-          ),
-          TextButton(
-            child: Text(
-              'Yes',
-              style: GoogleFonts.notoSans(
-                color: ColorConstants.primaryColor,
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onPressed: () {
-              FlightDetailsPreferences().clear();
-              Get.back(result: true);
+              if (controller.formKey.currentState!.validate()) {
+                if (controller.firstCandidateIndex <= 2 ||
+                    controller.secondCandidateIndex <= 2) {
+                  ShowAlert.showInfoAlert(
+                    Get.context!,
+                    'Caution!',
+                    "Please ensure that at least 3 items are selected for each flight crew.",
+                  );
+                  return;
+                } else {
+                  await controller.setCandidateAnotated();
+                  Get.toNamed(
+                    AppRoutes.TS1_EVALUATION,
+                    arguments: {
+                      'candidate': controller.candidate,
+                      'candidateAnotated': controller.candidateAnotated,
+                    },
+                  );
+                }
+              } else {
+                ShowAlert.showInfoAlert(
+                  Get.context!,
+                  'Caution!',
+                  "Please fill in all the required fields.",
+                );
+                return;
+              }
             },
+            child: Text(
+              'Next',
+              style: GoogleFonts.notoSans(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

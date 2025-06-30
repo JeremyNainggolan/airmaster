@@ -20,23 +20,23 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
         padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Card(
-                color: ColorConstants.cardColorPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    SizeConstant.BORDER_RADIUS,
+          child: Obx(
+            () => Column(
+              children: [
+                Card(
+                  color: ColorConstants.cardColorPrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      SizeConstant.BORDER_RADIUS,
+                    ),
                   ),
-                ),
-                elevation: SizeConstant.CARD_ELEVATION,
-                shadowColor: ColorConstants.shadowColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(SizeConstant.PADDING),
-                  child: Row(
-                    children: [
-                      Obx(
-                        () => CircleAvatar(
+                  elevation: SizeConstant.CARD_ELEVATION,
+                  shadowColor: ColorConstants.shadowColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(SizeConstant.PADDING),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
                           radius: 25,
                           backgroundImage:
                               controller.imgUrl.value.isNotEmpty
@@ -46,15 +46,13 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                                       )
                                       as ImageProvider,
                         ),
-                      ),
 
-                      const SizedBox(width: SizeConstant.SIZED_BOX_WIDTH),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Obx(
-                              () => Text(
+                        SizedBox(width: SizeConstant.SIZED_BOX_WIDTH),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 "Hello, ${controller.name.value}",
                                 style: GoogleFonts.notoSans(
                                   color: ColorConstants.textSecondary,
@@ -62,9 +60,7 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            Obx(
-                              () => Text(
+                              Text(
                                 'Good ${controller.greetings.value}',
                                 style: GoogleFonts.notoSans(
                                   color: ColorConstants.textSecondary,
@@ -72,85 +68,86 @@ class TS1_Home extends GetView<TS1_Home_Controller> {
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                DateFormatter.convertDateTimeDisplay(
+                                  DateTime.now().toString(),
+                                  "EEEE",
+                                ),
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textSecondary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                DateFormatter.convertDateTimeDisplay(
+                                  DateTime.now().toString(),
+                                  "MMM d, yyyy",
+                                ),
+                                style: GoogleFonts.notoSans(
+                                  color: ColorConstants.textSecondary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+                Divider(
+                  color: ColorConstants.dividerColor,
+                  thickness: SizeConstant.DIVIDER_THICKNESS,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(SizeConstant.PADDING),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Assessment',
+                        style: GoogleFonts.notoSans(
+                          color: ColorConstants.textPrimary,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              DateFormatter.convertDateTimeDisplay(
-                                DateTime.now().toString(),
-                                "EEEE",
-                              ),
-                              style: GoogleFonts.notoSans(
-                                color: ColorConstants.textSecondary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              DateFormatter.convertDateTimeDisplay(
-                                DateTime.now().toString(),
-                                "MMM d, yyyy",
-                              ),
-                              style: GoogleFonts.notoSans(
-                                color: ColorConstants.textSecondary,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.TS1_CANDIDATE_ASSESSMENT);
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          color: ColorConstants.primaryColor,
+                        ),
+                        label: Text(
+                          'New Assessment',
+                          style: GoogleFonts.notoSans(
+                            color: ColorConstants.primaryColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: ColorConstants.primaryColor),
+                          backgroundColor: ColorConstants.backgroundColor,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-              Divider(
-                color: ColorConstants.dividerColor,
-                thickness: SizeConstant.DIVIDER_THICKNESS,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(SizeConstant.PADDING),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Assessment',
-                      style: GoogleFonts.notoSans(
-                        color: ColorConstants.textPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        // Get.toNamed(AppRoutes.TS1_CANDIDATE_ASSESSMENT);
-                        // Get.toNamed(AppRoutes.TS1_FLIGHT_DETAILS);
-                        Get.toNamed(AppRoutes.TS1_EVALUATION);
-                      },
-                      icon: Icon(Icons.add, color: ColorConstants.primaryColor),
-                      label: Text(
-                        'New Assessment',
-                        style: GoogleFonts.notoSans(
-                          color: ColorConstants.primaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: ColorConstants.primaryColor),
-                        backgroundColor: ColorConstants.backgroundColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:airmaster/config/api_config.dart';
-import 'package:airmaster/data/asessment/flight_details/flight_details_preferences.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/model/assessment/flight_details/flight_details.dart';
 import 'package:flutter/widgets.dart';
@@ -12,11 +11,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class FlightDetails_Controller extends GetxController {
-  @override
-  void onInit() async {
-    super.onInit();
-    await getFlightDetails();
-  }
+  dynamic params = Get.arguments;
 
   final formKey = GlobalKey<FormState>();
 
@@ -30,10 +25,22 @@ class FlightDetails_Controller extends GetxController {
   RxMap secondCandidateSubAnotatedMap = {}.obs;
   int secondCandidateIndex = 0;
 
-  Future<void> getFlightDetails() async {
-    String token = await UserPreferences().getToken();
+  final isLoading = false.obs;
 
+  final candidate = {}.obs;
+  final candidateAnotated = {}.obs;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    candidate.value = params['candidate'];
+    await getFlightDetails();
+  }
+
+  Future<void> getFlightDetails() async {
+    isLoading.value = true;
     try {
+      String token = await UserPreferences().getToken();
       final response = await http.get(
         Uri.parse(ApiConfig.get_flight_details),
         headers: {
@@ -78,11 +85,13 @@ class FlightDetails_Controller extends GetxController {
       }
     } catch (e) {
       log("Error fetching flight details: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  Future<void> candidateAnotated() async {
-    final candidateAnotated = {
+  Future<void> setCandidateAnotated() async {
+    candidateAnotated.value = {
       'first_candidate': {
         'anotated': firstCandidateAnotated,
         'anotated_map': firstCandidateAnotatedMap,
@@ -94,10 +103,6 @@ class FlightDetails_Controller extends GetxController {
         'sub_anotated_map': secondCandidateSubAnotatedMap,
       },
     };
-
-    await FlightDetailsPreferences().saveCandidate(candidateAnotated);
-
-    log("Candidate anotated saved: $candidateAnotated");
   }
 
   Future<void> getValidation() async {
@@ -120,8 +125,5 @@ class FlightDetails_Controller extends GetxController {
             .expand((subMap) => subMap.values)
             .where((value) => value == true)
             .length;
-
-    log("First Candidate Index: $firstCandidateIndex");
-    log("Second Candidate Index: $secondCandidateIndex");
   }
 }

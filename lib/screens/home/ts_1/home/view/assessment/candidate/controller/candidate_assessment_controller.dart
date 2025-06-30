@@ -4,9 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:airmaster/config/api_config.dart';
-import 'package:airmaster/data/asessment/candidate/candidate_preferences.dart';
 import 'package:airmaster/data/users/user_preferences.dart';
-import 'package:airmaster/model/assessment/candidate/candidate.dart';
 import 'package:airmaster/model/users/user.dart';
 import 'package:airmaster/utils/date_formatter.dart';
 import 'package:flutter/widgets.dart';
@@ -39,24 +37,30 @@ class Candidate_Controller extends GetxController {
   final simulationIdentity = TextEditingController();
   final loaNumber = TextEditingController();
 
-  Future<void> candidateAssessment() async {
-    final candidate = Candidate(
-      firstFlightCrewName: firstFlightCrewName.text,
-      firstFlightCrewStaffNumber: firstFlightCrewStaffNumber.text,
-      firstFlightCrewLicense: firstFlightCrewLicense.text,
-      firstFlightCrewLicenseExpiry: firstFlightCrewLicenseExpiry.text,
-      secondFlightCrewName: secondFlightCrewName.text,
-      secondFlightCrewStaffNumber: secondFlightCrewStaffNumber.text,
-      secondFlightCrewLicense: secondFlightCrewLicense.text,
-      secondFlightCrewLicenseExpiry: secondFlightCrewLicenseExpiry.text,
-      aircraftType: aircraftType.text,
-      airportAndRoute: airportAndRoute.text,
-      simulationHours: simulationHours.text,
-      simulationIdentity: simulationIdentity.text,
-      loaNumber: loaNumber.text,
-    );
+  final candidate = {}.obs;
 
-    await CandidatePreferences().saveCandidate(candidate);
+  Future<void> setCandidateAssessment() async {
+    candidate.value = {
+      'firstFlightCrewData': {
+        'firstFlightCrewName': firstFlightCrewName.text,
+        'firstFlightCrewStaffNumber': firstFlightCrewStaffNumber.text,
+        'firstFlightCrewLicense': firstFlightCrewLicense.text,
+        'firstFlightCrewLicenseExpiry': firstFlightCrewLicenseExpiry.text,
+      },
+      'SecondFlightCrewData': {
+        'secondFlightCrewName': secondFlightCrewName.text,
+        'secondFlightCrewStaffNumber': secondFlightCrewStaffNumber.text,
+        'secondFlightCrewLicense': secondFlightCrewLicense.text,
+        'secondFlightCrewLicenseExpiry': secondFlightCrewLicenseExpiry.text,
+      },
+      'aircraftData': {
+        'aircraftType': aircraftType.text,
+        'airportAndRoute': airportAndRoute.text,
+        'simulationHours': simulationHours.text,
+        'simulationIdentity': simulationIdentity.text,
+        'loaNumber': loaNumber.text,
+      },
+    };
   }
 
   Future<List<User>> getUsersBySearchName(String searchName) async {

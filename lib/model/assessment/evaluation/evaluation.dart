@@ -271,6 +271,12 @@ class Evaluation {
     "Customer Focus": {
       "PA Content & Clarity": {"not_assigned": false, "PF": "", "PM": ""},
     },
-    "Others": {},
+    "Others": {
+      "Manual 1": {"not_assigned": false, "subject": "", "PF": "", "PM": ""},
+      "Manual 2": {"not_assigned": false, "subject": "", "PF": "", "PM": ""},
+      "Manual 3": {"not_assigned": false, "subject": "", "PF": "", "PM": ""},
+      "Manual 4": {"not_assigned": false, "subject": "", "PF": "", "PM": ""},
+      "Manual 5": {"not_assigned": false, "subject": "", "PF": "", "PM": ""},
+    },
   };
 }

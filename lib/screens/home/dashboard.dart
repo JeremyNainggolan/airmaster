@@ -1,3 +1,4 @@
+import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -14,9 +15,19 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  late String _userRank;
   @override
   void initState() {
     super.initState();
+    _userRank = '';
+    setRank();
+  }
+
+  Future<void> setRank() async {
+    final rank = await UserPreferences().getRank();
+    setState(() {
+      _userRank = rank;
+    });
   }
 
   @override
@@ -31,23 +42,32 @@ class _HomeViewState extends State<HomeView> {
           _buildWelcomeText(),
           _buildMenuText(),
           const SizedBox(height: 20),
-          _buildOption(
-            "TS-1",
-            "Training Simulator",
-            () => Get.toNamed(AppRoutes.MAINTENANCE_SCREEN),
-          ),
-          const SizedBox(height: 10),
-          _buildOption(
-            "Training Card",
-            "Pilot Training and Proficiency Control Card",
-            () => Get.toNamed(AppRoutes.TC_MAIN),
-          ),
-          const SizedBox(height: 10),
-          _buildOption(
-            "EFB",
-            "Electronic Flight Bag (EFB)",
-            () => Get.toNamed(AppRoutes.EFB_MAIN),
-          ),
+          if (_userRank == 'OCC') ...[
+            const SizedBox(height: 10),
+            _buildOption(
+              "EFB",
+              "Electronic Flight Bag (EFB)",
+              () => Get.toNamed(AppRoutes.EFB_MAIN),
+            ),
+          ] else ...[
+            _buildOption(
+              "TS-1",
+              "Training Simulator",
+              () => Get.toNamed(AppRoutes.TS1_MAIN),
+            ),
+            const SizedBox(height: 10),
+            _buildOption(
+              "Training Card",
+              "Pilot Training and Proficiency Control Card",
+              () => Get.toNamed(AppRoutes.TC_MAIN),
+            ),
+            const SizedBox(height: 10),
+            _buildOption(
+              "EFB",
+              "Electronic Flight Bag (EFB)",
+              () => Get.toNamed(AppRoutes.EFB_MAIN),
+            ),
+          ],
         ],
       ),
     );

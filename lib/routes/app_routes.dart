@@ -13,9 +13,13 @@ class AppRoutes {
 
   static const String TS1_HOME_SCREEN = '/main/ts1/home';
   static const String TS1_CANDIDATE_ASSESSMENT =
-      '/main/ts1/candidate_assessment';
-  static const String TS1_FLIGHT_DETAILS = '/main/ts1/flight_details';
-  static const String TS1_EVALUATION = '/main/ts1/evaluation';
+      '/main/ts1/assessment/candidate_assessment';
+  static const String TS1_FLIGHT_DETAILS =
+      '/main/ts1/assessment/flight_details';
+  static const String TS1_EVALUATION = '/main/ts1/assessment/evaluation';
+  static const String TS1_OVERALL_PERFORMANCE =
+      '/main/ts1/assessment/overall_performance';
+  static const String TS1_DECLARATION = '/main/ts1/assessment/declaration';
 
   static const String TS1_ANALYTICS = '/main/ts1/analytics';
   static const String TS1_HISTORY = '/main/ts1/history';
