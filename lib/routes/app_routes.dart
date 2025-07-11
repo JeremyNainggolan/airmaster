@@ -25,16 +25,49 @@ class AppRoutes {
   static const String TS1_HISTORY = '/main/ts1/history';
   static const String TS1_PROFILE = '/main/ts1/profile';
 
+  //tc
+
   static const String TC_MAIN = '/main/tc';
 
-  static const String TC_HOME_SCREEN = '/main/tc/home';
+  // home administrator
+  static const String TC_ADMINISTRATOR_HOME_SCREEN = '/main/tc/home/administrator';
+  static const String TC_ATTENDANCE_DETAIL_NEEDCONFIRM = '/main/tc/home/administrator/attendance_detail_confirm';
+  static const String TC_ATTENDANCE_DETAIL_WAITING = '/main/tc/home/administrator/attendance_detail_waiting';
+
+  //home instructor
+  static const String TC_INSTRUCTOR_HOME = '/main/tc/home/instructor';
+  static const String TC_INSTRUCTOR_ATTENDANCE_LIST = '/main/tc/home/instructor/attendance_list';
+  static const String INS_TOTAL_TRAINEE = '/main/tc/home/instructor/total_trainee';
+  static const String SCORING_TRAINEE = '/main/tc/home/instructor/scoring_trainee';
+
+  //home examinee
+  static const String TC_EXAMINEE_HOME_SCREEN = '/main/tc/home/examinee';
+
+  //home CPTS
+  static const String TC_CPTS_HOME_SCREEN = '/main/tc/home/cpts';
+
+  // training
   static const String TC_TRAINING = '/main/tc/training';
-  static const String TC_NEW_TRAINING = '/main/tc/new_training';
-  static const String TC_TRAINING_LIST_DETAIL = '/main/tc/training_list_detail';
-  static const String TC_ADD_ATTENDANCE = '/main/tc/add_attendance';
+  static const String TC_NEW_TRAINING = '/main/tc/training/new_training';
+  static const String TC_TRAINING_LIST_DETAIL = '/main/tc/training/training_list_detail';
+  static const String TC_ADD_ATTENDANCE = '/main/tc/training/training_list_detail/add_attendance';
+  static const String TC_ATTENDANCE_PENDING_DETAIL = '/main/tc/training/training_list_detail/attendance_detail_pending';
+  static const String TC_ATTENDANCE_CONFIRM_DETAIL = '/main/tc/training/training_list_detail/attendance_detail_confirm';
+  static const String TC_ATTENDANCE_DONE_DETAIL = '/main/tc/training/training_list_detail/attendance_detail_done';
+  static const String ADMIN_TOTAL_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/total_trainee';
+  static const String TC_ABSENT_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee';
+  static const String DETAIL_ABSENT_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee/detail_absent_trainee';
+  
 
   static const String TC_PILOT_CREW = '/main/tc/pilot_crew';
   static const String TC_PROFILE = '/main/tc/profile';
+
+  // traininglist examinee
+  static const String EXAMINEE_TRAINING_LIST = '/main/tc/training_list';
+  static const String EXAMINEE_CREATE_ATTENDANCE = '/main/tc/training_list/create_attendance';
+  static const String EXAMINEE_ATTENDANCE_DETAIL = '/main/tc/training_list/attendance_detail';
+
+  //efb
 
   static const String EFB_MAIN = '/main/efb';
   static const String EFB_HOME = '/main/efb/home';

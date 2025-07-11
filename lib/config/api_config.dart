@@ -11,6 +11,8 @@ class ApiConfig {
   static const String get_user_by_name = '$TS_1/get-user-by-name';
   static const String get_flight_details = '$TS_1/get-flight-details';
 
+
+  // Administration API Endpoints
   static const String TC = '$baseUrl/tc';
   static const String get_training_cards = '$TC/get-training-cards';
   static const String new_training_card = '$TC/new-training-card';
@@ -18,6 +20,39 @@ class ApiConfig {
   static const String new_training_attendance = '$TC/new-training-attendance';
   static const String get_attendance_list = '$TC/get-attendance-list';
   static const String delete_training_card = '$TC/delete-training-card';
+  
+
+  //home administrator
+  static const String get_total_participant_confirm = '$TC/get-total-participant';
+  static const String get_pilot_list = '$TC/get-pilot-list';
+  static const String confirm_class_attendance = '$TC/confirm-class-attendance';
+  static const String recurrent_date_training = '$TC/recurrent-date-training';
+  
+  static const String get_total_participant_done = '$TC/get-total-participant';
+  static const String get_absent_participant = '$TC/get-absent-participant';
+  static const String get_total_absent_trainee = '$TC/get-total-absent-trainee';
+    static const String get_training_list = '$TC/get-training-cards';
+
+  //home tc
+  static const String get_status_confirmation = '$TC/get-status-confirmation';
+
+  //home instructor
+  static const String get_training_overview = '$TC/get-training-overview';
+  static const String confirm_attendance ='$TC/confirm-attendance';
+  static const String get_attendance = '$TC/get-attendance';
+  static const String get_trainee_details = '$TC/get-trainee-details';
+  static const String trainee_details = '$TC/trainee-details';
+  static const String save_trainee_score = '$TC/save-trainee-score';
+
+  // home examinee
+  static const String get_need_feedback = '$TC/get-need-feedback';
+  static const String get_att_trainees = '$TC/get-att-trainees';
+  static const String get_class_open = '$TC/get-class-open';
+  static const String check_class_password = '$TC/check-class-password';
+
+  static const String create_attendance_detail =
+      '$TC/create-attendance-detail';
+
 
   static const String EFB = '$baseUrl/efb';
 

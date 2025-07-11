@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class TC_TrainingListDetail extends GetView<TC_TrainingListDetail_Controller> {
-  TC_TrainingListDetail({super.key});
-
-  final trainingName = Get.arguments;
+  const TC_TrainingListDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +24,19 @@ class TC_TrainingListDetail extends GetView<TC_TrainingListDetail_Controller> {
           icon: Icon(Icons.arrow_back, color: ColorConstants.textSecondary),
           onPressed: () => Get.back(),
         ),
-        title: Text('Training List $trainingName'),
-        titleTextStyle: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 20,
+        title: Text('Training List ${controller.subject.toString()}'),
+        titleTextStyle: GoogleFonts.notoSans(
+          color: ColorConstants.textSecondary,
+          fontSize: 20.0,
           fontWeight: FontWeight.bold,
         ),
         actions: [
           PopupMenuButton<int>(
             color: ColorConstants.backgroundColor,
             icon: Icon(Icons.more_vert, color: ColorConstants.backgroundColor),
-            onSelected: (item) => onSelected(context, item, trainingName, controller),
+            onSelected:
+                (item) =>
+                    onSelected(context, item, controller.subject, controller),
             itemBuilder:
                 (context) => [
                   PopupMenuItem(
@@ -86,67 +88,173 @@ class TC_TrainingListDetail extends GetView<TC_TrainingListDetail_Controller> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          TabBar(
-            controller: controller.trainingList,
-            tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'Confirmed'),
-              Tab(text: 'Done'),
-            ],
-            dividerColor: Colors.transparent,
-          ),
-          SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
-          Expanded(
-            child: TabBarView(
+      body: Obx(
+        () => Column(
+          children: [
+            TabBar(
               controller: controller.trainingList,
-              children: [
-                FutureBuilder<List<dynamic>>(
-                  future: controller.getAttendanceList('$trainingName','pending'),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No Pending Attendance'));
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          final attendance = snapshot.data![index];
-                          return ListTile(
-                            title: Text(attendance['user_name'] ?? 'No Name' ),
-                            subtitle: Text(
-                              attendance['date'] != null
-                                  ? DateFormat('dd MMMM yyyy').format(DateTime.parse(attendance['date']))
-                                  : 'No Date',
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-                Center(child: Text('In Use Devices')),
-                Center(child: Text('Returned Devices')),
+              tabs: [
+                Tab(text: 'Pending'),
+                Tab(text: 'Confirmed'),
+                Tab(text: 'Done'),
               ],
+              dividerColor: Colors.transparent,
             ),
-          ),
-        ],
+            SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+            Expanded(
+              child: TabBarView(
+                controller: controller.trainingList,
+                children: [
+                  RefreshIndicator(
+                    backgroundColor: ColorConstants.backgroundColor,
+                    onRefresh: () async {
+                      await controller.getAttendanceList(controller.subject);
+                    },
+                    child:
+                        controller.attendanceListPending.isEmpty
+                            ? ListView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: const [
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 24),
+                                    child: Text("No Data"),
+                                  ),
+                                ),
+                              ],
+                            )
+                            : buildList(
+                              controller.attendanceListPending,
+                              controller,
+                              AppRoutes.TC_ATTENDANCE_PENDING_DETAIL,
+                            ),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      await controller.getAttendanceList(controller.subject);
+                    },
+                    backgroundColor: ColorConstants.backgroundColor,
+                    child:
+                        controller.attendanceListConfirmed.isEmpty
+                            ? ListView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: [
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 24),
+                                    child: Text("No Data"),
+                                  ),
+                                ),
+                              ],
+                            )
+                            : buildList(
+                              controller.attendanceListConfirmed,
+                              controller,
+                              AppRoutes.TC_ATTENDANCE_CONFIRM_DETAIL,
+                            ),
+                  ),
+                  RefreshIndicator(
+                    backgroundColor: ColorConstants.backgroundColor,
+                    onRefresh: () async {
+                      await controller.getAttendanceList(controller.subject);
+                    },
+                    child:
+                        controller.attendanceListDone.isEmpty
+                            ? ListView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: [
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 24),
+                                    child: Text("No Data"),
+                                  ),
+                                ),
+                              ],
+                            )
+                            : buildList(
+                              controller.attendanceListDone,
+                              controller,
+                              AppRoutes.TC_ATTENDANCE_DONE_DETAIL,
+                            ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-void onSelected(BuildContext context, int item, dynamic trainingName, TC_TrainingListDetail_Controller controller) {
+void onSelected(
+  BuildContext context,
+  int item,
+  dynamic trainingName,
+  TC_TrainingListDetail_Controller controller,
+) async {
   switch (item) {
     case 0:
       Get.toNamed(AppRoutes.TC_ADD_ATTENDANCE, arguments: trainingName);
       break;
     case 1:
-      controller.deleteTraining(trainingName);
+      await controller.deleteTraining(trainingName);
+      Get.back(result: true);
+      QuickAlert.show(context: Get.context!, type: QuickAlertType.success);
       break;
   }
+}
+
+Widget buildList(List list, controller, String route) {
+  if (controller.isLoading.value) {
+    return Center(
+      child: LoadingAnimationWidget.hexagonDots(
+        color: ColorConstants.primaryColor,
+        size: 48,
+      ),
+    );
+  }
+
+  if (list.isEmpty) {
+    return Center(child: Text("No Data"));
+  }
+
+  return ListView.builder(
+    padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+    physics: const AlwaysScrollableScrollPhysics(),
+    itemCount: list.length,
+    itemBuilder: (context, index) {
+      final item = list[index];
+      return Card(
+        color: ColorConstants.backgroundColor,
+        elevation: 2,
+        child: ListTile(
+          title: Text(item['user_name']),
+          subtitle: Text(
+            item['date'] != null
+                ? DateFormat(
+                  'dd MMMM yyyy',
+                ).format(DateTime.parse(item['date']))
+                : 'No Date',
+          ),
+          leading: CircleAvatar(
+            backgroundImage:
+                item['user_photo'] != null &&
+                        item['user_photo'].toString().isNotEmpty
+                    ? NetworkImage(item['user_photo'])
+                    : AssetImage('assets/images/default_picture.png')
+                        as ImageProvider,
+          ),
+          onTap: () {
+            Get.toNamed(route, arguments: item);
+          },
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: ColorConstants.labelColor,
+            size: 18,
+          ),
+        ),
+      );
+    },
+  );
 }

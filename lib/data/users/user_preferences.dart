@@ -42,6 +42,7 @@ class UserPreferences {
       user.license_expiry?.toIso8601String() ?? '',
     );
     await _prefs!.setString('rank', user.rank ?? '');
+    await _prefs!.setString('type', user.type ?? '');
     await _prefs!.setString('instructor', (user.instructor?.join(',') ?? ''));
     return true;
   }
@@ -197,5 +198,10 @@ class UserPreferences {
   Future<List<String>> getInstructor() async {
     await init();
     return (_prefs!.getString('instructor')?.split(',') ?? []).cast<String>();
+  }
+
+  Future<String> getType() async {
+    await init();
+    return _prefs!.getString('type') ?? '';
   }
 }

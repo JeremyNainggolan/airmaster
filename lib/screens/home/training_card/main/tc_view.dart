@@ -1,8 +1,17 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names
+
+import 'dart:developer';
+
+import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/routes/app_routes.dart';
-import 'package:airmaster/screens/home/training_card/home/view/tc_home.dart';
+import 'package:airmaster/screens/home/training_card/home/home_administrator/view/tc_home_administrator.dart';
+import 'package:airmaster/screens/home/training_card/home/home_cpts/view/tc_home_cpts.dart';
+import 'package:airmaster/screens/home/training_card/home/home_examinee/view/tc_home_examinee.dart';
+import 'package:airmaster/screens/home/training_card/home/home_instructor/view/tc_home_instructor.dart';
 import 'package:airmaster/screens/home/training_card/pilot_crew/view/tc_pilot_crew.dart';
 import 'package:airmaster/screens/home/training_card/profile/view/tc_profile.dart';
 import 'package:airmaster/screens/home/training_card/training/view/tc_training.dart';
+import 'package:airmaster/screens/home/training_card/training_list/view/examinee_training_list.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,29 +25,61 @@ class TCView extends StatefulWidget {
   @override
   State<TCView> createState() => _TCViewState();
 }
-enum MenuItem{
-  addNewTraining,
-}
+
+enum MenuItem { addNewTraining }
 
 class _TCViewState extends State<TCView> {
   late PersistentTabController _controller;
   late bool _hideNavBar;
+  late String type;
 
   @override
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: 0);
     _hideNavBar = false;
+    type = "";
+    getType();
   }
 
-  List<Widget> _buildScreens() => [
-    TC_Home(),
+  Future <void> getType() async{
+    String _type = await UserPreferences().getType();
+    log('TYPE: $_type');
+
+    setState(() {
+      type = _type;
+    });
+  }
+
+  List<Widget> _buildScreens_PilotAdministrator() => [
+    TC_Home_Administrator(),
     TC_Training(),
     TC_PilotCrew(),
     TC_Profile(),
   ];
 
-  List<PersistentBottomNavBarItem> _navBarsItems() => [
+  List<Widget> _buildScreens_Instructor() => [
+    TC_Home_Instructor(),
+    TC_Training(),
+    TC_TrainingList(),
+    TC_Profile(),
+  ];
+
+  List<Widget> _buildScreens_Examinee() => [
+    TC_Home_Examinee(),
+    TC_TrainingList(),
+    TC_Profile(),
+  ];
+
+  List<Widget> _buildScreens_CPTS() => [
+    TC_Home_CPTS(),
+    TC_TrainingList(),
+    TC_Training(),
+    TC_PilotCrew(),
+    TC_Profile(),
+  ];
+
+  List<PersistentBottomNavBarItem> _navBarsItemsPilotAdministrator() => [
     PersistentBottomNavBarItem(
       icon: const Icon(Icons.home),
       title: "Home",
@@ -65,6 +106,87 @@ class _TCViewState extends State<TCView> {
     ),
   ];
 
+  List<PersistentBottomNavBarItem> _navBarsItemsInstructor() => [
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.home),
+      title: "Home",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.list_alt),
+      title: "Training",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.checklist_rtl),
+      title: "Training List",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(CupertinoIcons.person_circle_fill),
+      title: "Profile",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+  ];
+
+  List<PersistentBottomNavBarItem> _navBarsItemsExaminee() => [
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.home),
+      title: "Home",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.checklist_rtl),
+      title: "Training List",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(CupertinoIcons.person_circle_fill),
+      title: "Profile",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+  ];
+
+List<PersistentBottomNavBarItem> _navBarsItemsCPTS() => [
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.home),
+      title: "Home",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.checklist_rtl),
+      title: "Training List",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.list_alt),
+      title: "Training",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(CupertinoIcons.person_2_fill),
+      title: "Pilot Crew",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(CupertinoIcons.person_circle_fill),
+      title: "Profile",
+      activeColorPrimary: ColorConstants.activeColor,
+      inactiveColorPrimary: ColorConstants.inactiveColor,
+    ),
+  ];
+  
   @override
   Widget build(final BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -81,25 +203,12 @@ class _TCViewState extends State<TCView> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      actions: [
-        PopupMenuButton<int>(
-          color: ColorConstants.backgroundColor,
-          icon: Icon(Icons.more_vert, color: ColorConstants.backgroundColor),
-          onSelected: (item) => onSelected(context, item),
-          itemBuilder: (context) => [
-            PopupMenuItem( 
-              value: 0,
-              child: Text("Add New Training"),
-            ),
-          ],
-        ),
-      ]
     ),
     body: PersistentTabView(
       context,
       controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
+      screens: type == "Administrator" ? _buildScreens_PilotAdministrator() : type == "Instructor" ? _buildScreens_Instructor() : type == "Examinee"?_buildScreens_Examinee() : _buildScreens_CPTS(),
+      items: type == "Administrator" ? _navBarsItemsPilotAdministrator() : type == "Instructor" ? _navBarsItemsInstructor() : type == "Examinee"?_navBarsItemsExaminee() : _navBarsItemsCPTS(),
       handleAndroidBackButtonPress: false,
       resizeToAvoidBottomInset: false,
       stateManagement: true,

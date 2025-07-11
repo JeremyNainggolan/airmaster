@@ -11,20 +11,32 @@ class TC_TrainingListDetail_Controller extends GetxController
     with GetTickerProviderStateMixin {
   late TabController trainingList;
 
+
+  final attendanceListPending = [].obs;
+  final attendanceListConfirmed = [].obs;
+  final attendanceListDone = [].obs;
+
+  final subject = Get.arguments;
+
+  final isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     trainingList = TabController(length: 3, vsync: this);
+    getAttendanceList(subject);
   }
 
-  Future<List<dynamic>> getAttendanceList(String subject,String status) async {
+  Future<void> getAttendanceList(String subject) async {
+
+    isLoading.value = true;
+
     String token = await UserPreferences().getToken();
     try {
 
       final uri = Uri.parse(ApiConfig.get_attendance_list).replace(
         queryParameters:{
           'subject': subject,
-          'status': status,
         },
       );
       final response = await http.get(
@@ -41,14 +53,17 @@ class TC_TrainingListDetail_Controller extends GetxController
       if (response.statusCode == 200) {
         // log('Data: ${data['data']}');
         log('Training cards fetched successfully');
-        return data['data'];
+        attendanceListPending.value = data['data']['pending'];
+        attendanceListConfirmed.value = data['data']['confirmed'];
+        attendanceListDone.value = data['data']['done'];
+        
+        isLoading.value = false;
+
       } else {
         log('Failed to fetch training cards: ${data['message']}');
-        return [];
       }
     } catch (e) {
       log('Error fetching training cards: $e');
-      return [];
     }
   }
 
@@ -57,7 +72,7 @@ class TC_TrainingListDetail_Controller extends GetxController
 
     final uri = Uri.parse(ApiConfig.delete_training_card).replace(
       queryParameters: {
-        'subject': subject,
+        'training': subject,
       },
     );
 
@@ -70,6 +85,7 @@ class TC_TrainingListDetail_Controller extends GetxController
       );
       if (response.statusCode == 200) {
         log('Training card deleted successfully');
+        await Future.delayed(const Duration(seconds: 2));
         return true;
       } else {
         log('Failed to delete training card: ${jsonDecode(response.body)['message']}');

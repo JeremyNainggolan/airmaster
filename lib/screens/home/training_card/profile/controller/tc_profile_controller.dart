@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:airmaster/data/users/user_preferences.dart';
+import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -37,14 +38,13 @@ class TC_Profile_Controller extends GetxController {
     }
     loadUserData();
 
-
     ever<DateTime?>(licenseExpiryDate, (date) {
-    if (date != null) {
-      licenseExpiry.value = DateFormat('dd MMMM yyyy').format(date);
-    } else {
-      licenseExpiry.value = '-';
-    }
-  });
+      if (date != null) {
+        licenseExpiry.value = DateFormat('dd MMMM yyyy').format(date);
+      } else {
+        licenseExpiry.value = '-';
+      }
+    });
   }
 
   Future<void> loadUserData() async {
@@ -63,7 +63,7 @@ class TC_Profile_Controller extends GetxController {
 
   Future<void> logout() async {
     try {
-      await _userPrefs.clearUser();
+      await AuthService.logout();
     } catch (e) {
       log('Error clearing user data: $e');
     }

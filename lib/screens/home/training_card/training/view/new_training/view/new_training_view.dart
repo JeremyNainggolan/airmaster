@@ -1,8 +1,5 @@
 // ignore_for_file: camel_case_types
-
-import 'dart:developer';
-
-import 'package:airmaster/routes/app_routes.dart';
+import 'package:airmaster/helpers/input_decoration.dart';
 import 'package:airmaster/screens/home/training_card/training/view/new_training/controller/new_training_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
@@ -53,26 +50,7 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 0,
-                      horizontal: 10,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorConstants.primaryColor,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorConstants.backgroundColor,
-                      ),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                    ),
-                    labelText: "Subject",
-                  ),
+                  decoration: inputDecoration('Subject'),
                 ),
                 const SizedBox(height: 10),
 
@@ -158,14 +136,14 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                             text: 'Add Training Completed Successfully',
                             onConfirmBtnTap: () {
                               Get.back();
-                              Get.back();
+                              Get.back(result: true);
                             },
                             confirmBtnTextStyle: GoogleFonts.notoSans(
                               color: ColorConstants.textSecondary,
                               fontSize: SizeConstant.TEXT_SIZE_HINT,
                               fontWeight: FontWeight.normal,
                             ),
-                          ); 
+                          );
                         }
                       } else {
                         Get.snackbar(

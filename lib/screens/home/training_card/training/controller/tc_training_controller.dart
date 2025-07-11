@@ -10,6 +10,9 @@ import 'package:airmaster/config/api_config.dart';
 
 class TC_Training_Controller extends GetxController {
 
+  final List<dynamic> trainingList = [].obs;
+  final isLoading = false.obs;
+
   List<Map<String, String>> trainingRemarks = [
   {'code': 'RVSM', 'desc': 'Reduced Vertical Separation Minima'},
   {'code': 'SEP', 'desc': 'Safety Emergency Procedures'},
@@ -32,6 +35,9 @@ class TC_Training_Controller extends GetxController {
     getTrainingCard();
   }
   Future getTrainingCard()async {
+
+    isLoading.value = true;
+    
     String token = await UserPreferences().getToken();
     log('Token: $token');
     try {
@@ -48,6 +54,10 @@ class TC_Training_Controller extends GetxController {
         if (response.statusCode == 200) {
           // log('Data: ${data['data']}');
           log('Training cards fetched successfully');
+          trainingList.clear();
+          trainingList.addAll(data['data']);
+          
+          isLoading.value = false;
           return data['data'];
           
         } else {

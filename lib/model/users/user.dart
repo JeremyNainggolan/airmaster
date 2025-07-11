@@ -14,6 +14,7 @@ class User {
   String? license_number;
   DateTime? license_expiry;
   String? rank;
+  String? type;
   List<String>? instructor;
 
   User({
@@ -30,6 +31,7 @@ class User {
     this.license_number,
     this.license_expiry,
     this.rank,
+    this.type,
     this.instructor,
   });
 
@@ -56,6 +58,7 @@ class User {
               ? DateTime.tryParse(response['license_expiry'])
               : null,
       rank: response['rank'],
+      type: response['type'],
       instructor:
           response['instructor'] != null
               ? List<String>.from(response['instructor'].map((x) => x))
