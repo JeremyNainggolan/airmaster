@@ -42,7 +42,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['subject'],
-                    decoration: decorationReadOnly('Subject'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText: 'Subject'),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -56,7 +56,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                               DateTime.parse(controller.attendanceData['date']),
                             )
                             : 'No Date',
-                    decoration: decorationReadOnly('Date'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Date'),
                   ),
                 ),
               ],
@@ -71,7 +71,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['department'],
-                    decoration: decorationReadOnly('Department'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Department'),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -80,7 +80,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['venue'],
-                    decoration: decorationReadOnly('Venue'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Venue'),
                   ),
                 ),
               ],
@@ -95,7 +95,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['trainingType'],
-                    decoration: decorationReadOnly('Training Type'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Training Type'),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -104,7 +104,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['room'],
-                    decoration: decorationReadOnly('Room'),
+                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Room'),
                   ),
                 ),
               ],
@@ -116,7 +116,7 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
               readOnly: true,
               enableInteractiveSelection: false,
               initialValue: controller.attendanceData['user_name'],
-              decoration: decorationReadOnly(
+              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
                 'Chair Person / Instructor',
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 20, // Ubah nilai ini untuk mengatur tinggi

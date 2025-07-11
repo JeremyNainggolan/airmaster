@@ -63,7 +63,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['subject'],
-                              decoration: decorationReadOnly('Subject'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Subject'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -79,7 +79,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                                         ),
                                       )
                                       : 'No Date',
-                              decoration: decorationReadOnly('Date'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Date'),
                             ),
                           ),
                         ],
@@ -95,7 +95,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['department'],
-                              decoration: decorationReadOnly('Department'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Department'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -104,7 +104,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                               readOnly: true,
                               enableInteractiveSelection: false,
                               initialValue: controller.attendanceData['venue'],
-                              decoration: decorationReadOnly('Venue'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Venue'),
                             ),
                           ),
                         ],
@@ -120,7 +120,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['trainingType'],
-                              decoration: decorationReadOnly('Training Type'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Training Type'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -129,7 +129,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                               readOnly: true,
                               enableInteractiveSelection: false,
                               initialValue: controller.attendanceData['room'],
-                              decoration: decorationReadOnly('Room'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Room'),
                             ),
                           ),
                         ],
@@ -141,7 +141,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                         readOnly: true,
                         enableInteractiveSelection: false,
                         initialValue: controller.attendanceData['user_loaNo'],
-                        decoration: decorationReadOnly(
+                        decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
                           'LOA NO',
                           contentPadding: const EdgeInsets.symmetric(
                             vertical:
@@ -156,7 +156,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                         readOnly: true,
                         enableInteractiveSelection: false,
                         initialValue: controller.attendanceData['user_name'],
-                        decoration: decorationReadOnly(
+                        decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
                           'Chair Person / Instructor',
                           contentPadding: const EdgeInsets.symmetric(
                             vertical:
@@ -403,8 +403,8 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                         controller: controller.remarksController,
                         maxLines: 4,
                         keyboardType: TextInputType.multiline,
-                        decoration: decorationReadOnly(
-                          'Remarks',
+                        decoration: CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Remarks',
                           contentPadding: const EdgeInsets.symmetric(
                             vertical:
                                 20, // Ubah nilai ini untuk mengatur tinggi

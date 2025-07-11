@@ -2,9 +2,9 @@
 
 import 'dart:developer';
 
-import 'package:airmaster/helpers/qr_scanner.dart';
 import 'package:airmaster/screens/home/training_card/training_list/controller/examainee_training_list_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
+import 'package:airmaster/widgets/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:airmaster/routes/app_routes.dart';

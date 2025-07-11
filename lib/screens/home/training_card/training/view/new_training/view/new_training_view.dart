@@ -50,7 +50,7 @@ class TC_NewTraining extends GetView<TC_NewTrainingController> {
                     }
                     return null;
                   },
-                  decoration: inputDecoration('Subject'),
+                  decoration: CustomInputDecoration.customInputDecoration(labelText: 'Subject'),
                 ),
                 const SizedBox(height: 10),
 

@@ -62,7 +62,7 @@ class TC_Attendance_Detail_Confirm
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['subject'],
-                              decoration: decorationReadOnly('Subject'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Subject'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -78,7 +78,7 @@ class TC_Attendance_Detail_Confirm
                                         ),
                                       )
                                       : 'No Date',
-                              decoration: decorationReadOnly('Date'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Date'),
                             ),
                           ),
                         ],
@@ -94,7 +94,7 @@ class TC_Attendance_Detail_Confirm
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['department'],
-                              decoration: decorationReadOnly('Department'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Department'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -103,7 +103,7 @@ class TC_Attendance_Detail_Confirm
                               readOnly: true,
                               enableInteractiveSelection: false,
                               initialValue: controller.attendanceData['venue'],
-                              decoration: decorationReadOnly('Venue'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Venue'),
                             ),
                           ),
                         ],
@@ -119,7 +119,7 @@ class TC_Attendance_Detail_Confirm
                               enableInteractiveSelection: false,
                               initialValue:
                                   controller.attendanceData['trainingType'],
-                              decoration: decorationReadOnly('Training Type'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Training Type'),
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -128,7 +128,7 @@ class TC_Attendance_Detail_Confirm
                               readOnly: true,
                               enableInteractiveSelection: false,
                               initialValue: controller.attendanceData['room'],
-                              decoration: decorationReadOnly('Room'),
+                              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Room'),
                             ),
                           ),
                         ],
@@ -140,7 +140,7 @@ class TC_Attendance_Detail_Confirm
                         readOnly: true,
                         enableInteractiveSelection: false,
                         initialValue: controller.attendanceData['user_loaNo'],
-                        decoration: decorationReadOnly(
+                        decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
                           'LOA NO',
                           contentPadding: const EdgeInsets.symmetric(
                             vertical:
@@ -155,7 +155,7 @@ class TC_Attendance_Detail_Confirm
                         readOnly: true,
                         enableInteractiveSelection: false,
                         initialValue: controller.attendanceData['user_name'],
-                        decoration: decorationReadOnly(
+                        decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
                           'Chair Person / Instructor',
                           contentPadding: const EdgeInsets.symmetric(
                             vertical:

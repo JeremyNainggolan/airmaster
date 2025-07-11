@@ -93,7 +93,10 @@ class CustomInputDecoration {
     );
   }
 
-  static customInputDecorationReadOnly({required String labelText}) {
+  static customInputDecorationReadOnly({
+    required String labelText,
+    EdgeInsetsGeometry? contentPadding,
+  }) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
@@ -103,6 +106,8 @@ class CustomInputDecoration {
         borderRadius: BorderRadius.circular(SizeConstant.BORDER_RADIUS),
         borderSide: BorderSide(color: ColorConstants.successColor),
       ),
+      isDense: true, // Tambahkan agar padding tidak terlalu besar default-nya
+      contentPadding: contentPadding,
       labelText: labelText,
       labelStyle: GoogleFonts.notoSans(
         color: ColorConstants.textPrimary,
