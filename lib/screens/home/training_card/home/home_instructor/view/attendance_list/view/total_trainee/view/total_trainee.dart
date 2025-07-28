@@ -139,6 +139,7 @@ class Ins_TotalTrainee extends GetView<Ins_TotalTrainee_Controller> {
                                                 .trainee[index]['idtraining'],
                                         'idattendance-detail':
                                             controller.trainee[index]['_id'],
+                                        'subject': controller.subject.value,
                                       },
                                     );
                                     log('result: $result');

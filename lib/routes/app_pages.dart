@@ -40,6 +40,10 @@ import 'package:airmaster/screens/home/efb/home/view/occ-pages/used/view/occ_use
 import 'package:airmaster/screens/home/training_card/home/home_cpts/bindings/tc_home_cpts_binding.dart';
 import 'package:airmaster/screens/home/training_card/home/home_cpts/view/tc_home_cpts.dart';
 import 'package:airmaster/screens/home/training_card/home/home_examinee/bindings/tc_home_examinee_binding.dart';
+import 'package:airmaster/screens/home/training_card/home/home_examinee/view/feedback/bindings/tc_feedback_required_bindings.dart';
+import 'package:airmaster/screens/home/training_card/home/home_examinee/view/feedback/view/examinee_feedback/bindings/tc_examinee_feedback_binding.dart';
+import 'package:airmaster/screens/home/training_card/home/home_examinee/view/feedback/view/examinee_feedback/view/tc_examinee_feedback.dart';
+import 'package:airmaster/screens/home/training_card/home/home_examinee/view/feedback/view/tc_feedback_required.dart';
 import 'package:airmaster/screens/home/training_card/home/home_examinee/view/tc_home_examinee.dart';
 import 'package:airmaster/screens/home/training_card/home/home_instructor/bindings/tc_home_instructor_binding.dart';
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/attendance_list/bindings/ins_attendance_list_binding.dart';
@@ -49,16 +53,30 @@ import 'package:airmaster/screens/home/training_card/home/home_instructor/view/a
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/tc_home_instructor.dart';
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/attendance_list/view/total_trainee/bindings/total_trainee_binding.dart';
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/attendance_list/view/total_trainee/view/total_trainee.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/confirm_attendance_detail/bindings/tc_attendance_detail_confirm_bindings.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/confirm_attendance_detail/view/tc_attendance_detail_confirm.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/bindings/tc_attendance_detail_done_bindings.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/bindings/tc_absent_trainee_binding.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/view/detail_absent/bindings/tc_detail_absent_binding.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/view/detail_absent/view/tc_detail_absent_trainee.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/view/tc_absent_trainee.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/tc_attendance_detail_done.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/pending_attendance_detail/bindings/tc_attendance_detail_pending_bindings.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/pending_attendance_detail/view/tc_attendance_detail_pending.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/bindings/tc_pilot_crew_binding.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/bindings/tc_profile_pilot_bindings.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/view/tc_pilot_training_history/bingings/tc_pilot_training_history_binding.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/view/tc_pilot_training_history/view/tc_detail_pilot_histroy/bindings/tc_detail_pilot_history_binding.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/view/tc_pilot_training_history/view/tc_detail_pilot_histroy/view/tc_detail_pilot_history.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/view/tc_pilot_training_history/view/tc_pilot_training_history.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/profile_pilot/view/tc_profile_pilot.dart';
+import 'package:airmaster/screens/home/training_card/pilot_crew/view/tc_pilot_crew.dart';
+import 'package:airmaster/screens/home/training_card/profile_examinee/bindings/tc_profile_examinee_binding.dart';
+import 'package:airmaster/screens/home/training_card/profile_examinee/view/tc_profile_examinee.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/confirm_detail/bindings/tc_attendance_detail_confirm_bindings.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/confirm_detail/view/tc_attendance_detail_confirm.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/bindings/tc_attendance_detail_done_bindings.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/bindings/tc_absent_trainee_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/bindings/tc_detail_absent_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/tc_detail_absent_trainee.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/bindings/tc_training_history_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/view/detail_absent/view/training_history/view/detail_training_history/bindings/detail_training_history_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/view/detail_history/view/history.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/view/tc_training_history.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/tc_absent_trainee.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/tc_attendance_detail_done.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/pending_detail/bindings/tc_attendance_detail_pending_bindings.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/pending_detail/view/tc_attendance_detail_pending.dart';
 import 'package:airmaster/screens/home/training_card/training_list/bindings/examinee_training_list_binding.dart';
 import 'package:airmaster/screens/home/training_card/training_list/view/attendance_detail/bindings/examinee_attendance_detail_binding.dart';
 import 'package:airmaster/screens/home/training_card/training_list/view/attendance_detail/view/examinee_attendance_detail.dart';
@@ -232,7 +250,8 @@ class AppPages {
       binding: Ins_TotalTrainee_Binding(),
       transition: Transition.native,
     ),
-    GetPage(name: AppRoutes.TC_ABSENT_TRAINEE,
+    GetPage(
+      name: AppRoutes.TC_ABSENT_TRAINEE,
       page: () => const TC_AbsentParticipant(),
       binding: TC_AbsentParticipant_Binding(),
       transition: Transition.native,
@@ -271,6 +290,18 @@ class AppPages {
       binding: TC_Home_Examinee_Binding(),
       transition: Transition.native,
     ),
+    GetPage(
+      name: AppRoutes.TC_EXAMINEE_FEEDBACK_REQUIRED,
+      page: () => const TC_FeedbackRequired(),
+      binding: TC_FeedbackRequired_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_EXAMINEE_GIVE_FEEDBACK,
+      page: () => const TC_ExamineeFeedback(),
+      binding: TC_ExamineeFeedback_Binding(),
+      transition: Transition.native,
+    ),
 
     // TC Home CPTS
     GetPage(
@@ -285,6 +316,40 @@ class AppPages {
       name: AppRoutes.TC_PROFILE,
       page: () => const TC_Profile(),
       binding: TC_Profile_Binding(),
+      transition: Transition.native,
+    ),
+
+    // TC Profile Examinee
+    GetPage(
+      name: AppRoutes.TC_PROFILE_EXAMINEE,
+      page: () => const TC_ProfileExaminee(),
+      binding: TC_ProfileExaminee_Binding(),
+      transition: Transition.native,
+    ),
+
+    // TC Pilot Crew
+    GetPage(
+      name: AppRoutes.TC_PILOT_CREW,
+      page: () => const TC_PilotCrew(),
+      binding: TC_PilotCrew_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_PROFILE_PILOT,
+      page: () => const TC_ProfilePilot(),
+      binding: TC_ProfilePilot_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_PILOT_TRAINING_HISTORY,
+      page: () => const TC_PilotTrainingHistory(),
+      binding: TC_PilotTrainingHistory_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TC_DETAIL_PILOT_HISTORY,
+      page: () => const TC_Detail_PilotHistory(),
+      binding: TC_Detail_PilotHistory_Binding(),
       transition: Transition.native,
     ),
 
@@ -331,9 +396,22 @@ class AppPages {
       binding: TC_AttendanceDetail_Done_Binding(),
       transition: Transition.native,
     ),
-    GetPage(name: AppRoutes.DETAIL_ABSENT_TRAINEE,
+    GetPage(
+      name: AppRoutes.DETAIL_ABSENT_TRAINEE,
       page: () => const TC_Detail_AbsentTrainee(),
       binding: TC_Detail_AbsentTrainee_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.TRAINING_HISTORY,
+      page: () => const TC_TrainingHistory(),
+      binding: TC_TrainingHistory_Binding(),
+      transition: Transition.native,
+    ),
+    GetPage(
+      name: AppRoutes.DETAIL_TRAINING_HISTORY,
+      page: () => const TC_Detail_TrainingHistory(),
+      binding: TC_Detail_TrainingHistory_Binding(),
       transition: Transition.native,
     ),
 

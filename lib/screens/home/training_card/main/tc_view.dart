@@ -10,6 +10,7 @@ import 'package:airmaster/screens/home/training_card/home/home_examinee/view/tc_
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/tc_home_instructor.dart';
 import 'package:airmaster/screens/home/training_card/pilot_crew/view/tc_pilot_crew.dart';
 import 'package:airmaster/screens/home/training_card/profile/view/tc_profile.dart';
+import 'package:airmaster/screens/home/training_card/profile_examinee/view/tc_profile_examinee.dart';
 import 'package:airmaster/screens/home/training_card/training/view/tc_training.dart';
 import 'package:airmaster/screens/home/training_card/training_list/view/examinee_training_list.dart';
 import 'package:airmaster/utils/const_color.dart';
@@ -42,7 +43,7 @@ class _TCViewState extends State<TCView> {
     getType();
   }
 
-  Future <void> getType() async{
+  Future<void> getType() async {
     String _type = await UserPreferences().getType();
     log('TYPE: $_type');
 
@@ -68,7 +69,7 @@ class _TCViewState extends State<TCView> {
   List<Widget> _buildScreens_Examinee() => [
     TC_Home_Examinee(),
     TC_TrainingList(),
-    TC_Profile(),
+    TC_ProfileExaminee(),
   ];
 
   List<Widget> _buildScreens_CPTS() => [
@@ -154,7 +155,7 @@ class _TCViewState extends State<TCView> {
     ),
   ];
 
-List<PersistentBottomNavBarItem> _navBarsItemsCPTS() => [
+  List<PersistentBottomNavBarItem> _navBarsItemsCPTS() => [
     PersistentBottomNavBarItem(
       icon: const Icon(Icons.home),
       title: "Home",
@@ -186,7 +187,7 @@ List<PersistentBottomNavBarItem> _navBarsItemsCPTS() => [
       inactiveColorPrimary: ColorConstants.inactiveColor,
     ),
   ];
-  
+
   @override
   Widget build(final BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -207,8 +208,22 @@ List<PersistentBottomNavBarItem> _navBarsItemsCPTS() => [
     body: PersistentTabView(
       context,
       controller: _controller,
-      screens: type == "Administrator" ? _buildScreens_PilotAdministrator() : type == "Instructor" ? _buildScreens_Instructor() : type == "Examinee"?_buildScreens_Examinee() : _buildScreens_CPTS(),
-      items: type == "Administrator" ? _navBarsItemsPilotAdministrator() : type == "Instructor" ? _navBarsItemsInstructor() : type == "Examinee"?_navBarsItemsExaminee() : _navBarsItemsCPTS(),
+      screens:
+          type == "Administrator"
+              ? _buildScreens_PilotAdministrator()
+              : type == "Instructor"
+              ? _buildScreens_Instructor()
+              : type == "Examinee"
+              ? _buildScreens_Examinee()
+              : _buildScreens_CPTS(),
+      items:
+          type == "Administrator"
+              ? _navBarsItemsPilotAdministrator()
+              : type == "Instructor"
+              ? _navBarsItemsInstructor()
+              : type == "Examinee"
+              ? _navBarsItemsExaminee()
+              : _navBarsItemsCPTS(),
       handleAndroidBackButtonPress: false,
       resizeToAvoidBottomInset: false,
       stateManagement: true,

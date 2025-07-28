@@ -1,5 +1,4 @@
 import 'package:airmaster/helpers/input_decoration.dart';
-import 'package:airmaster/routes/app_routes.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/attendance_detail/controller/tc_attendance_detail_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';

@@ -55,32 +55,38 @@ class TC_Profile extends GetView<TC_Profile_Controller> {
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black26, // Warna shadow
-                                    blurRadius: 10,        // Seberapa blur shadow-nya
-                                    spreadRadius: 4,       // Seberapa lebar shadow menyebar
-                                    offset: Offset(0, 4),  // Posisi shadow (x, y)
+                                    blurRadius: 10, // Seberapa blur shadow-nya
+                                    spreadRadius:
+                                        4, // Seberapa lebar shadow menyebar
+                                    offset: Offset(
+                                      0,
+                                      4,
+                                    ), // Posisi shadow (x, y)
                                   ),
                                 ],
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: controller.imgUrl.value.isNotEmpty
-                                    ? Image.network(
-                                        controller.imgUrl.value,
-                                        errorBuilder: (context, error, stackTrace) =>
-                                            Icon(Icons.broken_image),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/airasia_logo_circle.png',
-                                        fit: BoxFit.cover,
-                                      ),
+                                child:
+                                    controller.imgUrl.value.isNotEmpty
+                                        ? Image.network(
+                                          controller.imgUrl.value,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Icon(Icons.broken_image),
+                                          fit: BoxFit.cover,
+                                        )
+                                        : Image.asset(
+                                          'assets/images/airasia_logo_circle.png',
+                                          fit: BoxFit.cover,
+                                        ),
                               ),
                             ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: SizeConstant.SPACING), 
+                      const SizedBox(height: SizeConstant.SPACING),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,15 +135,21 @@ class TC_Profile extends GetView<TC_Profile_Controller> {
                               1: FixedColumnWidth(10),
                               2: FlexColumnWidth(),
                             },
-                            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
                             children: [
                               buildReactiveRow('Email', controller.email),
                               buildReactiveRow('Hub', controller.hub),
-                              buildReactiveRow('License Number', controller.licenseNumber),
-                              buildReactiveRow('License Expiry', controller.licenseExpiry),
+                              buildReactiveRow(
+                                'License Number',
+                                controller.licenseNumber,
+                              ),
+                              buildReactiveRow(
+                                'License Expiry',
+                                controller.licenseExpiry,
+                              ),
                             ],
                           ),
-                          
                         ],
                       ),
                     ],
@@ -256,29 +268,27 @@ class TC_Profile extends GetView<TC_Profile_Controller> {
     );
   }
 
-TableRow buildReactiveRow(String label, RxString valueRx) {
+  TableRow buildReactiveRow(String label, RxString valueRx) {
+    TextStyle labelTextStyle = GoogleFonts.notoSans(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: ColorConstants.labelColor,
+    );
 
-  TextStyle labelTextStyle = GoogleFonts.notoSans(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: ColorConstants.labelColor,
-  );
-
-  TextStyle valueTextStyle = GoogleFonts.notoSans(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    color: ColorConstants.valueColor,
-  );
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 10.0 , right: 10.0, bottom: 5.0),
-        child: Text(label, style: labelTextStyle),
-      ),
-      Text(':', style: labelTextStyle),
-      Obx(() => Text(valueRx.value, style: valueTextStyle)),
-    ],
-  );
-}
-
+    TextStyle valueTextStyle = GoogleFonts.notoSans(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: ColorConstants.valueColor,
+    );
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 5.0),
+          child: Text(label, style: labelTextStyle),
+        ),
+        Text(':', style: labelTextStyle),
+        Obx(() => Text(valueRx.value, style: valueTextStyle)),
+      ],
+    );
+  }
 }

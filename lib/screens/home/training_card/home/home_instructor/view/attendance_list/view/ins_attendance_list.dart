@@ -1,6 +1,4 @@
 // ignore_for_file: camel_case_types
-
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:airmaster/helpers/input_decoration.dart';
@@ -191,14 +189,13 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                             );
                           } else {
 
-                            log('Total Trainee: ${controller.totalTrainee.value}');
-                            log('Attendance Participant: ${controller.attendanceParticipant}');
                             var result = await Get.toNamed(
                               AppRoutes.INS_TOTAL_TRAINEE,
                               arguments: {
                                 'dataParticipant':
                                     controller.attendanceParticipant,
                                 'totalTrainee': controller.totalTrainee.value,
+                                'subject': controller.attendanceData['subject'],
                               },
                             );
 
@@ -470,7 +467,7 @@ class TC_Ins_AttendanceList extends GetView<TC_Ins_AttendanceList_Controller> {
                                     ),
                                     child: SfSignaturePad(
                                       key: controller.signatureKey,
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Colors.transparent,
                                       onDrawEnd: () async {
                                         final imageData =
                                             await controller

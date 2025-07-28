@@ -58,6 +58,7 @@ class TC_TrainingListDetail_Controller extends GetxController
         attendanceListDone.value = data['data']['done'];
         
         isLoading.value = false;
+    log('Pending: $attendanceListPending');
 
       } else {
         log('Failed to fetch training cards: ${data['message']}');

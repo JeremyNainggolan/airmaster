@@ -36,6 +36,7 @@ class ColorConstants {
   static Color cardColorTertiary = Color.fromARGB(255, 255, 252, 252);
 
   static Color dividerColor = Color(0xFF000000);
+  static Color backgroundNumberColor= Color.fromARGB(255, 176, 35, 27);
 
   static Color errorColor = Color(0xFFF20000);
   static Color successColor = Color(0xFF14AE5C);

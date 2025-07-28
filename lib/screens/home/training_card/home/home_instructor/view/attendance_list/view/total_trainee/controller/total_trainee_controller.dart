@@ -16,6 +16,7 @@ class Ins_TotalTrainee_Controller extends GetxController {
   final selectedName = ''.obs;
   final traineeController = TextEditingController();
   final traineeDetails = [].obs;
+  final subject = ''.obs;
   RxString type = ''.obs;
 
   RxList<dynamic> trainee = [].obs;
@@ -24,10 +25,12 @@ class Ins_TotalTrainee_Controller extends GetxController {
   void onInit() async {
     isLoading.value = true;
     super.onInit();
+    subject.value = dataTrainee['subject'] ?? '';
     type.value = await UserPreferences().getType();
     await setValue();
     await getTraineeDetails();
     trainee.assignAll(traineeDetails);
+    log('Trainee Details: $traineeDetails');
     log('dataTrainee: $trainee');
     log('Pilot type: $type');
     isLoading.value = false;
@@ -63,16 +66,28 @@ class Ins_TotalTrainee_Controller extends GetxController {
 
     try {
       final idTrainee = [];
+      final idAttendance = [];
       for (var participant in dataParticipant) {
         idTrainee.add(participant['idtraining']);
+        idAttendance.add(participant['id']);
       }
 
 
-      final queryString = idTrainee
+      final idTraineeQuery = idTrainee
           .map((id) => 'idtraining[]=$id')
           .join('&'); 
 
-      final uri = Uri.parse('${ApiConfig.get_trainee_details}?$queryString');
+      final idAttendanceQuery = idAttendance
+          .map((id) => '_id[]=$id')
+          .join('&');
+
+      log('id? : ${dataParticipant[0]['id']}');
+
+      final String query = [idTraineeQuery, idAttendanceQuery]
+      .where((q) => q.isNotEmpty)
+      .join('&');
+
+      final uri = Uri.parse('${ApiConfig.get_trainee_details}?$query');
 
       final response = await http.get(
         uri,

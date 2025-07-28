@@ -4,7 +4,6 @@ import 'package:airmaster/helpers/show_alert.dart';
 import 'package:airmaster/screens/home/training_card/training_list/view/create_attendance/controller/examine_create_attendance_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';
-import 'package:airmaster/utils/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -259,7 +258,7 @@ class Examinee_CreateAttendance
                                 ),
                                 child: SfSignaturePad(
                                   key: controller.signatureKey,
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: Colors.transparent,
                                   onDrawEnd: () async {
                                     final imageData =
                                         await controller

@@ -31,7 +31,20 @@ class ApiConfig {
   static const String get_total_participant_done = '$TC/get-total-participant';
   static const String get_absent_participant = '$TC/get-absent-participant';
   static const String get_total_absent_trainee = '$TC/get-total-absent-trainee';
-    static const String get_training_list = '$TC/get-training-cards';
+  static const String get_training_list = '$TC/get-training-cards';
+  static const String get_attendance_detail_done = '$TC/get-attendance-detail-done';
+  static const String get_participant_detail = '$TC/get-participant-detail';
+  static const String get_administrator_data = '$TC/get-administrator-data';
+  static const String get_tc_signature = '$TC/get-tc-signature';
+  static const String get_participant_history = '$TC/get-participant-history';
+  static const String get_participant_training_history = '$TC/get-participant-training-history';
+  static const String get_instructor_training = '$TC/get-instructor-training';
+  static const String get_trainee_training = '$TC/get-trainee-training';
+  static const String get_history_training_trainee = '$TC/get-history-training-trainee';
+  static const String get_training_remarks = '$TC/get-training-remarks';
+  static const String get_all_pilot = '$TC/get-all-pilot';
+
+  // static const String get_signature_trainee = '$TC/get-signature-trainee';
 
   //home tc
   static const String get_status_confirmation = '$TC/get-status-confirmation';
@@ -43,17 +56,28 @@ class ApiConfig {
   static const String get_trainee_details = '$TC/get-trainee-details';
   static const String trainee_details = '$TC/trainee-details';
   static const String save_trainee_score = '$TC/save-trainee-score';
+  static const String check_trainee_score = '$TC/check-trainee-score';
 
   // home examinee
   static const String get_need_feedback = '$TC/get-need-feedback';
   static const String get_att_trainees = '$TC/get-att-trainees';
   static const String get_class_open = '$TC/get-class-open';
   static const String check_class_password = '$TC/check-class-password';
+  static const String examinee_feedback = '$TC/examinee-feedback';
+  static const String check_feedback = '$TC/check-feedback';
 
   static const String create_attendance_detail =
       '$TC/create-attendance-detail';
 
+  // Profile Examinee API Endpoints
+  static const String get_trainee_profile = '$TC/get-trainee-profile';
 
+  // Home CPTS API Endpoints
+  static const String get_pilot_only = '$TC/get-pilot-only';
+  static const String get_pilot_detail = '$TC/get-pilot-detail';
+  static const String get_attendance_list_cpts = '$TC/get-attendance-list-cpts';
+
+  //EFB API Endpoints
   static const String EFB = '$baseUrl/efb';
 
   /*

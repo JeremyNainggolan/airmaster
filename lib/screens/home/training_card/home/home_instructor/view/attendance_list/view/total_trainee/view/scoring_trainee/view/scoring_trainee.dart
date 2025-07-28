@@ -84,7 +84,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
                                             : CircleAvatar(
                                               backgroundColor: Colors.blueGrey,
                                               child: Text(
-                                                (controller.traineeDetails['name'] ??
+                                                (controller.traineeDetails['trainee_name'] ??
                                                         '?')
                                                     .toString()
                                                     .substring(0, 1)
@@ -139,7 +139,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
 
                                       Expanded(
                                         child: Text(
-                                          "${controller.traineeDetails['name']}",
+                                          "${controller.traineeDetails['trainee_name']}",
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 15,
@@ -178,7 +178,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
 
                                       Expanded(
                                         child: Text(
-                                          "${controller.traineeDetails['rank']}",
+                                          "${controller.traineeDetails['trainee_rank']}",
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 15,
@@ -837,7 +837,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
                                             : CircleAvatar(
                                               backgroundColor: Colors.blueGrey,
                                               child: Text(
-                                                (controller.traineeDetails['name'] ??
+                                                (controller.traineeDetails['trainee_name'] ??
                                                         '?')
                                                     .toString()
                                                     .substring(0, 1)
@@ -892,7 +892,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
 
                                       Expanded(
                                         child: Text(
-                                          "${controller.traineeDetails['name']}",
+                                          "${controller.traineeDetails['trainee_name']}",
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 15,
@@ -931,7 +931,7 @@ class Ins_ScoringTrainee extends GetView<Ins_ScoringTrainee_Controller> {
 
                                       Expanded(
                                         child: Text(
-                                          "${controller.traineeDetails['rank']}",
+                                          "${controller.traineeDetails['trainee_rank']}",
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 15,

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 
 class Examinee_AttendanceDetail_Controller extends GetxController {

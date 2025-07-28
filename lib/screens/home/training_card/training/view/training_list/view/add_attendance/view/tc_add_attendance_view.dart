@@ -1,6 +1,4 @@
 // ignore_for_file: camel_case_types
-
-import 'package:airmaster/helpers/input_decoration.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/add_attendance/controller/tc_add_attendance_controller.dart';
 import 'package:airmaster/utils/const_color.dart';
 import 'package:airmaster/utils/const_size.dart';

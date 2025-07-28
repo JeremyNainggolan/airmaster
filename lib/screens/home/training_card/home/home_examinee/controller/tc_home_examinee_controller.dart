@@ -27,7 +27,8 @@ class TC_Home_Examinee_Controller extends GetxController {
   var greetings = ''.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
+    isLoading.value = true;
     super.onInit();
 
     var hour = DateTime.now().hour;
@@ -38,9 +39,12 @@ class TC_Home_Examinee_Controller extends GetxController {
     } else {
       greetings.value = "Evening";
     }
-    loadUserData();
-    needFeedback();
+
+    await loadUserData();
+    await needFeedback();
+    isLoading.value = false;
   }
+
 
   Future<void> loadUserData() async {
     await _userPrefs.init();
@@ -57,32 +61,31 @@ class TC_Home_Examinee_Controller extends GetxController {
   }
 
   Future needFeedback() async {
-    isLoading.value = true;
     String token = await _userPrefs.getToken();
+    String idTrainee = await _userPrefs.getIdNumber();
     try {
       final response = await http.get(
-        Uri.parse(ApiConfig.get_need_feedback),
+        Uri.parse(
+          ApiConfig.get_need_feedback,
+        ).replace(queryParameters: {'idtraining': idTrainee}),
         headers: {
           'Authorization': 'Bearer $token',
           'accept': 'application/json',
         },
       );
 
-      log(jsonDecode(response.body).toString());
       Map<String, dynamic> data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        if (data['status'] == 'success') {
-          feedbackRequired.assignAll(data['data']);
-        } else {
-          log("Errorini: ${data['message']}");
-        }
+        feedbackRequired.clear();
+        feedbackRequired.assignAll(data['data']);
+        log("Feedback Required: $feedbackRequired");
       } else {
+        feedbackRequired.clear();
         log("Erroritu: ${data['message']}");
       }
-
-
     } catch (e) {
+      feedbackRequired.clear();
       log("Erroryglain: $e");
     }
   }

@@ -29,6 +29,7 @@ class AppRoutes {
 
   static const String TC_MAIN = '/main/tc';
 
+
   // home administrator
   static const String TC_ADMINISTRATOR_HOME_SCREEN = '/main/tc/home/administrator';
   static const String TC_ATTENDANCE_DETAIL_NEEDCONFIRM = '/main/tc/home/administrator/attendance_detail_confirm';
@@ -42,6 +43,8 @@ class AppRoutes {
 
   //home examinee
   static const String TC_EXAMINEE_HOME_SCREEN = '/main/tc/home/examinee';
+  static const String TC_EXAMINEE_FEEDBACK_REQUIRED = '/main/tc/home/examinee/feedback_required';
+  static const String TC_EXAMINEE_GIVE_FEEDBACK = '/main/tc/home/examinee/feedback_required/give_feedback';
 
   //home CPTS
   static const String TC_CPTS_HOME_SCREEN = '/main/tc/home/cpts';
@@ -57,10 +60,22 @@ class AppRoutes {
   static const String ADMIN_TOTAL_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/total_trainee';
   static const String TC_ABSENT_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee';
   static const String DETAIL_ABSENT_TRAINEE = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee/detail_absent_trainee';
-  
+  static const String TRAINING_HISTORY = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee/detail_absent_trainee/training_history';
+  static const String DETAIL_TRAINING_HISTORY = '/main/tc/training/administrator/training_list_detail/attendance_detail_done/absent_trainee/detail_absent_trainee/training_history/detail_training_history';
 
+  
+  // pilot crew
   static const String TC_PILOT_CREW = '/main/tc/pilot_crew';
+  static const String TC_PROFILE_PILOT = '/main/tc/pilot_crew/profile_pilot';
+  static const String TC_PILOT_TRAINING_HISTORY = '/main/tc/pilot_crew/profile_pilot/training_history';
+  static const String TC_DETAIL_PILOT_HISTORY = '/main/tc/pilot_crew/profile_pilot/training_history/detail_pilot_history';
+
+
+  // profile
   static const String TC_PROFILE = '/main/tc/profile';
+
+  // profile examinee
+  static const String TC_PROFILE_EXAMINEE = '/main/tc/profile_examinee';
 
   // traininglist examinee
   static const String EXAMINEE_TRAINING_LIST = '/main/tc/training_list';

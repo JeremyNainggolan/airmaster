@@ -229,7 +229,7 @@ Widget buildList(List list, controller, String route) {
         color: ColorConstants.backgroundColor,
         elevation: 2,
         child: ListTile(
-          title: Text(item['user_name']),
+          title: Text(item['instructor_name'] ?? 'ERROR'),
           subtitle: Text(
             item['date'] != null
                 ? DateFormat(
@@ -239,9 +239,9 @@ Widget buildList(List list, controller, String route) {
           ),
           leading: CircleAvatar(
             backgroundImage:
-                item['user_photo'] != null &&
-                        item['user_photo'].toString().isNotEmpty
-                    ? NetworkImage(item['user_photo'])
+                item['instructor_photo'] != null &&
+                        item['instructor_photo'].toString().isNotEmpty
+                    ? NetworkImage(item['instructor_photo'])
                     : AssetImage('assets/images/default_picture.png')
                         as ImageProvider,
           ),

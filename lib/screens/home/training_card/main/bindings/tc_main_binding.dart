@@ -5,6 +5,7 @@ import 'package:airmaster/screens/home/training_card/home/home_cpts/controller/t
 import 'package:airmaster/screens/home/training_card/home/home_examinee/controller/tc_home_examinee_controller.dart';
 import 'package:airmaster/screens/home/training_card/home/home_instructor/controller/tc_home_instructor_controller.dart';
 import 'package:airmaster/screens/home/training_card/profile/controller/tc_profile_controller.dart';
+import 'package:airmaster/screens/home/training_card/profile_examinee/controller/tc_profile_examinee_controller.dart';
 import 'package:airmaster/screens/home/training_card/training/controller/tc_training_controller.dart';
 import 'package:airmaster/screens/home/training_card/pilot_crew/controller/tc_pilot_crew_controller.dart';
 import 'package:airmaster/screens/home/training_card/training_list/controller/examainee_training_list_controller.dart';
@@ -21,5 +22,6 @@ class TC_Main_Binding extends Bindings {
     Get.lazyPut<TC_Training_Controller>(() => TC_Training_Controller());
     Get.lazyPut<TC_PilotCrew_Controller>(() => TC_PilotCrew_Controller());
     Get.lazyPut<TC_Profile_Controller>(() => TC_Profile_Controller());
+    Get.lazyPut<TC_ProfileExaminee_Controller>(() => TC_ProfileExaminee_Controller());
   }
 }

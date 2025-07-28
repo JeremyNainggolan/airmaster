@@ -29,6 +29,7 @@ class TC_Ins_AttendanceList_Controller extends GetxController {
   void onInit() async {
     super.onInit();
     await getAttendance(await attendanceData['_id']);
+    log('Attendance Data: $attendanceData');
   }
 
   Future<void> refreshData() async {

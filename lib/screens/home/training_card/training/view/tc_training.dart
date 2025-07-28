@@ -17,133 +17,141 @@ class TC_Training extends GetView<TC_Training_Controller> {
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
       body: Obx(
-        () => RefreshIndicator(
-          onRefresh: controller.getTrainingCard,
-          color: ColorConstants.primaryColor,
-          backgroundColor: ColorConstants.backgroundColor,
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              if (controller.isLoading.value)
-                SliverFillRemaining(
-                  child: Center(child: LoadingAnimationWidget.hexagonDots(color: ColorConstants.primaryColor, size: 48)),
-                )
-              else
-                (SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
-                  sliver: SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'TRAINING LIST',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
+        () =>
+            controller.isLoading.value
+                ? Center(
+                  child: LoadingAnimationWidget.hexagonDots(
+                    color: ColorConstants.primaryColor,
+                    size: 48,
                   ),
-                )),
-
-              // Training Grid
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final item = controller.trainingList[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        final trainingName = item['training'];
-                        final result = await Get.toNamed(
-                          AppRoutes.TC_TRAINING_LIST_DETAIL,
-                          arguments: trainingName,
-                        );
-                        if (result == true) {
-                          controller.getTrainingCard();
-                        }
-                      },
-                      child: Card(
-                        color: ColorConstants.backgroundColorSecondary,
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            SizeConstant.BORDER_RADIUS,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            item['training'] ?? '',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
+                )
+                : RefreshIndicator(
+                  onRefresh: controller.getTrainingCard,
+                  color: ColorConstants.primaryColor,
+                  backgroundColor: ColorConstants.backgroundColor,
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.all(16.0),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Text(
+                                  'TRAINING LIST',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }, childCount: controller.trainingList.length),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    childAspectRatio: 1.7,
-                  ),
-                ),
-              ),
 
-              // Training Remark
-              SliverPadding(
-                padding: const EdgeInsets.all(16.0),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      Text(
-                        'TRAINING REMARK',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ...controller.trainingRemarks.map((remark) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 90,
-                                child: Text(
-                                  remark['code'] ?? '',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold,
+                      // Training Grid
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        sliver: SliverGrid(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final item = controller.trainingList[index];
+                            return GestureDetector(
+                              onTap: () async {
+                                final trainingName = item['training'];
+                                final result = await Get.toNamed(
+                                  AppRoutes.TC_TRAINING_LIST_DETAIL,
+                                  arguments: trainingName,
+                                );
+                                if (result == true) {
+                                  controller.getTrainingCard();
+                                }
+                              },
+                              child: Card(
+                                color: ColorConstants.backgroundColorSecondary,
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    SizeConstant.BORDER_RADIUS,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    item['training'] ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  remark['desc'] ?? '',
-                                  style: GoogleFonts.poppins(),
+                            );
+                          }, childCount: controller.trainingList.length),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 5,
+                                childAspectRatio: 1.7,
+                              ),
+                        ),
+                      ),
+
+                      // Training Remark
+                      SliverPadding(
+                        padding: const EdgeInsets.all(16.0),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 24),
+                              Text(
+                                'TRAINING REMARK',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
                                 ),
                               ),
+                              const SizedBox(height: 12),
+                              ...controller.trainingRemarks.map((remark) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 6),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 90,
+                                        child: Text(
+                                          remark['code'] ?? '',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          remark['desc'] ?? '',
+                                          style: GoogleFonts.poppins(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
                             ],
                           ),
-                        );
-                      }),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
       ),
 
       floatingActionButton: FloatingActionButton(
