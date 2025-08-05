@@ -7,6 +7,19 @@ import 'package:airmaster/screens/home/efb/home/controller/efb_home_controller.d
 import 'package:airmaster/screens/home/efb/profile/controller/efb_profile_controller.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Main Binding
+  |--------------------------------------------------------------------------
+  | This file contains the binding for the EFB Main Controller.
+  | It is responsible for lazy loading the controllers when they are needed.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-04-24
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class EFB_Main_Binding extends Bindings {
   @override
   void dependencies() {

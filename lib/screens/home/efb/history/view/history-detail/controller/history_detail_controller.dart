@@ -12,6 +12,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB History Detail Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the EFB History Detail view.
+  | It handles fetching and formatting data for the EFB handover log,
+  | including device details, signatures, and PDF generation.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-28
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class History_Detail_Controller extends GetxController {
   dynamic params = Get.arguments;
 
@@ -31,10 +45,24 @@ class History_Detail_Controller extends GetxController {
     log('Detail: ${detail.toString()}');
   }
 
+  /// Asynchronously retrieves the user's rank from [UserPreferences] and updates the [rank] value.
+  ///
+  /// This method calls [UserPreferences.getRank] to fetch the rank and assigns it to [rank.value].
+  /// It is intended to be used for updating the rank information in the controller.
   Future<void> getRank() async {
     rank.value = await UserPreferences().getRank();
   }
 
+  /// Fetches an image from the server using the provided [imgName].
+  ///
+  /// Retrieves the authentication token from [UserPreferences] and sends an HTTP GET request
+  /// to the image endpoint specified in [ApiConfig.get_device_image], passing [imgName] as a query parameter.
+  /// If the request is successful (status code 200), updates [img] with the image bytes and logs the image size.
+  /// Logs an error message if the request fails.
+  ///
+  /// [imgName] - The name of the image to fetch.
+  ///
+  /// Throws no exceptions; errors are logged.
   Future<void> getImage(String imgName) async {
     String token = await UserPreferences().getToken();
 
@@ -55,6 +83,13 @@ class History_Detail_Controller extends GetxController {
     }
   }
 
+  /// Fetches the PDF format data from the API and updates the [format] value.
+  ///
+  /// This method retrieves the authentication token, sends a GET request to the
+  /// API endpoint specified by [ApiConfig.get_format_pdf] with the query parameter
+  /// 'id' set to 'handover-log', and includes the token in the request headers.
+  /// If the response status code is 200, it updates [format] with the received data.
+  /// Otherwise, or if an exception occurs, it clears the [format] value.
   Future<void> getFormatPdf() async {
     final token = await UserPreferences().getToken();
 
@@ -81,6 +116,14 @@ class History_Detail_Controller extends GetxController {
     }
   }
 
+  /// Formats a timestamp string into a human-readable date and time.
+  ///
+  /// The input [timestamp] should be in ISO 8601 format (e.g., "2023-06-01T14:30:00").
+  /// Returns a string in the format "day/month/year at hour:minute".
+  ///
+  /// Example:
+  ///   Input: "2023-06-01T14:30:00"
+  ///   Output: "1/6/2023 at 14:30"
   String _formatTimestamp(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
 
@@ -91,6 +134,15 @@ class History_Detail_Controller extends GetxController {
     return formattedDateTime;
   }
 
+  /// Fetches an image from the server as a [Uint8List] using the provided [imageUrl].
+  ///
+  /// The method retrieves the authentication token from [UserPreferences] and sends
+  /// an HTTP GET request to the signature image endpoint with the image name as a query parameter.
+  /// If the request is successful (status code 200), it returns the image bytes.
+  /// Otherwise, or if an exception occurs, it returns an empty [Uint8List].
+  ///
+  /// [imageUrl]: The name of the image to fetch from the server.
+  /// Returns a [Future] that completes with the image bytes or an empty [Uint8List] on failure.
   Future<Uint8List> fetchImage(String imageUrl) async {
     String token = await UserPreferences().getToken();
 
@@ -112,6 +164,19 @@ class History_Detail_Controller extends GetxController {
     }
   }
 
+  /// Generates a PDF document for the EFB Handover Log based on the provided details.
+  ///
+  /// This method performs the following steps:
+  /// - Loads the AirAsia logo and custom font from assets.
+  /// - Builds the PDF layout, including header, device/software details, and footer.
+  /// - Dynamically displays device information for either FO requests (multiple devices) or standard requests (single device).
+  /// - Includes signature images for crew members if available, or displays a fallback message.
+  /// - Handles both "handover" and "returned" status layouts, showing appropriate crew and OCC information.
+  /// - Saves the generated PDF to the application's documents directory and opens it.
+  ///
+  /// Returns `true` if the document is created and opened successfully, otherwise returns `false`.
+  ///
+  /// Throws no exceptions; errors are caught and result in a `false` return value.
   Future<bool> createDocument() async {
     await getFormatPdf();
 
@@ -269,7 +334,6 @@ class History_Detail_Controller extends GetxController {
                                   pw.Text(
                                     'IAA EFB',
                                     style: pw.TextStyle(
-                                      // font: ttf,
                                       fontSize: 12,
                                       fontWeight: pw.FontWeight.bold,
                                     ),
@@ -278,7 +342,6 @@ class History_Detail_Controller extends GetxController {
                                   pw.Text(
                                     'Handover Log',
                                     style: pw.TextStyle(
-                                      // font: ttf,
                                       fontSize: 12,
                                       fontWeight: pw.FontWeight.bold,
                                     ),
@@ -462,12 +525,7 @@ class History_Detail_Controller extends GetxController {
                             ),
                           ],
                         ),
-                        // pw.TableRow(
-                        //   children: [
-                        //     pw.Container(
-                        //       height: 20.0,
-                        //       child: _buildHeaderCellLeft('Charger No 2', context),
-                        //     ),
+
                         //     pw.Container(
                         //       height: 20.0,
                         //       child: _buildHeaderCellRight('xxxx', context),

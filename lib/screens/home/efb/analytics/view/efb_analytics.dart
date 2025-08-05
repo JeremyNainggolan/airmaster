@@ -10,6 +10,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Analytics View
+  |--------------------------------------------------------------------------
+  | This file contains the view for the EFB Analytics screen.
+  | It displays the analytics report, allows users to filter by date and hub,
+  | and shows various statistics related to the EFB process.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-27
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-07-08
+  |
+*/
 class EFB_Analytics extends GetView<EFB_Analytics_Controller> {
   const EFB_Analytics({super.key});
 
@@ -18,7 +32,9 @@ class EFB_Analytics extends GetView<EFB_Analytics_Controller> {
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
       body: Obx(() {
+        // Check if the controller is loading data
         if (controller.isLoading.value) {
+          // Show a loading animation while data is being fetched
           return Center(
             child: LoadingAnimationWidget.hexagonDots(
               color: ColorConstants.primaryColor,
@@ -26,6 +42,8 @@ class EFB_Analytics extends GetView<EFB_Analytics_Controller> {
             ),
           );
         }
+
+        // If data is loaded, display the analytics report
         return RefreshIndicator(
           onRefresh: controller.refreshData,
           child: SingleChildScrollView(

@@ -10,6 +10,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Request Device Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling device requests.
+  | It manages the state and logic for submitting device requests,
+  | including selecting devices and submitting request details.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-02
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Request_Controller extends GetxController {
   final requestDevice = TextEditingController();
   final selectedDevice = false.obs;
@@ -22,6 +36,22 @@ class Request_Controller extends GetxController {
   final category = 'Good'.obs;
   final remark = ''.obs;
 
+  /// Submits a device request to the server.
+  ///
+  /// This method gathers user and device information, constructs a request payload,
+  /// and sends it via an HTTP POST request to the API endpoint specified in [ApiConfig.submit_request].
+  /// The request includes device details, user information, and other relevant fields.
+  ///
+  /// Returns `true` if the request is successfully submitted (HTTP status 200),
+  /// otherwise returns `false`. In case of an exception during the request,
+  /// it also returns `false`.
+  ///
+  /// The method logs the result of the submission for debugging purposes.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// bool success = await submitRequest();
+  /// ```
   Future<bool> submitRequest() async {
     String token = await UserPreferences().getToken();
     String requestUser = await UserPreferences().getIdNumber();
@@ -66,6 +96,18 @@ class Request_Controller extends GetxController {
     }
   }
 
+  /// Fetches a list of [Device] objects by searching with the provided [searchDevice] name.
+  ///
+  /// Retrieves the authentication token and hub information from [UserPreferences].
+  /// Sends a GET request to the API endpoint specified in [ApiConfig.get_device_by_name],
+  /// including the device number and hub as query parameters.
+  ///
+  /// Returns a [Future] that resolves to a list of [Device] objects if the request is successful.
+  /// If the API response status is not 200 or an exception occurs, returns an empty list.
+  ///
+  /// Logs errors and exceptions for debugging purposes.
+  ///
+  /// [searchDevice]: The device name or number to search for.
   Future<List<Device>> getDeviceByName(String searchDevice) async {
     String token = await UserPreferences().getToken();
     String hub = await UserPreferences().getHub();
@@ -97,6 +139,19 @@ class Request_Controller extends GetxController {
     }
   }
 
+  /// Retrieves a [Device] by its ID from the API.
+  ///
+  /// This method sends a GET request to the API endpoint specified in [ApiConfig.get_device_by_id],
+  /// including the device number (`searchDevice`) and hub information as query parameters.
+  /// The request includes an authorization token in the headers.
+  ///
+  /// Returns a [Device] object if found, or `null` if no device is found or an error occurs.
+  ///
+  /// Logs an error message if the API response is not successful or if an exception is thrown.
+  ///
+  /// [searchDevice]: The device number to search for.
+  ///
+  /// Throws no exceptions; all errors are handled internally and logged.
   Future<Device?> getDeviceById(String searchDevice) async {
     String token = await UserPreferences().getToken();
     String hub = await UserPreferences().getHub();

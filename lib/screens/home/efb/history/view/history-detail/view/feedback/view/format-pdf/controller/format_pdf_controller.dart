@@ -9,6 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Format PDF Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling format PDF operations.
+  | It manages the state and logic for format PDF requests.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-06-01
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Format_Pdf_Controller extends GetxController {
   final format = {}.obs;
   final isLoading = true.obs;
@@ -25,6 +38,14 @@ class Format_Pdf_Controller extends GetxController {
     loadFormat();
   }
 
+  /// Loads the PDF format data for the feedback form.
+  ///
+  /// This method sets the loading state, clears any previous error messages,
+  /// and attempts to fetch the format data from the API using the user's token.
+  /// On a successful response (HTTP 200), it updates the format and associated
+  /// text controllers with the received data. If the request fails or an error
+  /// occurs, it clears the format and sets an appropriate error message.
+  /// The loading state is reset after the operation completes.
   Future<void> loadFormat() async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -60,6 +81,16 @@ class Format_Pdf_Controller extends GetxController {
     }
   }
 
+  /// Saves the current format data to the server.
+  ///
+  /// This method collects the format data from the controllers and sends a POST request
+  /// to the API endpoint specified in [ApiConfig.update_format_pdf]. The request includes
+  /// an authorization token and the format data in JSON format.
+  ///
+  /// Returns `true` if the format is saved successfully (HTTP 200), otherwise returns `false`.
+  /// In case of an error during the request, logs the error and returns `false`.
+  ///
+  /// Adds a delay of 1500 milliseconds after the request for UI feedback purposes.
   Future<bool> saveFormat() async {
     String token = await UserPreferences().getToken();
 
@@ -96,6 +127,17 @@ class Format_Pdf_Controller extends GetxController {
     }
   }
 
+  /// Displays a date picker dialog for the user to select a date.
+  ///
+  /// The date picker is themed according to the application's color scheme.
+  /// The selectable date range is from 10 years ago to 10 years in the future.
+  ///
+  /// If a date is selected, it formats the date as 'dd MMMM yyyy' and sets it to [dateController].
+  /// If no date is selected, it clears the [dateController].
+  ///
+  /// Uses [Get.context] for the dialog context and relies on [ColorConstants] for theming.
+  ///
+  /// Throws no exceptions.
   Future<void> selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: Get.context!,

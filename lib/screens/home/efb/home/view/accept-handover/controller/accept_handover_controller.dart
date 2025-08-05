@@ -11,14 +11,31 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Accept Handover Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for accepting handover requests.
+  | It manages the state and logic for accepting device handovers.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-04-24
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Accept_Handover_Controller extends GetxController {
+  // Parameters passed to the controller
   dynamic params = Get.arguments;
 
+  // Observable variables for managing state
   final requestId = ''.obs;
   final isLoading = false.obs;
 
+  // Observable variable for storing handover details
   final detail = {}.obs;
 
+  // Controllers for text fields
   final isCaptured = false.obs;
   final category = 'Good'.obs;
   final categoryRemark = ''.obs;
@@ -34,6 +51,17 @@ class Accept_Handover_Controller extends GetxController {
     getData();
   }
 
+  /// Fetches handover device details from the API and updates the [detail] observable.
+  ///
+  /// This method sets [isLoading] to `true` while fetching data. It retrieves the
+  /// authentication token from [UserPreferences], then makes a GET request to the
+  /// handover device detail endpoint with the current [requestId].
+  ///
+  /// If the response is successful (`statusCode == 200`), it updates [detail] with
+  /// the received data. Otherwise, it clears [detail].
+  ///
+  /// Any errors during the fetch are caught, [detail] is cleared, and the error is logged.
+  /// Finally, [isLoading] is set to `false` regardless of success or failure.
   Future<void> getData() async {
     isLoading.value = true;
     try {
@@ -65,6 +93,11 @@ class Accept_Handover_Controller extends GetxController {
     }
   }
 
+  /// Captures an image using the device camera and updates the state.
+  ///
+  /// Uses the [ImagePicker] to open the camera and allows the user to take a photo.
+  /// If an image is captured, toggles the [isCaptured] value and stores the image bytes in [damageImg].
+  /// This method is asynchronous and should be awaited.
   Future<void> getImageFromCamera() async {
     final ImagePicker picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
@@ -75,6 +108,18 @@ class Accept_Handover_Controller extends GetxController {
     }
   }
 
+  /// Sends a multipart POST request to confirm pilot handover.
+  ///
+  /// This method collects necessary handover details, including device information,
+  /// category, remarks, and images (damage and signature), and sends them to the
+  /// backend API. It retrieves the authorization token from user preferences and
+  /// attaches it to the request headers. If a damage image is captured, it is
+  /// included in the request. The signature image is always included.
+  ///
+  /// Returns `true` if the handover is accepted successfully (HTTP 200),
+  /// otherwise logs the error and returns `false`.
+  ///
+  /// Throws an exception if any error occurs during the request process.
   Future<bool> acceptHandover() async {
     try {
       String token = await UserPreferences().getToken();

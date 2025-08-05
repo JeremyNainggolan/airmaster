@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -15,6 +13,20 @@ import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB History Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for managing EFB history data.
+  | It handles fetching, filtering, and exporting history data. 
+  | It also manages user preferences and date selection for filtering.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-27
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class EFB_History_Controller extends GetxController {
   final RxList<dynamic> occHistory = <dynamic>[].obs;
   final RxList<dynamic> occFilteredHistory = <dynamic>[].obs;
@@ -26,6 +38,7 @@ class EFB_History_Controller extends GetxController {
   final RxBool handoverCheckBox = false.obs;
 
   final TextEditingController textSearchField = TextEditingController();
+
   final TextEditingController fromDate = TextEditingController();
   final TextEditingController toDate = TextEditingController();
 
@@ -47,11 +60,23 @@ class EFB_History_Controller extends GetxController {
     await getOtherHistory();
   }
 
+  /// Loads the user's rank data asynchronously and updates the [rank] value.
+  ///
+  /// Retrieves the user's rank from [UserPreferences] and assigns it to [rank].
+  /// Logs the retrieved rank for debugging purposes.
   Future<void> loadUserData() async {
     rank.value = await UserPreferences().getRank();
     log('User rank: $rank');
   }
 
+  /// Fetches OCC history data from the API and updates the history lists.
+  ///
+  /// This method sets the [isLoading] flag to `true` while fetching data.
+  /// It retrieves the user's token from [UserPreferences], then sends a GET request
+  /// to the history API endpoint. If the response is successful and contains data,
+  /// it updates both [occHistory] and [occFilteredHistory] with the received data.
+  /// Any errors encountered during the fetch are logged. The [isLoading] flag is
+  /// reset to `false` after the operation completes, regardless of success or failure.
   Future<void> getOccHistory() async {
     isLoading.value = true;
     String token = await UserPreferences().getToken();
@@ -78,6 +103,18 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Fetches the history data for other users asynchronously.
+  ///
+  /// This method sets the loading state to true, retrieves the authentication token
+  /// and user ID from user preferences, and sends a GET request to the API endpoint
+  /// to fetch other users' history data. The request includes the token in the
+  /// Authorization header and the user ID as a query parameter.
+  ///
+  /// If the response is successful and contains data, it assigns the fetched data
+  /// to both `otherHistory` and `otherFilteredHistory` lists, and logs the number
+  /// of items fetched along with the data. In case of an error during the fetch,
+  /// it logs the error message. The loading state is reset to false after the
+  /// operation completes, regardless of success or failure.
   Future<void> getOtherHistory() async {
     isLoading.value = true;
     String token = await UserPreferences().getToken();
@@ -109,6 +146,12 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Displays a date picker dialog for selecting the "from" date.
+  ///
+  /// The date picker is themed according to the application's color scheme.
+  /// The selectable date range is from 10 years ago to 10 years in the future.
+  /// If a date is picked, it is formatted as 'dd MMMM yyyy' and set to [fromDate].
+  /// If no date is picked, [fromDate] is cleared.
   Future<void> selectFromDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: Get.context!,
@@ -147,6 +190,12 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Displays a date picker dialog for selecting the "to" date.
+  ///
+  /// The date picker is themed according to the application's color scheme.
+  /// The selectable date range is from 10 years ago to 10 years in the future.
+  /// If a date is selected, it is formatted as 'dd MMMM yyyy' and set to [toDate].
+  /// If no date is selected, [toDate] is cleared.
   Future<void> selectToDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: Get.context!,
@@ -185,6 +234,15 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Parses a date string in the format 'dd MMMM yyyy' and returns a [DateTime] object.
+  ///
+  /// If the parsing fails, returns `null`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final date = parseCustomDate('12 January 2024');
+  /// // date == DateTime(2024, 1, 12)
+  /// ```
   DateTime? parseCustomDate(String input) {
     try {
       return DateFormatter.convertToDate(input, 'dd MMMM yyyy');
@@ -193,6 +251,13 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Filters the `occHistory` list based on the provided [query].
+  ///
+  /// If [query] is empty, all history items are assigned to `occFilteredHistory`.
+  /// Otherwise, only items where the `request_user_name` contains the [query]
+  /// (case-insensitive) are included in `occFilteredHistory`.
+  ///
+  /// [query] The search string used to filter history items.
   void searchHistory(String query) {
     if (query.isEmpty) {
       occFilteredHistory.assignAll(occHistory);
@@ -208,6 +273,16 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Filters the `otherHistory` list based on the provided [query].
+  ///
+  /// Other history is specifically for Pilot and FO (First Officer) users.
+  ///
+  /// If [query] is empty, all items from `otherHistory` are assigned to
+  /// `otherFilteredHistory`. Otherwise, only items where the
+  /// `'request_user_name'` field contains the [query] (case-insensitive)
+  /// are included in `otherFilteredHistory`.
+  ///
+  /// [query] The search string used to filter the history.
   void searchOtherHistory(String query) {
     if (query.isEmpty) {
       otherFilteredHistory.assignAll(otherHistory);
@@ -223,6 +298,21 @@ class EFB_History_Controller extends GetxController {
     }
   }
 
+  /// Applies filters to the occurrence history based on selected date range,
+  /// status, and handover status.
+  ///
+  /// The method parses the `fromDate` and `toDate` text fields to determine
+  /// the filtering date range. If the fields are empty, it defaults to the
+  /// earliest possible date (`DateTime(0)`) for `from` and the current date
+  /// for `to`.
+  ///
+  /// It then filters `occHistory` by:
+  /// - Checking if the `request_date` falls within the specified date range.
+  /// - If `doneCheckBox` is checked, only includes items with status 'returned'.
+  /// - If `handoverCheckBox` is checked, only includes items with handover status 'handover'.
+  ///
+  /// The filtered results are assigned to `occFilteredHistory`, and the number
+  /// of filtered items is logged.
   void applyFilter() {
     DateTime from = DateTime(0);
     DateTime to = DateTime.now();
@@ -269,6 +359,15 @@ class EFB_History_Controller extends GetxController {
     occFilteredHistory.assignAll(occHistory);
   }
 
+  /// Exports the filtered OCC history data to an Excel file.
+  ///
+  /// This method creates an Excel file with a sheet named 'History' and appends a header row
+  /// followed by rows containing data from `occFilteredHistory`. Each row represents a history
+  /// record with crew, device, and handover details. The Excel file is saved to the application's
+  /// documents directory as 'history_export.xlsx' and opened automatically after saving.
+  ///
+  /// Returns `true` if the export is successful.
+  /// Throws an [Exception] if an error occurs during the export process.
   Future<bool> exportToExcel() async {
     try {
       var excel = Excel.createExcel();

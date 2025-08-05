@@ -9,6 +9,19 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Pilot Handover Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling pilot handover operations.
+  | It manages the state and logic for pilot handover requests.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-20
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Pilot_Handover_Controller extends GetxController {
   dynamic params = Get.arguments;
 
@@ -30,6 +43,23 @@ class Pilot_Handover_Controller extends GetxController {
     }
   }
 
+  /// Retrieves user information by user ID from the API.
+  ///
+  /// This method sends a GET request to the user endpoint with the provided [userId].
+  /// It uses the stored authentication token for authorization. If the request is successful
+  /// and the user data is found:
+  /// - If [device['isFoRequest']] is `true`, it checks if the user's rank is 'FO' (First Officer).
+  ///   If so, assigns the user data and returns `true`. Otherwise, sets an error message and returns `false`.
+  /// - If [device['isFoRequest']] is `false`, assigns the user data and returns `true`.
+  ///
+  /// If the user is not found or the request fails, sets an appropriate error message and returns `false`.
+  ///
+  /// Returns a [Future] that completes with `true` if the user is found and valid for handover,
+  /// otherwise `false`.
+  ///
+  /// [userId] - The ID of the user to retrieve.
+  ///
+  /// Throws no exceptions; returns `false` on error.
   Future<bool> getUser(String userId) async {
     String token = await UserPreferences().getToken();
 
@@ -76,6 +106,23 @@ class Pilot_Handover_Controller extends GetxController {
     }
   }
 
+  /// Saves the pilot handover data by sending a multipart POST request to the server.
+  ///
+  /// This method performs the following steps:
+  /// - Retrieves the authentication token from user preferences.
+  /// - Constructs a multipart request with required headers and fields:
+  ///   - `request_id`: The device request ID.
+  ///   - `request_user`: The user who made the request.
+  ///   - `handover_to`: The ID number of the user to whom the handover is made.
+  ///   - `handover_date`: The current date and time.
+  ///   - `feedback`: (optional) Encoded feedback data if available.
+  ///   - `signature`: The signature image file.
+  /// - Sends the request to the API endpoint specified in `ApiConfig.pilot_handover`.
+  /// - Waits for 2 seconds after receiving the response.
+  /// - Returns `true` if the response status code is 200 (success), otherwise returns `false`.
+  /// - In case of any exception, waits for 2 seconds and returns `false`.
+  ///
+  /// Returns a [Future] that completes with a boolean indicating the success of the operation.
   Future<bool> saveHandover() async {
     String token = await UserPreferences().getToken();
 

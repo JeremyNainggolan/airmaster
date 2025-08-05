@@ -9,6 +9,19 @@ import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: OCC Return Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling OCC return operations.
+  | It manages the state and logic for OCC return requests.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-21
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Occ_Return_Controller extends GetxController {
   dynamic params = Get.arguments;
 
@@ -29,6 +42,23 @@ class Occ_Return_Controller extends GetxController {
     }
   }
 
+  /// Sends a multipart/form-data POST request to return an OCC (Operational Control Center) item.
+  ///
+  /// This method performs the following steps:
+  /// - Retrieves the user's authentication token.
+  /// - Prepares a multipart request with required headers and fields:
+  ///   - `request_user`: The user making the request.
+  ///   - `request_id`: The ID of the OCC request.
+  ///   - `remark`: Optional remark text if provided.
+  ///   - `feedback`: Optional feedback, encoded as JSON if provided.
+  ///   - `signature`: The user's signature image as a PNG file.
+  /// - Sends the request to the OCC return API endpoint.
+  /// - Waits for 2 seconds after receiving the response.
+  /// - Returns `true` if the response status code is 200 (success), otherwise returns `false`.
+  /// - In case of any exception, waits for 2 seconds and returns `false`.
+  ///
+  /// Returns:
+  ///   `Future<bool>` indicating whether the OCC return was successful.
   Future<bool> returnOCC() async {
     String token = await UserPreferences().getToken();
 

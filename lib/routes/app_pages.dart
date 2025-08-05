@@ -70,7 +70,7 @@ import 'package:airmaster/screens/home/training_card/training/view/training_list
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/bindings/tc_detail_absent_binding.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/tc_detail_absent_trainee.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/bindings/tc_training_history_binding.dart';
-import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_attendance_detail/view/absent_trainee/view/detail_absent/view/training_history/view/detail_training_history/bindings/detail_training_history_binding.dart';
+import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/view/detail_history/bindings/history_binding.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/view/detail_history/view/history.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/detail_absent/view/training_history/view/tc_training_history.dart';
 import 'package:airmaster/screens/home/training_card/training/view/training_list/view/done_detail/view/absent_trainee/view/tc_absent_trainee.dart';

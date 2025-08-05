@@ -12,10 +12,26 @@ import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Analytics Controller
+  |--------------------------------------------------------------------------
+  | This controller handles the logic for EFB Analytics, including fetching
+  | data, filtering it based on user input, and managing the state of the
+  | analytics dashboard. It also manages the date selection and hub filtering
+  | functionalities.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-27
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-07-08
+  |
+*/
 class EFB_Analytics_Controller extends GetxController {
-  final fromDateText = ''.obs;
-  final toDateText = ''.obs;
+  final fromDateText = ''.obs; // Initial date for filtering
+  final toDateText = ''.obs; // End date for filtering
 
+  // Controllers for date input fields
   final fromDate = TextEditingController(
     text: DateFormatter.convertDateTimeDisplay(
       DateFormatter.getStartOfYear().toString(),
@@ -29,28 +45,35 @@ class EFB_Analytics_Controller extends GetxController {
     ),
   );
 
+  // Observable lists for data and filtered data
   final RxList<dynamic> data = <dynamic>[].obs;
   final RxList<dynamic> filteredData = <dynamic>[].obs;
 
+  // Observable list for hubs and legend data
   final RxList<String> hubList = <String>[].obs;
   late List<Map<String, String>> legendList = [];
   late List<Map<String, Map<String, dynamic>>> legendListCount = [];
 
+  // Observable for the selected hub
   final RxString selectedHub = ''.obs;
 
+  // Observable for loading state
   final isLoading = false.obs;
 
+  // Controllers for analytics data
   final acknowledgeCountText = TextEditingController();
   final returnCountText = TextEditingController();
 
+  // Controllers for device acknowledge and return counts
   final firstDeviceAcknowledgeText = TextEditingController();
   final otherDeviceAcknowledgeText = TextEditingController();
-
   final firstDeviceReturnText = TextEditingController();
   final otherDeviceReturnText = TextEditingController();
 
+  // Controller for unfinished process count
   final unfinishedProcessCountText = TextEditingController();
 
+  // Method to initialize the controller and fetch initial data
   @override
   void onInit() async {
     super.onInit();
@@ -62,6 +85,7 @@ class EFB_Analytics_Controller extends GetxController {
     await setAnalyticsData();
   }
 
+  // Method to refresh data and re-fetch all necessary information
   Future<void> refreshData() async {
     fromDateText.value = fromDate.text;
     toDateText.value = toDate.text;
@@ -74,6 +98,17 @@ class EFB_Analytics_Controller extends GetxController {
     await setAnalyticsData();
   }
 
+  /// Fetches all pilot devices from the API and updates the data list.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future] that completes when the data has been fetched.
+  /// Throws an error if the API request fails or if there is an issue with the response.
+  /// Updates the [data] and [filteredData] lists with the fetched data.
+  /// Sets the [isLoading] observable to true while fetching data and false when done.
+  /// Logs any errors encountered during the fetch operation.
   Future<void> getAllPilotDevices() async {
     isLoading.value = true;
     try {
@@ -102,6 +137,17 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Filters the data based on the selected date range and hub.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future] that completes when the filtering is done.
+  /// Throws an error if there is an issue with date parsing or filtering.
+  /// Updates the [filteredData] list with the filtered results.
+  /// Sets the [isLoading] observable to true while filtering and false when done.
+  /// Logs any errors encountered during the filtering process.
   Future<void> filterData() async {
     isLoading.value = true;
     try {
@@ -164,6 +210,18 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Sets the analytics data by calculating various counts and percentages
+  /// based on the filtered data.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future] that completes when the analytics data has been set.
+  /// Throws an error if there is an issue with the calculations.
+  /// Updates the text controllers with the calculated values.
+  /// Sets the [isLoading] observable to true while processing and false when done.
+  /// Logs any errors encountered during the calculations.
   Future<void> setAnalyticsData() async {
     isLoading.value = true;
     try {
@@ -174,6 +232,7 @@ class EFB_Analytics_Controller extends GetxController {
           return '${value.toString()} Device';
         }
       });
+
       returnCountText.text = await countForReturn().then((value) {
         if (value > 1) {
           return '${value.toString()} Devices';
@@ -260,6 +319,16 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Counts the total number of devices in the filtered data.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the total count of devices.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on whether the device is a FO request or not.
+  /// Logs any errors encountered during the counting process.
   Future<int> countAllDevices() async {
     int tempCount = 0;
     try {
@@ -276,6 +345,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that are in an unfinished process.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices in an unfinished process.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForUnfinishedProcess() async {
     int tempCount = 0;
     try {
@@ -296,6 +375,15 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that need to be acknowledged.
+  ///
+  /// Parameters:
+  /// [None]
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices that need to be acknowledged.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForAcknowledge() async {
     int tempCount = 0;
     try {
@@ -316,6 +404,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that need to be acknowledged for the first device.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices that need to be acknowledged for the first device.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForFirstDeviceAcknowledge() async {
     int tempCount = 0;
     try {
@@ -336,6 +434,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that need to be acknowledged for other devices.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices that need to be acknowledged for other devices.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForOtherDeviceAcknowledge() async {
     int tempCount = 0;
     try {
@@ -354,6 +462,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that are ready for return.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices ready for return.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForReturn() async {
     int tempCount = 0;
     try {
@@ -372,6 +490,15 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that are ready for return for the first device.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices ready for return for the first device.
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
   Future<int> countForFirstDeviceReturn() async {
     int tempCount = 0;
     try {
@@ -390,6 +517,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Counts the number of devices that are ready for return for other devices.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<int>] that returns the count of devices ready for return for other devices
+  /// Throws an error if there is an issue with the counting logic.
+  /// Updates the count based on the device status and whether it is a FO request.
+  /// Logs any errors encountered during the counting process.
   Future<int> countForOtherDeviceReturn() async {
     int tempCount = 0;
     try {
@@ -406,6 +543,16 @@ class EFB_Analytics_Controller extends GetxController {
     return tempCount;
   }
 
+  /// Selects a date from a date picker and updates the fromDate text controller.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the date selection is done.
+  /// Throws an error if there is an issue with the date selection.
+  /// Updates the [fromDateText] observable with the selected date.
+  /// Logs any errors encountered during the date selection process.
   Future<void> selectFromDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: Get.context!,
@@ -446,6 +593,16 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Selects a date from a date picker and updates the toDate text controller.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the date selection is done.
+  /// Throws an error if there is an issue with the date selection.
+  /// Updates the [toDateText] observable with the selected date.
+  /// Logs any errors encountered during the date selection process.
   Future<void> selectToDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: Get.context!,
@@ -486,6 +643,17 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Fetches the list of hubs from the API and updates the hubList observable.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the hub list has been fetched.
+  /// Throws an error if there is an issue with the API request or response.
+  /// Updates the [hubList] observable with the fetched data.
+  /// Sets the [isLoading] observable to true while fetching data and false when done.
+  /// Logs any errors encountered during the fetch operation.
   Future<void> getHub() async {
     isLoading.value = true;
     try {
@@ -516,6 +684,14 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Sets the legend data for the pie chart by fetching count data for each hub.
+  ///
+  /// Parameters:
+  /// [None]
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the legend data has been set.
+  /// Throws an error if there is an issue with the API request or response.
   Future<void> setLegendData() async {
     var pastelColors = RandomColor.getColor(
       Options(
@@ -530,6 +706,18 @@ class EFB_Analytics_Controller extends GetxController {
     }
   }
 
+  /// Fetches the count of devices for a specific hub and updates the legendListCount observable.
+  ///
+  /// Parameters:
+  /// [hub] - The hub for which to fetch the count.
+  /// [color] - The color associated with the hub.
+  ///
+  /// Returns:
+  /// A [Future<void>] that completes when the count data has been fetched.
+  /// Throws an error if there is an issue with the API request or response.
+  /// Updates the [legendListCount] observable with the fetched data.
+  /// Sets the [isLoading] observable to true while fetching data and false when done.
+  /// Logs any errors encountered during the fetch operation.
   Future<void> getPieChartData(String hub, String color) async {
     isLoading.value = true;
     try {

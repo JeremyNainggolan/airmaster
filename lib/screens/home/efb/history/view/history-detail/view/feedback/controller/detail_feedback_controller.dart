@@ -12,6 +12,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Detail Feedback Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling feedback details in the EFB history view.
+  | It is responsible for fetching feedback data, formatting it, and generating PDF documents.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-06-01
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Detail_Feedback_Controller extends GetxController {
   dynamic params = Get.arguments;
 
@@ -21,6 +34,7 @@ class Detail_Feedback_Controller extends GetxController {
 
   final history = {}.obs;
   final feedback = {}.obs;
+
   final format = {}.obs;
 
   final reqId = ''.obs;
@@ -35,10 +49,26 @@ class Detail_Feedback_Controller extends GetxController {
     getFeedbackDetail(reqId.value);
   }
 
+  /// Asynchronously retrieves the user's rank from preferences and updates the [rank] value.
+  ///
+  /// This method calls [UserPreferences.getRank] to fetch the rank and assigns it to [rank].
+  /// It is intended to be used for updating the rank information in the controller.
   Future<void> getRank() async {
     rank.value = await UserPreferences().getRank();
   }
 
+  /// Fetches the feedback detail for a given request ID.
+  ///
+  /// This method sets the [isLoading] flag to `true` while fetching data.
+  /// It retrieves the authentication token from [UserPreferences], then
+  /// sends an HTTP GET request to the feedback detail API endpoint with the
+  /// provided [requestId] as a query parameter.
+  ///
+  /// If the response status code is 200, it updates the [feedback] value
+  /// with the received data. Any errors encountered during the process are
+  /// logged. The [isLoading] flag is reset to `false` after the operation.
+  ///
+  /// [requestId] - The ID of the feedback request to fetch details for.
   Future<void> getFeedbackDetail(String requestId) async {
     isLoading.value = true;
     String token = await UserPreferences().getToken();
@@ -66,6 +96,15 @@ class Detail_Feedback_Controller extends GetxController {
     }
   }
 
+  /// Fetches the PDF format data for the feedback form from the API.
+  ///
+  /// This method retrieves the authentication token, sends a GET request to the
+  /// API endpoint specified in [ApiConfig.get_format_pdf] with the query parameter
+  /// `id=feedback-form`, and includes the token in the request headers.
+  ///
+  /// If the request is successful (`statusCode == 200`), the response data is
+  /// assigned to [format]. Otherwise, [format] is cleared. Any exceptions during
+  /// the request also result in [format] being cleared.
   Future<void> getFormatPdf() async {
     final token = await UserPreferences().getToken();
 
@@ -92,6 +131,14 @@ class Detail_Feedback_Controller extends GetxController {
     }
   }
 
+  /// Formats a timestamp string into a human-readable date and time.
+  ///
+  /// The input [timestamp] should be in ISO 8601 format (e.g., "2023-06-01T14:30:00").
+  /// Returns a string in the format "day/month/year at hour:minute".
+  ///
+  /// Example:
+  ///   Input: "2023-06-01T14:30:00"
+  ///   Output: "1/6/2023 at 14:30"
   String _formatTimestamp(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
 
@@ -102,6 +149,21 @@ class Detail_Feedback_Controller extends GetxController {
     return formattedDateTime;
   }
 
+  /// Generates a feedback PDF document based on the provided history and feedback data.
+  ///
+  /// This method performs the following steps:
+  /// 1. Loads the required assets (logo image and custom font).
+  /// 2. Constructs a PDF document using the `pdf` package, including:
+  ///    - Header with logo, title, device information, and record details.
+  ///    - Multiple tables and sections for feedback questions and answers.
+  ///    - Footer with customizable left and right text.
+  /// 3. Formats and inserts feedback data into the PDF, handling empty values gracefully.
+  /// 4. Saves the generated PDF to the application's documents directory as `feedback-form.pdf`.
+  /// 5. Opens the generated PDF file for viewing.
+  ///
+  /// Returns `true` if the document was created and opened successfully, otherwise returns `false`.
+  ///
+  /// Throws no exceptions; errors are caught and result in a `false` return value.
   Future<bool> createDocument() async {
     await getFormatPdf();
 
@@ -143,11 +205,7 @@ class Detail_Feedback_Controller extends GetxController {
             padding: pw.EdgeInsets.all(5.0),
             child: pw.Text(
               text,
-              style: pw.TextStyle(
-                // font: ttf,
-                fontWeight: pw.FontWeight.bold,
-                fontSize: 9,
-              ),
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
             ),
           );
         }
@@ -159,11 +217,7 @@ class Detail_Feedback_Controller extends GetxController {
             padding: pw.EdgeInsets.all(5.0),
             child: pw.Text(
               text,
-              style: pw.TextStyle(
-                // font: ttf,
-                fontWeight: pw.FontWeight.bold,
-                fontSize: 10,
-              ),
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
             ),
           );
         }
@@ -216,7 +270,6 @@ class Detail_Feedback_Controller extends GetxController {
                                   pw.Text(
                                     'IAA EFB',
                                     style: pw.TextStyle(
-                                      // font: ttf,
                                       fontSize: 12,
                                       fontWeight: pw.FontWeight.bold,
                                     ),
@@ -225,7 +278,6 @@ class Detail_Feedback_Controller extends GetxController {
                                   pw.Text(
                                     'FEEDBACK FORM',
                                     style: pw.TextStyle(
-                                      // font: ttf,
                                       fontSize: 12,
                                       fontWeight: pw.FontWeight.bold,
                                     ),
@@ -235,10 +287,7 @@ class Detail_Feedback_Controller extends GetxController {
                                     history['isFoRequest'] == true
                                         ? '${history['mainDeviceNo']} & ${history['backupDeviceNo']}'
                                         : '${history['deviceno'].toString().isEmpty ? '-' : history['deviceno']}',
-                                    style: pw.TextStyle(
-                                      // font: ttf,
-                                      fontSize: 12,
-                                    ),
+                                    style: pw.TextStyle(fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -380,12 +429,7 @@ class Detail_Feedback_Controller extends GetxController {
                             height: 20.0,
                             child: reguler("Device No.", context),
                           ),
-                          // if (devicename2 == '-' || devicename2 == null)
-                          //   pw.Container(
-                          //     height: 20.0,
-                          //     child: reguler("$devicename1", context),
-                          //   ),
-                          // if (devicename1 == '-')
+
                           pw.Container(
                             height: 20.0,
                             child: reguler(

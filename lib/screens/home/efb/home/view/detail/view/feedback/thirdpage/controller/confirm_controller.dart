@@ -3,6 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Confirm Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the Confirm feature.
+  | It is responsible for managing the state and logic of the confirmation form.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-16
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Confirm_Controller extends GetxController {
   final params = Get.arguments;
 

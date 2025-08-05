@@ -6,6 +6,19 @@ import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Profile Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the EFB Profile.
+  | It is responsible for managing user profile data and actions.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-04-24
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class EFB_Profile_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
@@ -27,6 +40,11 @@ class EFB_Profile_Controller extends GetxController {
     loadUserData();
   }
 
+  /// Loads user data asynchronously from user preferences and updates the corresponding observable fields.
+  ///
+  /// This method initializes the user preferences and retrieves various user-related information such as
+  /// ID number, name, email, image URL, hub, LOA number, license number, license expiry, rank, status,
+  /// and instructor list. The retrieved values are assigned to their respective observable variables.
   Future<void> loadUserData() async {
     await _userPrefs.init();
     userId.value = await _userPrefs.getIdNumber();
@@ -42,6 +60,11 @@ class EFB_Profile_Controller extends GetxController {
     instructor.assignAll(await _userPrefs.getInstructor());
   }
 
+  /// Logs out the current user by calling the [AuthService.logout] method.
+  ///
+  /// If an error occurs during the logout process, it logs the error message.
+  ///
+  /// This method is asynchronous and should be awaited.
   Future<void> logout() async {
     try {
       await AuthService.logout();

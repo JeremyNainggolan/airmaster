@@ -9,33 +9,60 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Main Controller
+  |--------------------------------------------------------------------------
+  | 
+  | This file defines the EFB_Home_Controller class, which manages the state and 
+  | API interactions for the EFB home screen in the AirMaster application. It 
+  | handles user data, device status, and request/confirmation flows for both 
+  | pilots and OCC users. The controller uses observables for reactive UI updates 
+  | and provides methods for loading, refreshing, and updating device and request 
+  | information via HTTP requests.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-04-24
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class EFB_Home_Controller extends GetxController
     with GetTickerProviderStateMixin {
+  // User preferences instance for accessing user data
   final UserPreferences _userPrefs = UserPreferences();
 
+  // Tab controllers for OCC and Pilot tabs
   late TabController occTabController;
   late TabController pilotTabController;
 
+  // Observable variables for user and device data
   final name = ''.obs;
   final imgUrl = ''.obs;
   final hub = ''.obs;
   final rank = ''.obs;
 
+  // Observable variables for greetings and request status
   final greetings = ''.obs;
 
+  // Observable variable to check if a request is pending
   final checkRequest = false.obs;
 
+  // Observable variables for device counts and statuses
   final availableDevicesCount = 0.obs;
   final usedDevicesCount = 0.obs;
 
+  // Observable variables for request and confirmation data
   final waitingConfirmation = {}.obs;
   final inUse = {}.obs;
   final pilotHandover = {}.obs;
 
+  // Observable variables for OCC request data
   final requestConfirmationOCC = <Map<String, dynamic>>[].obs;
   final deviceUsedOCC = <Map<String, dynamic>>[].obs;
   final returnConfirmationOCC = <Map<String, dynamic>>[].obs;
 
+  // Observable variable to track loading state
   final isLoading = false.obs;
 
   @override
@@ -48,11 +75,13 @@ class EFB_Home_Controller extends GetxController
     setGreeting();
   }
 
+  // Initializes data by loading user information and device statuses
   void initData() async {
     try {
       isLoading.value = true;
       await loadUserData();
 
+      // Check user rank and load appropriate data
       if (rank.value == 'OCC') {
         await getOCCRequestStatus();
         await getDeviceOCCUsed();
@@ -69,6 +98,7 @@ class EFB_Home_Controller extends GetxController
     }
   }
 
+  // Sets the greeting based on the current time of day
   void setGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -89,7 +119,7 @@ class EFB_Home_Controller extends GetxController
 
   /*
     |--------------------------------------------------------------------------
-    | Line 89 - 290 is the EFB API handle from Pilot Request
+    | Line 134 - 356 is the EFB API handle from Pilot Request
     |--------------------------------------------------------------------------
     |
     | This section handles the API requests related to checking pilot requests,
@@ -328,11 +358,13 @@ class EFB_Home_Controller extends GetxController
 
   /*
     |--------------------------------------------------------------------------
-    | Line 305 - 414 is the EFB API handle from OCC Request
+    | Line 370 - 478 is the EFB API handle from OCC Request
     |--------------------------------------------------------------------------
     |
-    | This section handles the API requests related to OCC requests,
-    |
+    | This section handles the API requests related to OCC requests, 
+    | including fetching request statuses, device usage, and return statuses.
+    | It includes methods for getting OCC request statuses, devices in use,
+    | and return statuses.
     */
 
   Future<void> getOCCRequestStatus() async {

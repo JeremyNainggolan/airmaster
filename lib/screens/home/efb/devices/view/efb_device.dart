@@ -17,6 +17,19 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:stroke_text/stroke_text.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: EFB Device
+  |--------------------------------------------------------------------------
+  | This widget handles the UI for displaying and managing EFB devices,
+  | including search functionality, loading indicators, and device details.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-27
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class EFB_Device extends GetView<EFB_Device_Controller> {
   const EFB_Device({super.key});
 
@@ -29,6 +42,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
           padding: EdgeInsets.all(SizeConstant.SCREEN_PADDING),
           child: Column(
             children: [
+              // Search field for filtering device list by device ID.
               TextField(
                 autofocus: false,
                 controller: controller.textSearchField,
@@ -41,10 +55,12 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                 },
               ),
               SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+              // Main list view or loading indicator
               Expanded(
                 child:
                     controller.isLoading.value
                         ? Center(
+                          // Loading animation shown while data is fetched
                           child: LoadingAnimationWidget.hexagonDots(
                             color: ColorConstants.activeColor,
                             size: 48,
@@ -55,6 +71,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                           child:
                               controller.foundedDevices.isEmpty
                                   ? ListView(
+                                    // Shown when no devices match the search
                                     children: [
                                       Center(
                                         child: Column(
@@ -83,6 +100,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                                     ],
                                   )
                                   : ListView.builder(
+                                    // List of found devices displayed as cards
                                     itemCount: controller.foundedDevices.length,
                                     itemBuilder: (context, index) {
                                       final device =
@@ -99,6 +117,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                                         color: ColorConstants.backgroundColor,
                                         child: ListTile(
                                           onTap: () {
+                                            // Open device details dialog when tapped
                                             showDeviceDialog(
                                               context,
                                               device.deviceNo,
@@ -138,6 +157,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Show a dialog displaying detailed information for a selected device
   Future<void> showDeviceDialog(BuildContext context, String deviceNo) async {
     Device device = controller.getDeviceById(deviceNo);
     return showDialog<void>(
@@ -154,6 +174,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Device detail title
                 Text(
                   'Device Details',
                   style: GoogleFonts.notoSans(
@@ -162,6 +183,8 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
+                // Information rows for device details
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT_DOUBLE),
                 buildInfoRow('Device Number', device.deviceNo),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
@@ -178,25 +201,33 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
                   device.status ? 'Available' : 'Unavailable',
                 ),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+
+                // QR code wallpaper generation section
                 CustomDivider(divider: 'QR Code Device'),
                 generateWallpaper(deviceNo),
                 SizedBox(height: SizeConstant.SIZED_BOX_HEIGHT),
+
+                // Download button for the generated wallpaper
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      // Show loading alert
                       QuickAlert.show(
                         context: Get.context!,
                         type: QuickAlertType.loading,
                         text: 'Downloading...',
                       );
 
+                      // Capture image and save
                       var result = await captureAndDownloadWallpaper(deviceNo);
 
+                      // Dismiss current alert
                       if (Get.isDialogOpen ?? false) {
                         Get.back();
                       }
 
+                      // Show result alert
                       if (result) {
                         QuickAlert.show(
                           barrierDismissible: false,
@@ -261,6 +292,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Build a single row showing a label and corresponding value
   Widget buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -281,6 +313,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Build text widget for displaying key/label in info row
   Widget buildTextKey(String text) {
     return Text(
       text,
@@ -292,6 +325,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Build text widget for displaying value in info row
   Widget buildTextValue(String text) {
     return Text(
       text,
@@ -304,6 +338,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Generate a wallpaper widget that includes a QR code and EFB label
   Widget generateWallpaper(String deviceNo) {
     return Screenshot(
       controller: controller.screenshotController,
@@ -341,6 +376,7 @@ class EFB_Device extends GetView<EFB_Device_Controller> {
     );
   }
 
+  // Captures the wallpaper image and saves it to the user's gallery
   Future<bool> captureAndDownloadWallpaper(String deviceNo) async {
     await Future.delayed(const Duration(milliseconds: 300));
 

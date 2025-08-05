@@ -7,6 +7,20 @@ import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: FO Request Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling FO Request operations.
+  | It manages the state and logic for FO Request, including device selection
+  | and request submission.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-06-06
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Fo_Request_Controller extends GetxController {
   final mainDevice = false.obs;
   final searchMainDevice = TextEditingController();
@@ -30,6 +44,18 @@ class Fo_Request_Controller extends GetxController {
   final backupDeviceCategory = 'Good'.obs;
   final backupDeviceRemark = ''.obs;
 
+  /// Retrieves a list of [Device] objects by searching for a device name.
+  ///
+  /// This function sends an HTTP GET request to the API endpoint specified in [ApiConfig.get_device_by_name],
+  /// including the device number (`searchDevice`) and hub as query parameters. The request includes an
+  /// authorization token in the headers.
+  ///
+  /// Returns a [Future] that completes with a list of [Device] objects matching the search criteria.
+  /// If the request fails or no devices are found, an empty list is returned.
+  ///
+  /// Throws no exceptions; any errors are caught and result in an empty list being returned.
+  ///
+  /// - [searchDevice]: The name or number of the device to search for.
   Future<List<Device>> getDeviceByName(String searchDevice) async {
     String token = await UserPreferences().getToken();
     String hub = await UserPreferences().getHub();
@@ -59,6 +85,23 @@ class Fo_Request_Controller extends GetxController {
     }
   }
 
+  /// Retrieves a [Device] object by its ID from the server.
+  ///
+  /// Makes an HTTP GET request to the API endpoint specified in [ApiConfig.get_device_by_id],
+  /// passing the device number ([searchDevice]) and hub as query parameters. The request includes
+  /// an authorization token in the headers.
+  ///
+  /// Returns a [Device] if found, or `null` if no device matches the given ID, the response is invalid,
+  /// or an error occurs during the request.
+  ///
+  /// Throws no exceptions; all errors are caught and result in a `null` return value.
+  ///
+  /// - [searchDevice]: The device number to search for.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// Device? device = await getDeviceById('12345');
+  /// ```
   Future<Device?> getDeviceById(String searchDevice) async {
     String token = await UserPreferences().getToken();
     String hub = await UserPreferences().getHub();
@@ -92,6 +135,16 @@ class Fo_Request_Controller extends GetxController {
     }
   }
 
+  /// Sets the main device information and updates relevant fields.
+  ///
+  /// This method assigns the provided [device] as the main device by:
+  /// - Setting [mainDevice] to `true`.
+  /// - Updating [searchMainDevice] text with the device number.
+  /// - Assigning device properties such as device number, iOS version,
+  ///   FlySmart version, Docu version, Lido version, and hub to their
+  ///   respective observable fields.
+  ///
+  /// [device] - The [Device] object containing the main device details.
   void setMainDevice(Device device) {
     mainDevice.value = true;
     searchMainDevice.text = device.deviceNo;
@@ -103,6 +156,13 @@ class Fo_Request_Controller extends GetxController {
     mainDeviceHub.value = device.hub;
   }
 
+  /// Clears all fields related to the main device, resetting their values to defaults.
+  ///
+  /// This includes:
+  /// - Setting `mainDevice` to `false`
+  /// - Clearing the search field for the main device
+  /// - Resetting device number, iOS version, FlySmart version, Docu version, Lido version, hub, and remark to empty strings
+  /// - Setting device category to `'Good'`
   void clearMainDevice() {
     mainDevice.value = false;
     searchMainDevice.clear();
@@ -116,6 +176,17 @@ class Fo_Request_Controller extends GetxController {
     mainDeviceRemark.value = '';
   }
 
+  /// Sets the backup device information using the provided [device].
+  ///
+  /// Updates the following backup device properties:
+  /// - [backupDevice]: Marks the backup device as active.
+  /// - [searchBackupDevice]: Sets the device number for search.
+  /// - [backupDeviceNo]: Stores the device number.
+  /// - [backupDeviceiOSVersion]: Stores the iOS version of the device.
+  /// - [backupDeviceFlySmart]: Stores the FlySmart version.
+  /// - [backupDeviceDocuVersion]: Stores the Docu version.
+  /// - [backupDeviceLidoVersion]: Stores the Lido version.
+  /// - [backupDeviceHub]: Stores the hub information.
   void setBackupDevice(Device device) {
     backupDevice.value = true;
     searchBackupDevice.text = device.deviceNo;
@@ -127,6 +198,12 @@ class Fo_Request_Controller extends GetxController {
     backupDeviceHub.value = device.hub;
   }
 
+  /// Clears all backup device-related fields by resetting their values to default.
+  ///
+  /// This method sets the backup device status to `false`, clears the search field,
+  /// and resets all backup device details such as device number, iOS version,
+  /// FlySmart version, Docu version, Lido version, hub, category, and remark.
+  /// The category is set to 'Good' by default.
   void clearBackupDevice() {
     backupDevice.value = false;
     searchBackupDevice.clear();
@@ -140,6 +217,20 @@ class Fo_Request_Controller extends GetxController {
     backupDeviceRemark.value = '';
   }
 
+  /// Submits a FO (First Officer) request to the server.
+  ///
+  /// This method gathers device and user information, constructs a request payload,
+  /// and sends it via HTTP POST to the FO request submission endpoint.
+  ///
+  /// Returns `true` if the request was successfully submitted (HTTP 200 response),
+  /// otherwise returns `false`.
+  ///
+  /// The request payload includes:
+  /// - Device information for both main and backup devices (number, iOS version, FlySmart, DocuVersion, LidoVersion, Hub, Category, Remark)
+  /// - User information (ID number, name)
+  /// - Request metadata (date, status)
+  ///
+  /// Throws no exceptions; any error during submission will result in a `false` return value.
   Future<bool> submitRequest() async {
     String token = await UserPreferences().getToken();
     String requestUser = await UserPreferences().getIdNumber();

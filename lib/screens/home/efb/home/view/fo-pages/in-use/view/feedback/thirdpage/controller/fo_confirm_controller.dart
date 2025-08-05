@@ -3,6 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Fo Confirm Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling Fo Confirm operations.
+  | It manages the state and logic for Fo Confirm feedback requests.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-06-04
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Fo_Confirm_Controller extends GetxController {
   final params = Get.arguments;
 

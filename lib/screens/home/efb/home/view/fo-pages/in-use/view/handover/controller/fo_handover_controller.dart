@@ -11,6 +11,20 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: FO Handover Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for handling FO Handover operations.
+  | It manages the state and logic for FO Handover requests, including
+  | fetching details, accepting handover, and capturing signatures.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-06-04
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Fo_Handover_Controller extends GetxController {
   dynamic params = Get.arguments;
 
@@ -36,6 +50,14 @@ class Fo_Handover_Controller extends GetxController {
     getData();
   }
 
+  /// Fetches handover device details from the API and updates the [detail] observable.
+  ///
+  /// - Sets [isLoading] to `true` while fetching data.
+  /// - Retrieves the authentication token from [UserPreferences].
+  /// - Sends a GET request to the handover device detail endpoint with the current [requestId].
+  /// - On success (`statusCode == 200`), updates [detail] with the received data.
+  /// - On failure or exception, clears [detail].
+  /// - Sets [isLoading] to `false` after the operation completes.
   Future<void> getData() async {
     isLoading.value = true;
     try {
@@ -66,6 +88,11 @@ class Fo_Handover_Controller extends GetxController {
     }
   }
 
+  /// Captures an image using the device camera and updates the state.
+  ///
+  /// Uses the [ImagePicker] to open the camera and allows the user to take a photo.
+  /// If an image is captured, toggles the [isCaptured] value and stores the image bytes in [damageImg].
+  /// Does nothing if the user cancels the image capture.
   Future<void> getImageFromCamera() async {
     final ImagePicker picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
@@ -76,6 +103,19 @@ class Fo_Handover_Controller extends GetxController {
     }
   }
 
+  /// Sends a request to accept a handover by submitting relevant data and files to the server.
+  ///
+  /// This method performs the following steps:
+  /// - Retrieves the authentication token from user preferences.
+  /// - Constructs a multipart POST request to the handover confirmation API endpoint.
+  /// - Adds required fields such as request ID, handover details, device categories, remarks, and device numbers.
+  /// - Optionally attaches a damage image if it has been captured.
+  /// - Attaches a signature image.
+  /// - Sends the request and logs the response body.
+  /// - Returns `true` if the server responds with a 200 status code, otherwise returns `false`.
+  /// - Returns `false` if any exception occurs during the process.
+  ///
+  /// Returns a [Future] that completes with a boolean indicating the success of the handover acceptance.
   Future<bool> acceptHandover() async {
     try {
       String token = await UserPreferences().getToken();

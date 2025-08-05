@@ -3,6 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Battery Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the Battery feature.
+  | It is responsible for managing the state and logic of the battery feedback form.
+  |--------------------------------------------------------------------------
+  | created by: Jeremy Nainggolan
+  | created at: 2025-05-14
+  | last modified by: Jeremy Nainggolan
+  | last modified at: 2025-08-05
+  |
+*/
 class Battery_Controller extends GetxController {
   dynamic params = Get.arguments;
 
