@@ -7,6 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Scoring Trainee Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the Scoring Trainee feature.
+  | It manages the state and logic for scoring trainee operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class Ins_ScoringTrainee_Controller extends GetxController {
   final traineeId = Get.arguments['idTrainee'];
   final idAttendanceDetail = Get.arguments['idattendance-detail'];
@@ -31,6 +42,22 @@ class Ins_ScoringTrainee_Controller extends GetxController {
     fetchTraineeDetails();
   }
 
+  /// Fetches the details of a trainee from the server.
+  ///
+  /// This method sets the [isLoading] flag to `true` while fetching data.
+  /// It retrieves the authentication token, sends an HTTP GET request to the
+  /// trainee details API endpoint with the required query parameters, and
+  /// parses the response.
+  ///
+  /// On a successful response (`statusCode == 200`), it:
+  /// - Assigns the trainee details to [traineeDetails].
+  /// - Updates [idAttendance], [scoreValue], [gradeController], [communicationScore],
+  ///   [knowledgeScore], [activeParticipationScore], and [additionalInfoController]
+  ///   with the corresponding values from the response.
+  /// - Logs relevant information for debugging.
+  /// - Sets [isLoading] to `false`.
+  ///
+  /// If the response fails or an exception occurs, it logs the error.
   Future<void> fetchTraineeDetails() async {
     isLoading.value = true;
 
@@ -71,6 +98,16 @@ class Ins_ScoringTrainee_Controller extends GetxController {
     }
   }
 
+  /// Submits the trainee's score to the server.
+  ///
+  /// This method collects the necessary scoring data from the controllers,
+  /// formats the trainee number, and sends a POST request to the API endpoint
+  /// to save the trainee's score. The request includes authorization and
+  /// relevant scoring details in the body.
+  ///
+  /// Returns `true` if the score was submitted successfully, otherwise `false`.
+  ///
+  /// Logs the process and any errors encountered during submission.
   Future<bool> submitScore() async {
     String token = await UserPreferences().getToken();
 
@@ -124,6 +161,14 @@ class Ins_ScoringTrainee_Controller extends GetxController {
     }
   }
 
+  /// Checks the score of a trainee for a specific attendance ID.
+  ///
+  /// This asynchronous method retrieves the authentication token, logs the attendance ID,
+  /// and sends a GET request to the API to fetch the trainee's score. If the request is
+  /// successful (HTTP 200), it returns the score from the response. If the request fails
+  /// or an error occurs, it logs the error and returns 0.
+  ///
+  /// Returns the trainee's score as an [int], or 0 if the score cannot be retrieved.
   Future<int> checkTraineeScore() async {
     String token = await UserPreferences().getToken();
 

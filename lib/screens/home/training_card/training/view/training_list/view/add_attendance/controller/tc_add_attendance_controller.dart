@@ -1,3 +1,5 @@
+// ignore: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:developer';
 
@@ -7,24 +9,29 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:airmaster/config/api_config.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Add Attendance Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for adding attendance in the training module.
+  | It manages the state and logic for creating new attendance records.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_AddAttendanceController extends GetxController {
-  // Define your variables and methods
-
   late GlobalKey<FormState> formKey;
-
 
   final trainingAttendanceName = TextEditingController();
   final trainingAttendanceDate = TextEditingController();
   RxString trainingAttendanceType = ''.obs;
   RxString trainingAttendanceDepartment = ''.obs;
   RxString trainingAttendanceRoom = ''.obs;
-  RxString trainingAttendanceVenue =''.obs;
+  RxString trainingAttendanceVenue = ''.obs;
 
   RxString selectedInstructorId = ''.obs;
   final instructorController = TextEditingController();
-
-
-  // ignore: non_constant_identifier_names
 
   @override
   void onInit() {
@@ -32,11 +39,33 @@ class TC_AddAttendanceController extends GetxController {
     formKey = GlobalKey<FormState>();
   }
 
+  /// Generates a random string of the specified [length] using
+  /// uppercase and lowercase English letters.
+  ///
+  /// Note: The randomness is based on the current time in milliseconds
+  /// and the index, which may not provide strong randomness for security purposes.
+  ///
+  /// [length] The length of the string to generate.
+  ///
+  /// Returns a randomly generated string.
   String _generateRandomString(int length) {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return List.generate(length, (index) => chars[(DateTime.now().millisecondsSinceEpoch + index) % chars.length]).join();
+    return List.generate(
+      length,
+      (index) =>
+          chars[(DateTime.now().millisecondsSinceEpoch + index) % chars.length],
+    ).join();
   }
 
+  /// Saves the attendance record by sending a POST request to the server.
+  ///
+  /// The attendance details are collected from various controllers and sent as
+  /// the request body. The request includes an authorization token in the headers.
+  ///
+  /// Returns `true` if the attendance was saved successfully (HTTP 200),
+  /// otherwise returns `false`. In case of an exception, logs the error and returns `false`.
+  ///
+  /// Throws no exceptions.
   Future<bool?> saveAttendance() async {
     String token = await UserPreferences().getToken();
     try {
@@ -49,7 +78,7 @@ class TC_AddAttendanceController extends GetxController {
           'room': trainingAttendanceRoom.value,
           'venue': trainingAttendanceVenue.value,
           'keyAttendance': _generateRandomString(6),
-          'idTrainingType':trainingAttendanceName.text,
+          'idTrainingType': trainingAttendanceName.text,
           'instructor': selectedInstructorId.value,
           'trainingType': trainingAttendanceType.value,
         },
@@ -62,7 +91,9 @@ class TC_AddAttendanceController extends GetxController {
         log('Attendance saved successfully');
         return true;
       } else {
-        log('Failed to save attendance: ${jsonDecode(response.body)['message']}');
+        log(
+          'Failed to save attendance: ${jsonDecode(response.body)['message']}',
+        );
         return false;
       }
     } catch (e) {
@@ -71,6 +102,19 @@ class TC_AddAttendanceController extends GetxController {
     }
   }
 
+  /// Fetches a list of instructor suggestions based on the provided [pattern].
+  ///
+  /// Makes an HTTP GET request to retrieve instructor data, then filters the results
+  /// to include only instructors whose names contain the [pattern] (case-insensitive).
+  ///
+  /// Returns a [Future] that completes with a list of [Instructor] objects matching the pattern.
+  /// If the request fails or an error occurs, returns an empty list.
+  ///
+  /// Logs the response body and any errors encountered during the fetch process.
+  ///
+  /// [pattern] The search string used to filter instructor names.
+  ///
+  /// Throws no exceptions; errors are logged and an empty list is returned on failure.
   Future<List<Instructor>> getInstructorSuggestions(String pattern) async {
     String token = await UserPreferences().getToken();
     try {
@@ -90,8 +134,10 @@ class TC_AddAttendanceController extends GetxController {
 
         return list
             .map((json) => Instructor.fromJson(json))
-            .where((instructor) =>
-                instructor.name.toLowerCase().contains(pattern.toLowerCase()))
+            .where(
+              (instructor) =>
+                  instructor.name.toLowerCase().contains(pattern.toLowerCase()),
+            )
             .toList();
       } else {
         log("Failed to fetch instructors: ${response.body}");
@@ -102,7 +148,6 @@ class TC_AddAttendanceController extends GetxController {
       return [];
     }
   }
-
 }
 
 class Instructor {
@@ -112,10 +157,7 @@ class Instructor {
   Instructor({required this.id, required this.name});
 
   factory Instructor.fromJson(Map<String, dynamic> json) {
-    return Instructor(
-      id: json['id'].toString(),
-      name: json['name'],
-    );
+    return Instructor(id: json['id'].toString(), name: json['name']);
   }
 
   @override

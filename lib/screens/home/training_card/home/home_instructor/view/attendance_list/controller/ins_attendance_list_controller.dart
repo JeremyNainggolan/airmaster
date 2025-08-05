@@ -11,6 +11,17 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Instructor Attendance List Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Instructor Attendance List feature.
+  | It manages the state and logic for attendance operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Ins_AttendanceList_Controller extends GetxController {
   final isLoading = false.obs;
   final selectedOption = 'Meeting'.obs;
@@ -36,6 +47,21 @@ class TC_Ins_AttendanceList_Controller extends GetxController {
     await getAttendance(await attendanceData['_id']);
   }
 
+  /// Confirms attendance by sending a multipart POST request to the server.
+  ///
+  /// This method performs the following steps:
+  /// - Retrieves the user's authentication token.
+  /// - Constructs a multipart request to the attendance confirmation API endpoint,
+  ///   including the attendance ID as a query parameter.
+  /// - Sets the required headers for authorization and content type.
+  /// - Adds attendance type and remarks as form fields.
+  /// - Attaches the signature image as a multipart file.
+  /// - Sends the request and logs the response body.
+  /// - Returns `true` if the attendance confirmation is successful (HTTP 200),
+  ///   otherwise logs the error and returns `false`.
+  ///
+  /// Returns a [Future] that completes with `true` if the attendance is confirmed successfully,
+  /// or `false` if an error occurs or the response status is not 200.
   Future<bool> confirmAttendance() async {
     String token = await UserPreferences().getToken();
 
@@ -81,6 +107,19 @@ class TC_Ins_AttendanceList_Controller extends GetxController {
     }
   }
 
+  /// Fetches attendance data for a given attendance ID from the server.
+  ///
+  /// This method sends an HTTP GET request to the attendance API endpoint,
+  /// including the provided [idattendance] as a query parameter and an
+  /// authorization token in the headers. Upon a successful response (HTTP 200),
+  /// it updates the [attendanceParticipant] list and [totalTrainee] value with
+  /// the received data, and sets [isLoading] to false. If the request fails or
+  /// an exception occurs, it logs the error and returns `false`.
+  ///
+  /// Returns `true` if the attendance data was successfully fetched and updated,
+  /// otherwise returns `false`.
+  ///
+  /// [idattendance] - The ID of the attendance record to fetch.
   Future<bool> getAttendance(String idattendance) async {
     String token = await UserPreferences().getToken();
     isLoading.value = true;

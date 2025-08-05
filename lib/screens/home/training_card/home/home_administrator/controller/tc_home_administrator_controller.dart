@@ -7,6 +7,17 @@ import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Home Administrator Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Home Administrator feature.
+  | It manages the state and logic for the home administrator operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Home_Administrator_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
@@ -44,6 +55,11 @@ class TC_Home_Administrator_Controller extends GetxController {
     getStatusConfirmation();
   }
 
+  /// Loads user data asynchronously from user preferences and updates the corresponding observable fields.
+  ///
+  /// This method initializes the user preferences and retrieves various user-related information such as
+  /// ID number, name, email, image URL, hub, LOA number, license number, license expiry, rank, and instructor list.
+  /// The retrieved values are assigned to their respective observable variables.
   Future<void> loadUserData() async {
     await _userPrefs.init();
     userId.value = await _userPrefs.getIdNumber();
@@ -58,6 +74,21 @@ class TC_Home_Administrator_Controller extends GetxController {
     instructor.assignAll(await _userPrefs.getInstructor());
   }
 
+  /// Fetches the status confirmation for training cards.
+  ///
+  /// Retrieves the authentication token from user preferences and sends a GET request
+  /// to the API endpoint specified in [ApiConfig.get_status_confirmation]. The request
+  /// includes the token in the Authorization header.
+  ///
+  /// On a successful response (HTTP 200), it parses the response body, clears the
+  /// [attendanceConfirmed] and [attendanceWaiting] lists, and populates them with the
+  /// respective data from the response. Sets [isLoading] to false and returns the
+  /// fetched data.
+  ///
+  /// If the response is not successful or an exception occurs, logs the error and
+  /// returns `false`.
+  ///
+  /// Returns a `Map<String, dynamic>` containing the data on success, or `false` on failure.
   Future getStatusConfirmation() async {
     String token = await _userPrefs.getToken();
     isLoading.value = true;

@@ -1,3 +1,5 @@
+// ignore: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:developer';
 
@@ -7,14 +9,22 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:airmaster/config/api_config.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: New Training Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the New Training feature.
+  | It manages the state and logic for creating new training records.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_NewTrainingController extends GetxController {
-  // Define your variables and methods
-
   late GlobalKey<FormState> formKey;
 
   final trainingController = TextEditingController();
   final descriptionController = TextEditingController();
-  // ignore: non_constant_identifier_names
 
   RxString selectedTrainingType = ''.obs;
 
@@ -24,6 +34,17 @@ class TC_NewTrainingController extends GetxController {
     formKey = GlobalKey<FormState>();
   }
 
+  /// Saves a new training entry to the server.
+  ///
+  /// Sends a POST request to the API endpoint specified in [ApiConfig.new_training_card]
+  /// with the training details provided by [trainingController], [selectedTrainingType],
+  /// and [descriptionController]. The request includes an authorization token retrieved
+  /// from [UserPreferences].
+  ///
+  /// Returns `true` if the training is saved successfully (HTTP 200), `false` otherwise.
+  /// In case of an exception, logs the error and returns `false`.
+  ///
+  /// Logs the server response for debugging purposes.
   Future<bool?> saveTraining() async {
     String token = await UserPreferences().getToken();
     try {

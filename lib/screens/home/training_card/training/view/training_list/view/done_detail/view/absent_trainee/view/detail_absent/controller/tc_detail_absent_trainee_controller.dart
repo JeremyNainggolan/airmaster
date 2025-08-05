@@ -11,6 +11,17 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Detail Absent Trainee Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for managing details of absent trainees.
+  | It handles fetching training lists and participant history.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Detail_AbsentTrainee_Controller extends GetxController {
   var trainee = RxMap<String, dynamic>();
   final trainingList = [].obs;
@@ -29,6 +40,16 @@ class TC_Detail_AbsentTrainee_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches the list of training sessions from the API.
+  ///
+  /// Retrieves the authentication token from user preferences and sends a GET request
+  /// to the training list endpoint. If the request is successful (HTTP 200), it assigns
+  /// the received training data to `trainingList` and logs the result. In case of failure
+  /// or exception, logs the error and returns an empty list.
+  ///
+  /// Returns a [Future] that completes with a list of training data (currently always returns an empty list).
+  ///
+  /// Throws no exceptions; errors are logged and handled internally.
   Future<List<dynamic>> getTrainingList() async {
     String token = await UserPreferences().getToken();
 
@@ -57,6 +78,15 @@ class TC_Detail_AbsentTrainee_Controller extends GetxController {
     }
   }
 
+  /// Fetches the training history of a participant asynchronously.
+  ///
+  /// Retrieves the participant's training history from the API using the provided
+  /// `idtraining` parameter from the `trainee` map. The request includes an authorization
+  /// token and expects a JSON response. On success, updates the `historyTraining` list
+  /// with the received data and returns it. If the request fails or an error occurs,
+  /// logs the error and returns an empty list.
+  ///
+  /// Returns a [Future] containing a [List] of dynamic objects representing the training history.
   Future<List<dynamic>> getParticipantHistory() async {
     String token = await UserPreferences().getToken();
 
@@ -87,6 +117,19 @@ class TC_Detail_AbsentTrainee_Controller extends GetxController {
     }
   }
 
+  /// Fetches the history data for a specific trainee and subject.
+  ///
+  /// Makes an HTTP GET request to retrieve the training history of a trainee
+  /// based on the provided [idTrainee], [subject], and [longlist] parameters.
+  ///
+  /// Returns a [Future] that resolves to a list of maps containing the history data,
+  /// or an empty list if the request fails or an error occurs.
+  ///
+  /// - [idTrainee]: The ID of the trainee.
+  /// - [subject]: The subject for which history is requested.
+  /// - [longlist]: The number of history records to fetch.
+  ///
+  /// Requires a valid authentication token.
   Future<List<Map<String, dynamic>>?> getHistoryData(
     String idTrainee,
     String subject,
@@ -127,6 +170,24 @@ class TC_Detail_AbsentTrainee_Controller extends GetxController {
     }
   }
 
+  /// Generates a PDF export of a trainee's training history.
+  ///
+  /// This function retrieves various training history data for the specified crew member (`idCrew`),
+  /// loads a PDF template, and populates it with the trainee's information and training records.
+  /// The filled PDF is then saved to a temporary directory and the file path is returned.
+  ///
+  /// The PDF includes trainee details (name, license number, employee ID) and training records
+  /// for multiple categories such as AVSEC, LINE CHECK, LVO, ETOPS SIM, ETOPS FLT, BASIC INDOC,
+  /// LSWB, RVSM, WNDSHEAR, ALAR/CFIT, SEP, DRILL, DGR, SMS, CRM, RNP, RGT, RHS, and UPRT.
+  /// Each record is drawn at specific coordinates on the PDF template.
+  ///
+  /// If an error occurs during PDF generation, an empty string is returned.
+  ///
+  /// Parameters:
+  /// - [idCrew]: The ID of the crew member whose training history will be exported.
+  ///
+  /// Returns:
+  /// - A [Future<String>] containing the file path of the generated PDF, or an empty string if an error occurs.
   Future<String> eksportPDF(String idCrew) async {
     try {
       final List<Map<String, dynamic>>? historyDataBasicIndoc =
@@ -214,8 +275,10 @@ class TC_Detail_AbsentTrainee_Controller extends GetxController {
       String userEmp = "";
       // You can now work with the usersData list
 
-
-      userName = usersData['trainee_name'] != null ? usersData['trainee_name'].toUpperCase() : "";
+      userName =
+          usersData['trainee_name'] != null
+              ? usersData['trainee_name'].toUpperCase()
+              : "";
       userLicense = usersData['trainee_licenseNo'];
       userEmp = usersData['trainee_id'];
 

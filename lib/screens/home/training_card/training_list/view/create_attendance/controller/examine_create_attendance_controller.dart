@@ -10,6 +10,17 @@ import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Examinee Create Attendance Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for creating attendance for examinees.
+  | It manages the state and logic for the attendance creation operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class Examinee_CreateAttendance_Controller extends GetxController {
   dynamic data = Get.arguments;
   final attendanceData = {}.obs;
@@ -50,7 +61,7 @@ class Examinee_CreateAttendance_Controller extends GetxController {
       );
       final response = await request.send();
       log('Failed to create attendance: ${response.statusCode}');
-        log('Response body: ${await response.stream.bytesToString()}');
+      log('Response body: ${await response.stream.bytesToString()}');
       if (response.statusCode == 200) {
         await Future.delayed(const Duration(seconds: 2));
         return true;
@@ -60,11 +71,10 @@ class Examinee_CreateAttendance_Controller extends GetxController {
         await Future.delayed(const Duration(seconds: 2));
         return false;
       }
-
     } catch (e) {
       log('Error creating attendance: $e');
       await Future.delayed(const Duration(seconds: 2));
-      
+
       return false;
     }
   }

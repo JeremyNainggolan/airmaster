@@ -14,6 +14,16 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Feedback Required Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Feedback Required feature.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_FeedbackRequired_Controller extends GetxController {
   final idHistory = Get.arguments['_id'];
   final RxMap<String, dynamic> historyTraining = <String, dynamic>{}.obs;
@@ -28,13 +38,22 @@ class TC_FeedbackRequired_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches feedback data required for a specific training history.
+  ///
+  /// This asynchronous method retrieves the feedback requirement status for a training history
+  /// by making an HTTP GET request to the feedback API endpoint. It uses the user's token for
+  /// authorization and expects a JSON response containing the feedback data.
+  ///
+  /// Upon a successful response (HTTP 200), it parses the response body and updates the
+  /// `historyTraining` list with the received data. If the request fails or an error occurs,
+  /// it logs the error message for debugging purposes.
   Future<void> needFeedback() async {
     String token = await UserPreferences().getToken();
     try {
       final response = await http.get(
-        Uri.parse(ApiConfig.check_feedback).replace(
-          queryParameters: {'_id': idHistory},
-        ),
+        Uri.parse(
+          ApiConfig.check_feedback,
+        ).replace(queryParameters: {'_id': idHistory}),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -54,7 +73,17 @@ class TC_FeedbackRequired_Controller extends GetxController {
     }
   }
 
-
+  /// Retrieves the trainee's name for a specific training session.
+  ///
+  /// This asynchronous method sends an HTTP GET request to the API endpoint
+  /// specified in [ApiConfig.get_trainee_training], using the training ID from
+  /// [historyTraining]. The request includes an authorization token in the headers.
+  ///
+  /// Returns the trainee's name as a [String] if the request is successful and the
+  /// response contains the expected data. If the request fails or an error occurs,
+  /// an empty string is returned.
+  ///
+  /// Logs the response body and any errors encountered during the process.
   Future<String> getTraineeName() async {
     String token = await UserPreferences().getToken();
     try {
@@ -80,6 +109,11 @@ class TC_FeedbackRequired_Controller extends GetxController {
     }
   }
 
+  /// Opens a PDF file located at the specified [path] using the default application.
+  ///
+  /// If an error occurs while attempting to open the file, the error is logged.
+  ///
+  /// [path] - The file system path to the PDF file to be opened.
   Future<void> openExportedPDF(String path) async {
     try {
       await OpenFile.open(path);
@@ -88,6 +122,16 @@ class TC_FeedbackRequired_Controller extends GetxController {
     }
   }
 
+  /// Generates a certificate PDF for a trainee based on training history data.
+  ///
+  /// Loads custom fonts and a background image from assets, formats certificate details,
+  /// and creates a PDF document with the trainee's name, certificate number, subject,
+  /// training type, duration, and date. The PDF is saved to a temporary directory and
+  /// the file path is returned.
+  ///
+  /// Returns the file path of the generated PDF certificate, or an empty string if an error occurs.
+  ///
+  /// Throws an [Exception] if the date format in the training history is unsupported.
   Future<String> createCertificate() async {
     try {
       final font = await rootBundle.load("assets/fonts/Poppins-Regular.ttf");
@@ -97,10 +141,10 @@ class TC_FeedbackRequired_Controller extends GetxController {
       final ttfBold = pw.Font.ttf(fontBold);
 
       final pdf = pw.Document();
-      final Uint8List backgroundImageData = (await rootBundle
-              .load('assets/images/Template-Certificate-Pilot.png'))
-          .buffer
-          .asUint8List();
+      final Uint8List backgroundImageData =
+          (await rootBundle.load(
+            'assets/images/Template-Certificate-Pilot.png',
+          )).buffer.asUint8List();
 
       final Map<String, dynamic> certificateDate = historyTraining;
       var name = await getTraineeName(); // harus ganti nanti
@@ -137,76 +181,90 @@ class TC_FeedbackRequired_Controller extends GetxController {
 
             return pw.Stack(
               children: [
-                pw.Image(pw.MemoryImage(backgroundImageData),
-                    fit: pw.BoxFit.cover),
+                pw.Image(
+                  pw.MemoryImage(backgroundImageData),
+                  fit: pw.BoxFit.cover,
+                ),
                 pw.Positioned(
-                    top: 345,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text(name,
-                              style: pw.TextStyle(
-                                font: ttfBold,
-                                fontSize: 32,
-                                fontWeight: pw.FontWeight.bold,
-                              )),
-                        ))),
+                  top: 345,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        name,
+                        style: pw.TextStyle(
+                          font: ttfBold,
+                          fontSize: 32,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 pw.Positioned(
-                    top: 400,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text("Certificate No:  $certificateNo",
-                              style: pw.TextStyle(
-                                font: ttfBold,
-                                fontSize: 12,
-                                fontWeight: pw.FontWeight.bold,
-                              )),
-                        ))),
+                  top: 400,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        "Certificate No:  $certificateNo",
+                        style: pw.TextStyle(
+                          font: ttfBold,
+                          fontSize: 12,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 pw.Positioned(
-                    top: 460,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text("Has successfully completed",
-                              style: pw.TextStyle(
-                                font: ttf,
-                                fontSize: 16,
-                              )),
-                        ))),
+                  top: 460,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        "Has successfully completed",
+                        style: pw.TextStyle(font: ttf, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
                 pw.Positioned(
-                    top: 480,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text("$subject $trainingType Training",
-                              style: pw.TextStyle(
-                                font: ttf,
-                                fontSize: 16,
-                              )),
-                        ))),
+                  top: 480,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        "$subject $trainingType Training",
+                        style: pw.TextStyle(font: ttf, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
                 pw.Positioned(
-                    top: 500,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text("Conducted with total of 8 hours",
-                              style: pw.TextStyle(
-                                font: ttf,
-                                fontSize: 16,
-                              )),
-                        ))),
+                  top: 500,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        "Conducted with total of 8 hours",
+                        style: pw.TextStyle(font: ttf, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
                 pw.Positioned(
-                    top: 520,
-                    child: pw.Container(
-                        width: pageWidth,
-                        child: pw.Center(
-                          child: pw.Text("Date passes, $datePases",
-                              style: pw.TextStyle(
-                                font: ttf,
-                                fontSize: 16,
-                              )),
-                        ))),
+                  top: 520,
+                  child: pw.Container(
+                    width: pageWidth,
+                    child: pw.Center(
+                      child: pw.Text(
+                        "Date passes, $datePases",
+                        style: pw.TextStyle(font: ttf, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             );
           },
@@ -215,8 +273,9 @@ class TC_FeedbackRequired_Controller extends GetxController {
       final outputDirectory = await getTemporaryDirectory();
       // Save the document.
       final List<int> outputBytes = await pdf.save();
-      final File file =
-          File('${outputDirectory.path}/Certificate-$name-$subject.pdf');
+      final File file = File(
+        '${outputDirectory.path}/Certificate-$name-$subject.pdf',
+      );
       await file.writeAsBytes(outputBytes);
       return file.path;
     } catch (e) {
@@ -224,6 +283,4 @@ class TC_FeedbackRequired_Controller extends GetxController {
       return Future.value('');
     }
   }
-
-
 }

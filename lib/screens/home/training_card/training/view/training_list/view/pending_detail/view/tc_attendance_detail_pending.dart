@@ -8,7 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_Controller> {
+class TC_Attendance_Detail_Pending
+    extends GetView<TC_AttendanceDetail_Pending_Controller> {
   const TC_Attendance_Detail_Pending({super.key});
 
   @override
@@ -42,7 +43,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['subject'],
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText: 'Subject'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Subject',
+                        ),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -56,7 +60,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                               DateTime.parse(controller.attendanceData['date']),
                             )
                             : 'No Date',
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Date'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Date',
+                        ),
                   ),
                 ),
               ],
@@ -71,7 +78,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['department'],
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Department'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Department',
+                        ),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -80,7 +90,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['venue'],
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Venue'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Venue',
+                        ),
                   ),
                 ),
               ],
@@ -95,7 +108,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['trainingType'],
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Training Type'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Training Type',
+                        ),
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -104,7 +120,10 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                     readOnly: true,
                     enableInteractiveSelection: false,
                     initialValue: controller.attendanceData['room'],
-                    decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:'Room'),
+                    decoration:
+                        CustomInputDecoration.customInputDecorationReadOnly(
+                          labelText: 'Room',
+                        ),
                   ),
                 ),
               ],
@@ -116,8 +135,8 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
               readOnly: true,
               enableInteractiveSelection: false,
               initialValue: controller.attendanceData['user_name'],
-              decoration: CustomInputDecoration.customInputDecorationReadOnly(labelText:
-                'Chair Person / Instructor',
+              decoration: CustomInputDecoration.customInputDecorationReadOnly(
+                labelText: 'Chair Person / Instructor',
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 20, // Ubah nilai ini untuk mengatur tinggi
                   horizontal: 12,
@@ -183,33 +202,33 @@ class TC_Attendance_Detail_Pending extends GetView<TC_AttendanceDetail_Pending_C
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child:  ListTile(
-                      leading: Icon(Icons.qr_code_2_rounded, size: 35),
-                      title: Text(
-                        'Open QR Code',
-                        style: TextStyle(
-                          color: ColorConstants.blackColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: ListTile(
+                    leading: Icon(Icons.qr_code_2_rounded, size: 35),
+                    title: Text(
+                      'Open QR Code',
+                      style: TextStyle(
+                        color: ColorConstants.blackColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      subtitle: Text(
-                        '${controller.attendanceData['keyAttendance'] ?? 'No Password'}',
-                        style: TextStyle(
-                          color: ColorConstants.primaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                        color: ColorConstants.labelColor,
-                      ),
-
-                      onTap: () => {showBottomDialog()},
                     ),
+                    subtitle: Text(
+                      '${controller.attendanceData['keyAttendance'] ?? 'No Password'}',
+                      style: TextStyle(
+                        color: ColorConstants.primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: ColorConstants.labelColor,
+                    ),
+
+                    onTap: () => {showBottomDialog()},
+                  ),
                 )
                 : Card(
                   color: ColorConstants.backgroundColor,

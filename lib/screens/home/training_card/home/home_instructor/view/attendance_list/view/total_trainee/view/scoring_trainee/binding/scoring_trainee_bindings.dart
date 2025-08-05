@@ -1,9 +1,22 @@
 import 'package:airmaster/screens/home/training_card/home/home_instructor/view/attendance_list/view/total_trainee/view/scoring_trainee/controller/scoring_trainee_controller.dart';
 import 'package:get/get.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Scoring Trainee Binding
+  |--------------------------------------------------------------------------
+  | This file contains the binding for the Scoring Trainee feature.
+  | It manages the dependencies for the scoring trainee controller.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class Ins_ScoringTrainee_Binding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<Ins_ScoringTrainee_Controller>(() => Ins_ScoringTrainee_Controller());
+    Get.lazyPut<Ins_ScoringTrainee_Controller>(
+      () => Ins_ScoringTrainee_Controller(),
+    );
   }
 }

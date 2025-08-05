@@ -9,6 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Pilot Crew Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Pilot Crew feature.
+  | It manages the state and logic for the pilot crew operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_PilotCrew_Controller extends GetxController {
   final isLoading = false.obs;
   final pilotList = [].obs;
@@ -24,6 +35,13 @@ class TC_PilotCrew_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches the list of pilots from the API and updates [pilotList].
+  ///
+  /// Retrieves the authentication token from [UserPreferences], then sends a GET request
+  /// to the [ApiConfig.get_all_pilot] endpoint with the appropriate headers.
+  /// If the response is successful (status code 200), parses the JSON response and
+  /// assigns the pilot data to [pilotList]. Logs an error message if the request fails
+  /// or if an exception occurs during the process.
   Future<void> getPilotList() async {
     String token = await UserPreferences().getToken();
 
@@ -47,6 +65,12 @@ class TC_PilotCrew_Controller extends GetxController {
     }
   }
 
+  /// Filters the list of trainees based on the provided [query].
+  ///
+  /// If [query] is empty, all pilots from [pilotList] are assigned to [trainee].
+  /// Otherwise, only pilots whose 'name' starts with the lowercase [query] are assigned.
+  ///
+  /// [query]: The search string used to filter trainee names.
   void showFilteredTrainees(String query) {
     if (query.isEmpty) {
       trainee.assignAll(pilotList);

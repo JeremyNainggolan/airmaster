@@ -6,6 +6,17 @@ import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Training History Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Training History feature.
+  | It manages the state and logic for the training history operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_TrainingHistory_Controller extends GetxController {
   final isLoading = true.obs;
   final historyData = Get.arguments;
@@ -13,7 +24,6 @@ class TC_TrainingHistory_Controller extends GetxController {
   final RxString status = ''.obs;
   final RxString traineeId = ''.obs;
   final trainingHistory = [].obs;
-  
 
   @override
   void onInit() async {
@@ -26,6 +36,15 @@ class TC_TrainingHistory_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches the training history for a specific trainee and subject.
+  ///
+  /// This method retrieves the authentication token, then sends an HTTP GET request
+  /// to the participant training history API endpoint with the provided trainee ID and subject.
+  /// If the request is successful (status code 200), it parses the response and updates
+  /// the `trainingHistory` list with the received data. In case of failure or error,
+  /// it logs the issue and returns an empty list.
+  ///
+  /// Returns a [Future] that resolves to a [List<dynamic>] containing the training history data.
   Future<List<dynamic>> getTrainingHistory() async {
     String token = await UserPreferences().getToken();
 

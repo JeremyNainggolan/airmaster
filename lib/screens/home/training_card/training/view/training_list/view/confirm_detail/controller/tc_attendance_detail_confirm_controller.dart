@@ -10,6 +10,17 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Attendance Detail Confirm Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for confirming attendance details in the
+  | training card feature of the application.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_AttendanceDetail_Confirm_Controller extends GetxController {
   final isLoading = false.obs;
   final selectedOption = "".obs;
@@ -35,11 +46,32 @@ class TC_AttendanceDetail_Confirm_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches the list of instructor suggestions asynchronously and updates the [instructorList].
+  ///
+  /// This method retrieves instructor suggestions by calling [getInstructorSuggestions] with an empty
+  /// query string, and then assigns the resulting list to [instructorList].
+  ///
+  /// Typically used to initialize or refresh the instructor list in the UI.
   Future<void> fetchInstructorList() async {
     final result = await getInstructorSuggestions('');
     instructorList.assignAll(result);
   }
 
+  /// Fetches the total number of participants for a specific attendance record.
+  ///
+  /// This asynchronous method retrieves the authentication token, sends a GET request
+  /// to the API endpoint to obtain participant data for the given attendance ID, and
+  /// updates the `attendanceParticipant` list with the received data. It returns the
+  /// total number of participants if the request is successful, or `0` if there is
+  /// an error or the request fails.
+  ///
+  /// Returns:
+  ///   - `int`: The total number of participants, or `0` on failure.
+  ///
+  /// Logs:
+  ///   - The response body from the API.
+  ///   - The total number of participants on success.
+  ///   - Error messages on failure.
   Future<int> totalParticipant() async {
     String token = await UserPreferences().getToken();
     try {
@@ -70,6 +102,15 @@ class TC_AttendanceDetail_Confirm_Controller extends GetxController {
     }
   }
 
+  /// Fetches a list of instructor suggestions based on the provided [pattern].
+  ///
+  /// Makes an HTTP GET request to retrieve a list of pilots, then filters the results
+  /// to include only those whose names contain the [pattern] (case-insensitive).
+  ///
+  /// Returns a [Future] that resolves to a [List] of [Trainee] objects matching the pattern.
+  /// If the request fails or an error occurs, returns an empty list.
+  ///
+  /// Throws no exceptions; errors are logged internally.
   Future<List<Trainee>> getInstructorSuggestions(String pattern) async {
     String token = await UserPreferences().getToken();
     try {
@@ -102,6 +143,16 @@ class TC_AttendanceDetail_Confirm_Controller extends GetxController {
     }
   }
 
+  /// Fetches the valid until date for the current training attendance.
+  ///
+  /// This method retrieves the authentication token from user preferences,
+  /// then sends a GET request to the recurrent date training API endpoint
+  /// with the subject ID as a query parameter. If the request is successful
+  /// (HTTP 200), it returns the 'data' field from the response, which
+  /// represents the valid until date. If the request fails or an exception
+  /// occurs, it returns an empty string.
+  ///
+  /// Returns a [Future<String>] containing the valid until date or an empty string on failure.
   Future<String> validUntil() async {
     String token = await UserPreferences().getToken();
 
@@ -129,10 +180,27 @@ class TC_AttendanceDetail_Confirm_Controller extends GetxController {
     }
   }
 
+  /// Confirms the attendance for a class by sending a multipart HTTP request to the server.
+  ///
+  /// This method performs the following steps:
+  /// - Retrieves the authentication token and administrator ID from user preferences.
+  /// - Logs the IDs of absent trainees.
+  /// - Determines the validity period (`valid_to`) for the attendance based on the recurrence type.
+  /// - Prepares a multipart request including:
+  ///   - Authorization and content headers.
+  ///   - Administrator ID, validity date, absent trainees, and signature image.
+  /// - Sends the request to the server and logs the response.
+  /// - Returns `true` if the attendance confirmation is successful (`statusCode == 200`), otherwise returns `false`.
+  ///
+  /// Returns a [Future] that completes with a [bool] indicating success or failure.
+  ///
+  /// Throws an exception if an error occurs during the process.
   Future<bool> confirmClassAttendance() async {
     String token = await UserPreferences().getToken();
 
-    log('Absent Trainees: ${listSelectedTrainees.map((e) => e.id).toList().join(',')}');
+    log(
+      'Absent Trainees: ${listSelectedTrainees.map((e) => e.id).toList().join(',')}',
+    );
 
     DateTime nextMonths;
     var recurrent = await validUntil();
@@ -170,7 +238,10 @@ class TC_AttendanceDetail_Confirm_Controller extends GetxController {
       request.fields['idPilotAdministrator'] =
           await UserPreferences().getIdNumber();
       request.fields['valid_to'] = nextMonths.toIso8601String();
-      request.fields['absentTrainees'] = listSelectedTrainees.map((e) => e.id).toList().join(',');
+      request.fields['absentTrainees'] = listSelectedTrainees
+          .map((e) => e.id)
+          .toList()
+          .join(',');
 
       request.files.add(
         http.MultipartFile.fromBytes(

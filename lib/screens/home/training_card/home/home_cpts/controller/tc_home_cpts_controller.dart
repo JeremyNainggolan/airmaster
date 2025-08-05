@@ -10,10 +10,20 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Home CPTS Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Home CPTS feature.
+  | It manages the state and logic for the home CPTS operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Home_CPTS_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
   Future<void> attendanceFuture = Future.value(); // inisialisasi default
-
 
   var userId = ''.obs;
   var name = ''.obs;
@@ -82,6 +92,9 @@ class TC_Home_CPTS_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Loads user data asynchronously from user preferences and updates the corresponding
+  /// observable fields with the retrieved values. This includes user ID, name, email,
+  /// image URL, hub, LOA number, license number, license expiry, rank, and instructor list.
   Future<void> loadUserData() async {
     await _userPrefs.init();
     userId.value = await _userPrefs.getIdNumber();
@@ -96,6 +109,15 @@ class TC_Home_CPTS_Controller extends GetxController {
     instructor.assignAll(await _userPrefs.getInstructor());
   }
 
+  /// Fetches the list of training cards from the API.
+  ///
+  /// Retrieves the user's authentication token and sends a GET request to the
+  /// training cards endpoint. On success, parses the response and updates the
+  /// `trainingList` and `trainingCount` with the fetched subjects.
+  /// Returns the list of subjects including "ALL" as the first item.
+  /// Logs errors or failure messages if the request is unsuccessful.
+  ///
+  /// Returns a [Future] that completes with a [List<String>] of subjects.
   Future getTrainingCard() async {
     List<String> subjects = ["ALL"];
 
@@ -134,6 +156,16 @@ class TC_Home_CPTS_Controller extends GetxController {
     }
   }
 
+  /// Fetches the status confirmation for training cards from the API.
+  ///
+  /// Retrieves the user's authentication token and sends a GET request to the
+  /// status confirmation endpoint. If the request is successful (HTTP 200),
+  /// updates the `ongoingTrainingCount` with the number of pending training cards
+  /// and returns the relevant data. If the request fails or an error occurs,
+  /// logs the error and returns `false`.
+  ///
+  /// Returns a `Map<String, dynamic>` containing the status confirmation data
+  /// on success, or `false` on failure.
   Future getStatusConfirmation() async {
     String token = await _userPrefs.getToken();
 
@@ -167,6 +199,14 @@ class TC_Home_CPTS_Controller extends GetxController {
     }
   }
 
+  /// Fetches the total number of instructors by making an HTTP GET request to the pilot detail API.
+  ///
+  /// Retrieves the authentication token, sends a request to the API, and parses the response to extract
+  /// instructor counts for various categories (FIS, FIA, GI, CCP, FO, CAPT). Updates the corresponding
+  /// observable values with the fetched data. If the request fails or an error occurs, sets the instructor
+  /// count to zero and logs the error.
+  ///
+  /// Throws no exceptions; errors are handled internally and logged.
   Future<void> getTotalInstructor() async {
     String token = await UserPreferences().getToken();
     try {
@@ -204,6 +244,15 @@ class TC_Home_CPTS_Controller extends GetxController {
     }
   }
 
+  /// Fetches the list of pilots from the API and updates the [pilotCount] value.
+  ///
+  /// This method retrieves the authentication token from [UserPreferences], then
+  /// sends a GET request to the pilot API endpoint. If the request is successful
+  /// (status code 200), it decodes the response and updates [pilotCount] with the
+  /// number of pilots received. If the request fails or an error occurs, it logs
+  /// the error message.
+  ///
+  /// Exceptions are caught and logged for debugging purposes.
   Future<void> getPilotList() async {
     String token = await UserPreferences().getToken();
 
@@ -229,10 +278,18 @@ class TC_Home_CPTS_Controller extends GetxController {
     }
   }
 
+  /// Updates the currently selected subject.
+  ///
+  /// Sets the value of `_selectedSubject` to the provided [newSubject].
+  /// This method can be used to change the subject selection in the UI.
   void updateSelectedSubject(String newSubject) {
     _selectedSubject.value = newSubject;
   }
-   void refreshAttendance() {
+
+  /// Refreshes the attendance data by fetching it again using the current
+  /// values of [training], [from], and [to]. Updates [attendanceFuture]
+  /// with the new fetch operation.
+  void refreshAttendance() {
     attendanceFuture = fetchAttendanceData(
       trainingType: training.value,
       from: from.value,
@@ -240,6 +297,12 @@ class TC_Home_CPTS_Controller extends GetxController {
     );
   }
 
+  /// Resets the date filters and selections to their default values.
+  ///
+  /// - Sets `training` and `selectedSubject` to "ALL".
+  /// - Sets `from` to January 1, 1900 and `to` to the current date.
+  /// - Clears the text fields `fromC` and `toC`.
+  /// - Refreshes the attendance data.
   void resetDate() {
     training.value = "ALL";
     selectedSubject.value = "ALL";
@@ -251,6 +314,17 @@ class TC_Home_CPTS_Controller extends GetxController {
     refreshAttendance();
   }
 
+  /// Fetches attendance data for a given training type within a specified date range.
+  ///
+  /// Makes an HTTP GET request to retrieve attendance information, including absent and present counts.
+  ///
+  /// Parameters:
+  /// - [trainingType]: The type of training to filter attendance data.
+  /// - [from]: The start date of the attendance period.
+  /// - [to]: The end date of the attendance period.
+  ///
+  /// Updates [absentCount] and [presentCount] with the fetched data.
+  /// Logs errors if the request fails or an exception occurs.
   Future<void> fetchAttendanceData({
     required String trainingType,
     required DateTime from,

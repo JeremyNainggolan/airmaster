@@ -9,6 +9,17 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Training List Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Training List feature.
+  | It manages the state and logic for the training list operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_TrainingList_Controller extends GetxController {
   final List<dynamic> trainingList = [].obs;
   final isLoading = false.obs;
@@ -114,8 +125,6 @@ class TC_TrainingList_Controller extends GetxController {
       return 0; // Error
     }
   }
-
-
 
   Future<int> checkClassPassword(String subject, String password) async {
     String token = await UserPreferences().getToken();

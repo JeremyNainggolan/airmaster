@@ -65,7 +65,9 @@ class TC_AddAttendance extends GetView<TC_AddAttendanceController> {
                           horizontal: 10,
                         ),
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: ColorConstants.borderColor),
+                          borderSide: BorderSide(
+                            color: ColorConstants.borderColor,
+                          ),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.green),

@@ -8,6 +8,17 @@ import 'package:airmaster/data/users/user_preferences.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Home Instructor Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Home Instructor feature.
+  | It manages the state and logic for the home instructor operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Home_Instructor_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
@@ -43,6 +54,12 @@ class TC_Home_Instructor_Controller extends GetxController {
     getTrainingOverview(userId.value);
   }
 
+  /// Loads user data from shared preferences and updates the corresponding observable fields.
+  ///
+  /// This method initializes the user preferences and retrieves various user-related information,
+  /// such as ID number, name, email, image URL, hub, LOA number, license number, license expiry,
+  /// rank, and instructor list. The retrieved values are assigned to their respective observable
+  /// variables for use within the application.
   Future<void> loadUserData() async {
     await _userPrefs.init();
     userId.value = await _userPrefs.getIdNumber();
@@ -57,18 +74,29 @@ class TC_Home_Instructor_Controller extends GetxController {
     instructor.assignAll(await _userPrefs.getInstructor());
   }
 
+  /// Fetches the training overview for a specific instructor by their [id].
+  ///
+  /// This method sends a GET request to the training overview API endpoint,
+  /// including the instructor's ID as a query parameter and an authorization token in the headers.
+  ///
+  /// On a successful response (HTTP 200), it assigns the list of pending training overviews
+  /// to [trainingOverviewList] and logs relevant information.
+  ///
+  /// If the response indicates an error or an exception occurs, it logs the error message.
+  /// The [isLoading] observable is used to indicate the loading state throughout the process.
+  ///
+  /// Throws no exceptions; errors are logged and handled internally.
   Future getTrainingOverview(String id) async {
     log(id);
     String token = await _userPrefs.getToken();
 
     isLoading.value = true;
-    
-    try {
 
+    try {
       final uri = Uri.parse(
         ApiConfig.get_training_overview,
       ).replace(queryParameters: {'instructor_id': id});
-      
+
       final response = await http.get(
         uri,
         headers: {

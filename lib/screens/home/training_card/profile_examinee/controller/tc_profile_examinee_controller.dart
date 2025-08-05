@@ -12,6 +12,17 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Profile Examinee Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Profile Examinee feature.
+  | It manages the state and logic for the examinee profile operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_ProfileExaminee_Controller extends GetxController {
   var trainee = RxMap<String, dynamic>();
   final trainingList = [].obs;
@@ -30,14 +41,24 @@ class TC_ProfileExaminee_Controller extends GetxController {
     isLoading.value = false;
   }
 
-  Future<List<dynamic>> getTraineeProfile () async {
+  /// Fetches the profile information of a trainee from the server.
+  ///
+  /// This method retrieves the authentication token and trainee ID from user preferences,
+  /// then makes an HTTP GET request to the API endpoint to obtain the trainee's profile data.
+  /// The response is logged for debugging purposes. If the request is successful (status code 200),
+  /// the trainee list is cleared and updated with the new data from the response.
+  /// In case of failure or exception, an empty list is returned and the error is logged.
+  ///
+  /// Returns a [Future] that completes with a [List<dynamic>] containing the trainee profile data,
+  /// or an empty list if the request fails.
+  Future<List<dynamic>> getTraineeProfile() async {
     String token = await UserPreferences().getToken();
     String idTrainee = await UserPreferences().getIdNumber();
     try {
       final response = await http.get(
-        Uri.parse(ApiConfig.get_trainee_profile).replace(
-          queryParameters: {'id_number': idTrainee},
-        ),
+        Uri.parse(
+          ApiConfig.get_trainee_profile,
+        ).replace(queryParameters: {'id_number': idTrainee}),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -62,6 +83,14 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Fetches the list of training sessions from the API.
+  ///
+  /// Retrieves the authentication token from user preferences and sends a GET request
+  /// to the training list endpoint. If the request is successful (HTTP 200), it assigns
+  /// the received training data to `trainingList` and logs the result. In case of failure
+  /// or an exception, logs the error and returns an empty list.
+  ///
+  /// Returns a `Future<List<dynamic>>` containing the training data, or an empty list on failure.
   Future<List<dynamic>> getTrainingList() async {
     String token = await UserPreferences().getToken();
 
@@ -90,6 +119,14 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Fetches the training history of a participant asynchronously.
+  ///
+  /// Retrieves the participant's training history from the API using their `id_number`.
+  /// The request includes an authorization token and expects a JSON response.
+  /// On success (HTTP 200), it assigns the fetched data to `historyTraining` and returns the list.
+  /// On failure or error, logs the issue and returns an empty list.
+  ///
+  /// Returns a [Future] containing a [List] of dynamic objects representing the training history.
   Future<List<dynamic>> getParticipantHistory() async {
     String token = await UserPreferences().getToken();
 
@@ -123,6 +160,21 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Fetches the history data for a specific trainee and subject.
+  ///
+  /// Makes an HTTP GET request to retrieve the training history of a trainee
+  /// identified by [idTrainee] for the given [subject]. The [longlist] parameter
+  /// specifies the number of records to fetch.
+  ///
+  /// Returns a [Future] that resolves to a list of maps containing the history data,
+  /// or an empty list if the request fails or an error occurs.
+  ///
+  /// Throws no exceptions; errors are logged and an empty list is returned.
+  ///
+  /// Parameters:
+  /// - [idTrainee]: The ID of the trainee.
+  /// - [subject]: The subject for which history is requested.
+  /// - [longlist]: The number of records to fetch.
   Future<List<Map<String, dynamic>>?> getHistoryData(
     String idTrainee,
     String subject,
@@ -163,6 +215,11 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Logs out the current user by calling the [AuthService.logout] method.
+  ///
+  /// If an error occurs during the logout process, it will be caught and logged.
+  ///
+  /// Throws no exceptions; errors are handled internally.
   Future<void> logout() async {
     try {
       await AuthService.logout();
@@ -171,6 +228,24 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Generates a PDF export of the training card for a given crew member.
+  ///
+  /// This function retrieves various training history data for the specified crew member (`idCrew`),
+  /// loads a PDF template, and populates it with the crew member's information and training records.
+  /// The filled PDF is then saved to a temporary directory and the file path is returned.
+  ///
+  /// The PDF includes:
+  /// - Crew member's name, license number, and employee ID.
+  /// - Training history for multiple categories (e.g., AVSEC, LINE CHECK, LVO, ETOPS SIM/FLT, BASIC INDOC, LSWB, RVSM, WNDSHEAR, ALAR/CFIT, SEP, DRILL, DGR, SMS, CRM, RNP, RGT, RHS, UPRT).
+  /// - Each category's training date and validity (if applicable) are drawn at specific positions on the PDF.
+  ///
+  /// If an error occurs during PDF generation, an empty string is returned.
+  ///
+  /// Parameters:
+  /// - [idCrew]: The ID of the crew member whose training card will be exported.
+  ///
+  /// Returns:
+  /// - A [Future<String>] containing the file path of the generated PDF, or an empty string if an error occurs.
   Future<String> eksportPDF(String idCrew) async {
     try {
       final List<Map<String, dynamic>>? historyDataBasicIndoc =
@@ -260,8 +335,8 @@ class TC_ProfileExaminee_Controller extends GetxController {
 
       log('Trainee: $trainee');
 
-
-      userName = usersData['name'] != null ? usersData['name'].toUpperCase() : "";
+      userName =
+          usersData['name'] != null ? usersData['name'].toUpperCase() : "";
       userLicense = usersData['license_number'] ?? "";
       userEmp = usersData['id_number'] ?? "";
 
@@ -773,6 +848,11 @@ class TC_ProfileExaminee_Controller extends GetxController {
     }
   }
 
+  /// Opens a PDF file located at the specified [path] using the default application.
+  ///
+  /// If an error occurs while attempting to open the file, it is logged for debugging purposes.
+  ///
+  /// [path]: The file system path to the PDF file to be opened.
   Future<void> openExportedPDF(String path) async {
     try {
       await OpenFile.open(path);

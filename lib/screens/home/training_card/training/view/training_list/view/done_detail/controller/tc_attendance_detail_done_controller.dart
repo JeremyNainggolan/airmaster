@@ -12,6 +12,17 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Attendance Detail Done Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Attendance Detail Done feature.
+  | It manages the state and logic for attendance details that have been completed.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_AttendanceDetail_Done_Controller extends GetxController {
   final attendanceData = Get.arguments; // data dari attendance
   final isLoading = false.obs;
@@ -29,6 +40,18 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Fetches the total number of participants for a specific attendance record.
+  ///
+  /// This asynchronous method sends an HTTP GET request to the API endpoint specified
+  /// in [ApiConfig.get_total_participant_done], including the attendance record's `_id`
+  /// as a query parameter. The request uses a bearer token for authorization.
+  ///
+  /// If the request is successful (HTTP 200), it parses the response, updates
+  /// [attendanceParticipant] with the received data, and returns the number of participants.
+  /// If the request fails or an exception occurs, it logs the error and returns 0.
+  ///
+  /// Returns:
+  ///   An [int] representing the total number of participants, or 0 if an error occurs.
   Future<int> totalParticipant() async {
     String token = await UserPreferences().getToken();
     try {
@@ -58,6 +81,15 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     }
   }
 
+  /// Fetches the total number of absent participants for a specific attendance record.
+  ///
+  /// This asynchronous method sends a GET request to the API endpoint defined in [ApiConfig.get_total_absent_trainee],
+  /// including the attendance ID as a query parameter. The request uses a bearer token for authorization.
+  ///
+  /// Returns the total number of absent participants as an [int] if the request is successful (HTTP 200).
+  /// If the request fails or an exception occurs, returns 0.
+  ///
+  /// Logs the response body and any errors encountered during the process.
   Future<int> totalAbsent() async {
     String token = await UserPreferences().getToken();
     try {
@@ -87,6 +119,19 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     }
   }
 
+  /// Fetches the combined attendance details for a specific attendance record.
+  ///
+  /// This method retrieves the attendance details from the API using the provided
+  /// attendance ID. It sends an HTTP GET request with the user's authentication token,
+  /// parses the response, and returns a list of attendance detail maps if successful.
+  ///
+  /// Returns an empty list if the request fails or an error occurs.
+  ///
+  /// Throws no exceptions; errors are logged internally.
+  ///
+  /// Returns:
+  ///   A [Future] that resolves to a [List] of [Map<String, dynamic>] containing
+  ///   attendance details.
   Future<List<Map<String, dynamic>>> getCombinedAttendanceDetailStream() async {
     String token = await UserPreferences().getToken();
     try {
@@ -119,6 +164,17 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     return [];
   }
 
+  /// Fetches the administrator data for the current attendance record.
+  ///
+  /// Makes an HTTP GET request to the administrator data API endpoint using the
+  /// provided `idPilotAdministrator` and `_id` from `attendanceData`.
+  /// The request includes an authorization token in the headers.
+  ///
+  /// Returns a `Map<String, dynamic>` containing the administrator data if the
+  /// request is successful (`statusCode == 200`), or `null` if the request fails
+  /// or an exception occurs.
+  ///
+  /// Logs the response body and any errors encountered during the request.
   Future<Map<String, dynamic>?> administratorList() async {
     String token = await UserPreferences().getToken();
     try {
@@ -150,6 +206,22 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     }
   }
 
+  /// Generates and exports an attendance list PDF using the provided attendance data.
+  ///
+  /// This method performs the following steps:
+  /// - Loads attendance, instructor, and administrator data.
+  /// - Loads a PDF template from assets.
+  /// - Fills in attendance details, including subject, department, training type, date, venue, and room.
+  /// - Draws checkboxes for attendance type (Training/Meeting).
+  /// - Iterates through the list of trainees and adds their details and signatures to the PDF.
+  /// - Adds instructor details and signature.
+  /// - Adds remarks from the attendance data.
+  /// - Adds administrator details and signature.
+  /// - Saves the completed PDF to a temporary directory.
+  ///
+  /// Returns the file path of the generated PDF on success, or an empty string on failure.
+  ///
+  /// Throws an exception if any error occurs during PDF generation.
   Future<String> eksportAttendanceListPDF() async {
     try {
       // get Attendance
@@ -323,10 +395,8 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
         final response = await http.get(
           Uri.parse(
             ApiConfig.get_tc_signature,
-          ).replace(queryParameters: {'filename': filename}), headers: {
-            'Authorization': 'Bearer $token',
-
-          }
+          ).replace(queryParameters: {'filename': filename}),
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
@@ -392,10 +462,8 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
         final response = await http.get(
           Uri.parse(
             ApiConfig.get_tc_signature,
-          ).replace(queryParameters: {'filename': filename}), headers: {
-            'Authorization': 'Bearer $token',
-
-          }
+          ).replace(queryParameters: {'filename': filename}),
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
@@ -463,10 +531,8 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
         final response = await http.get(
           Uri.parse(
             ApiConfig.get_tc_signature,
-          ).replace(queryParameters: {'filename': filename}), headers: {
-            'Authorization': 'Bearer $token',
-
-          }
+          ).replace(queryParameters: {'filename': filename}),
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
@@ -509,6 +575,11 @@ class TC_AttendanceDetail_Done_Controller extends GetxController {
     }
   }
 
+  /// Opens a PDF file located at the specified [path] using the default application.
+  ///
+  /// This method attempts to open the file and logs an error message if the operation fails.
+  ///
+  /// [path]: The file system path to the PDF file to be opened.
   Future<void> openExportedPDF(String path) async {
     try {
       await OpenFile.open(path);

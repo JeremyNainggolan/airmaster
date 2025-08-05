@@ -7,6 +7,17 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:airmaster/config/api_config.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: Total Trainee Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for managing total trainee data in the
+  | attendance list feature of the TC Instructor module.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class Ins_TotalTrainee_Controller extends GetxController {
   final isLoading = false.obs;
   dynamic dataTrainee = Get.arguments;
@@ -36,6 +47,12 @@ class Ins_TotalTrainee_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Refreshes the trainee data by fetching the latest trainee details.
+  ///
+  /// Sets the [isLoading] flag to `true` while data is being fetched.
+  /// Calls [getTraineeDetails] to retrieve updated trainee information.
+  /// Updates the [trainee] list with the new details.
+  /// Finally, sets the [isLoading] flag to `false` to indicate completion.
   Future<void> refreshData() async {
     isLoading.value = true;
     await getTraineeDetails();
@@ -43,6 +60,13 @@ class Ins_TotalTrainee_Controller extends GetxController {
     isLoading.value = false;
   }
 
+  /// Filters the list of trainees based on the provided [query].
+  ///
+  /// If [query] is empty, all trainees from [traineeDetails] are assigned to [trainee].
+  /// Otherwise, only trainees whose 'user_name' contains the [query] (case-insensitive)
+  /// are assigned to [trainee].
+  ///
+  /// [query]: The search string used to filter trainee names.
   void showFilteredTrainees(String query) {
     if (query.isEmpty) {
       trainee.assignAll(traineeDetails);
@@ -72,20 +96,18 @@ class Ins_TotalTrainee_Controller extends GetxController {
         idAttendance.add(participant['id']);
       }
 
-
       final idTraineeQuery = idTrainee
           .map((id) => 'idtraining[]=$id')
-          .join('&'); 
-
-      final idAttendanceQuery = idAttendance
-          .map((id) => '_id[]=$id')
           .join('&');
+
+      final idAttendanceQuery = idAttendance.map((id) => '_id[]=$id').join('&');
 
       log('id? : ${dataParticipant[0]['id']}');
 
-      final String query = [idTraineeQuery, idAttendanceQuery]
-      .where((q) => q.isNotEmpty)
-      .join('&');
+      final String query = [
+        idTraineeQuery,
+        idAttendanceQuery,
+      ].where((q) => q.isNotEmpty).join('&');
 
       final uri = Uri.parse('${ApiConfig.get_trainee_details}?$query');
 

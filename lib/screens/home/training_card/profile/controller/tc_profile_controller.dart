@@ -7,6 +7,17 @@ import 'package:airmaster/services/auth/auth_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+/*
+  |--------------------------------------------------------------------------
+  | File: TC Profile Controller
+  |--------------------------------------------------------------------------
+  | This file contains the controller for the TC Profile feature.
+  | It manages the state and logic for the profile operations.
+  |--------------------------------------------------------------------------
+  | created by: Meilyna Hutajulu
+  | last modified by: Meilyna Hutajulu
+  |
+*/
 class TC_Profile_Controller extends GetxController {
   final UserPreferences _userPrefs = UserPreferences();
 
@@ -47,6 +58,9 @@ class TC_Profile_Controller extends GetxController {
     });
   }
 
+  /// Loads user data asynchronously from user preferences and updates the corresponding
+  /// observable fields with the retrieved values. This includes user ID, name, email,
+  /// image URL, hub, LOA number, license number, license expiry date, rank, and instructor list.
   Future<void> loadUserData() async {
     await _userPrefs.init();
     userId.value = await _userPrefs.getIdNumber();
@@ -61,6 +75,11 @@ class TC_Profile_Controller extends GetxController {
     instructor.assignAll(await _userPrefs.getInstructor());
   }
 
+  /// Logs out the current user by calling the [AuthService.logout] method.
+  ///
+  /// If an error occurs during logout, it will be caught and logged.
+  ///
+  /// This method is asynchronous and returns a [Future] that completes when the logout process is finished.
   Future<void> logout() async {
     try {
       await AuthService.logout();
